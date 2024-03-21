@@ -22,10 +22,8 @@ public class Main {
         elements.add(wall4);
         elements.add(floor);
 
-        ArrayList<LCAIFCElement> elementResults = lca.CalculateLCAWhole(elements, 1000);
+        LCAResult lcaResult = lca.CalculateLCAWhole(elements, 200, 180, 1000);
 
-        double result = elementResults.stream().mapToDouble(LCAIFCElement::getLcaVal).sum();
-
-        System.out.println("LCA for building = " + result + " kg CO2-equivalents/m2/year");
+        System.out.println("LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
     }
 }

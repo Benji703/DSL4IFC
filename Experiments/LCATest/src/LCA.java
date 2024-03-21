@@ -15,12 +15,6 @@ public class LCA {
 
     public double CalculateLCAForWall(double quantity, double aRef) {
 
-        /*
-        for (int i = 0; i < 5; i++) {
-
-        }
-        */
-
         double a = 53.1 * quantity;
         double c3 = 0.965 * quantity;
         double c4 = 0.7 * quantity;
@@ -34,6 +28,7 @@ public class LCA {
         double c3Ref = 0;
         double c4Ref= 0;
 
+        //Get generic product data from json - Should be replaced
         try (FileReader reader = new FileReader("src/JSONData/ProductData.json"))
         {
             Object obj = jsonParser.parse(reader);
@@ -48,6 +43,7 @@ public class LCA {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+        //Get generic product data from json - Should be replaced
 
         double a = aRef * element.getQuantity();
         double c3 = c3Ref * element.getQuantity();
@@ -56,12 +52,16 @@ public class LCA {
         return lcaCalc.CalculateLCABasic(a, c3, c4, area);
     }
 
-    public ArrayList<LCAIFCElement> CalculateLCAWhole(ArrayList<LCAIFCElement> ifcElements, double area) {
+    public LCAResult CalculateLCAWhole(ArrayList<LCAIFCElement> ifcElements, double area, double areaHeated, double b6) {
 
         for (LCAIFCElement element : ifcElements) {
             element.setLcaVal(CalculateLCAForElement(element, area));
         }
 
-        return ifcElements;
+        double baseResult = ifcElements.stream().mapToDouble(LCAIFCElement::getLcaVal).sum();
+        double opResult = lcaCalc.CalculateLCAOperational(b6, areaHeated);
+        double result = baseResult + opResult;
+
+        return new LCAResult(result,ifcElements);
     }
 }
