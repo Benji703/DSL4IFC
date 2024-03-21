@@ -3,10 +3,14 @@
  */
 package org.sdu.dsl4ifc.generator
 
+import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import org.sdu.dsl4ifc.sustainLang.SourceCommand
+import java.io.File
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 
 /**
  * Generates code from your model files on save.
@@ -16,6 +20,19 @@ import org.eclipse.xtext.generator.IGeneratorContext
 class SustainLangGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		
+		var ifcModel = new IfcModel();
+		
+		var sourceCommands = resource.allContents.filter(SourceCommand);
+		
+		var sourceCommand = sourceCommands.head
+		var file = new File(sourceCommand.path);
+		ifcModel.readStepFile(file)
+		
+		var walls = ifcModel.getCollection(IfcWall)
+		
+		walls.forEach[wall, index | System.out.println(wall.name.decodedValue) ]
+		
 //		fsa.generateFile('greetings.txt', 'People to greet: ' + 
 //			resource.allContents
 //				.filter(Greeting)

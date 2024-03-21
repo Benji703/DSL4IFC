@@ -6,6 +6,9 @@ Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.sdu.dsl4ifc; singleton:=true
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ bin/com.apstex.ifc2x3toolbox_4.5.1_20200406.jar,
+ bin/com.apstex.stepparser_4.5.1_20200406.jar
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
  org.eclipse.equinox.common;bundle-version="3.16.0",
