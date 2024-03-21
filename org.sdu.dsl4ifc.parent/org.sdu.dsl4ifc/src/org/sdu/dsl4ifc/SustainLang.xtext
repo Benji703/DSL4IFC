@@ -1,0 +1,57 @@
+grammar org.sdu.dsl4ifc.SustainLang with org.eclipse.xtext.common.Terminals
+
+generate sustainLang "http://www.sdu.org/dsl4ifc/SustainLang"
+
+Model:
+    commands+=Command*;
+
+Command:
+    SourceCommand from=FromCommand? filter=WhereCommand? calcs=DoCommand transforms=TranformationCommand;
+
+SourceCommand:
+    'SOURCE' 'MODEL' name=ID path=STRING;
+
+FromCommand:
+    'FROM' types+=IfcTypeRef+;
+    
+enum IfcType:
+	ifcWalls='IfcWalls'
+;
+
+WhereCommand:
+    'WHERE' condition=Condition;
+
+DoCommand:
+    {DoCommand} 'DO' calculation+=Calculation*;
+
+TranformationCommand:
+    'GROUP' 'BY' attribute=Attribute;	// Add more
+
+IfcTypeRef returns Reference:
+    ifcType=IfcType name=ID?;
+
+Condition:
+    Expression;
+
+Calculation:
+    'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
+
+CalcReference returns Reference:
+    {CalcReference}name=ID;
+
+Expression:
+    BinaryExpression ({BooleanExpression.left=current} op=('AND' | 'OR') right=BinaryExpression)*;
+
+BinaryExpression:
+    left=Atom op=BinaryOperator right=Atom;
+
+Atom:
+	Attribute | value=STRING
+;
+
+Attribute:
+    reference=[Reference]'.'attribute=ID
+;
+
+enum BinaryOperator:
+    EQUALS='=' | different='<>' | smallerThan='<' | largerThan='>' | smallerOrEqualThan='<=' | largerOrEqualThan='>=';

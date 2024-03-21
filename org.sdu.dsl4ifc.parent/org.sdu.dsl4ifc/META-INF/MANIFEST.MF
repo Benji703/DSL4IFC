@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.sdu.dsl4ifc
+Bundle-ManifestVersion: 2
+Bundle-Name: org.sdu.dsl4ifc
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.sdu.dsl4ifc; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.16.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.sdu.dsl4ifc,
+ org.sdu.dsl4ifc.serializer,
+ org.sdu.dsl4ifc.scoping,
+ org.sdu.dsl4ifc.generator,
+ org.sdu.dsl4ifc.sustainLang.impl,
+ org.sdu.dsl4ifc.sustainLang,
+ org.sdu.dsl4ifc.parser.antlr.internal,
+ org.sdu.dsl4ifc.sustainLang.util,
+ org.sdu.dsl4ifc.parser.antlr,
+ org.sdu.dsl4ifc.services,
+ org.sdu.dsl4ifc.validation
+Import-Package: org.apache.log4j
