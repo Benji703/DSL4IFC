@@ -9,4 +9,11 @@ public class LCAIFCElement {
     }
 
 
+    public double getLcaVal() {
+        return lcaVal;
+    }
+
+    public void setLcaVal(double lcaVal) {
+        this.lcaVal = lcaVal;
+    }
 }
