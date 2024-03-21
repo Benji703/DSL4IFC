@@ -38,6 +38,11 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>com.apstex.ifc2x3tool</groupId>
+				<artifactId>ifc2x3tool</artifactId>
+				<version>4.5.1</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>

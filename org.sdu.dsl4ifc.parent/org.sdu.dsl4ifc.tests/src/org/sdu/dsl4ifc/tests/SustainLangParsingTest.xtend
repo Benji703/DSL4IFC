@@ -21,7 +21,12 @@ class SustainLangParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			Hello Xtext!
+			SOURCE MODEL m1 "path"              // Choose the model(s) source(s)
+			FROM IfcWalls r  // or wildcard?     // Way of specifying types 
+			DO LCA(                             // Run calculations
+			                                // Options? Fx the variable above: "BR18"
+			) lcaRes 
+			GROUP BY lcaRes.modules   
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
