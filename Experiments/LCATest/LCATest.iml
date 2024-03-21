@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.apstex.stepparser_4.5.1_20200406" level="project" />
     <orderEntry type="library" name="com.apstex.stepparser_4.5.1_20200406 (2)" level="project" />
+    <orderEntry type="library" name="googlecode.json.simple" level="application" />
   </component>
 </module>

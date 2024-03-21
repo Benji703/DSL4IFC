@@ -16,4 +16,12 @@ public class LCAIFCElement {
     public void setLcaVal(double lcaVal) {
         this.lcaVal = lcaVal;
     }
+
+    public IFCType getType() {
+        return type;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
 }
