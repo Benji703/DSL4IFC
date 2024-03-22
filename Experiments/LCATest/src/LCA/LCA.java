@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.io.FileReader;
 import java.io.IOException;
 
+import DomainClasses.EnvProductInfo;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -43,6 +44,9 @@ public class LCA {
             e.printStackTrace();
         }
         //Get generic product data from json - Should be replaced
+
+        EnvProductInfo envProductInfo;
+
 
         double a = aRef * element.getQuantity();
         double c3 = c3Ref * element.getQuantity();
