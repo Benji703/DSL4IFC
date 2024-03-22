@@ -1,12 +1,12 @@
 package DomainClasses;
 
 public class EnvProductInfo {
-    private double name;
+    private String name;
     private double a;
     private double c3;
     private double c4;
 
-    public EnvProductInfo(double name, double a, double c3, double c4) {
+    public EnvProductInfo(String name, double a, double c3, double c4) {
         this.name = name;
         this.a = a;
         this.c3 = c3;
@@ -26,7 +26,7 @@ public class EnvProductInfo {
         return a;
     }
 
-    public double getName() {
+    public String getName() {
         return name;
     }
 }

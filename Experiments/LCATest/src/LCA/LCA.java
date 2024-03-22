@@ -5,12 +5,21 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import DomainClasses.EnvProductInfo;
+import EPDConnectors.EcoPortalConnector;
+import Interfaces.IEPDConnector;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class LCA {
-    private LCACalc lcaCalc = new LCACalc();
+    private LCACalc lcaCalc;
+    private IEPDConnector edpConnetcor;
+
+
+    public LCA(){
+        lcaCalc = new LCACalc();
+        edpConnetcor = new EcoPortalConnector();
+    }
 
 
     public double CalculateLCAForWall(double quantity, double aRef) {
@@ -23,34 +32,15 @@ public class LCA {
     }
 
     public double CalculateLCAForElement(LCAIFCElement element, double area) {
-        JSONParser jsonParser = new JSONParser();
         double aRef = 0;
         double c3Ref = 0;
         double c4Ref= 0;
 
-        //Get generic product data from json - Should be replaced
-        try (FileReader reader = new FileReader("src/JSONData/ProductData.json"))
-        {
-            Object obj = jsonParser.parse(reader);
+        EnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getType());
 
-            JSONObject products = (JSONObject) obj;
-            JSONObject product = (JSONObject) products.get(element.getType().toString());
-
-            aRef = Double.parseDouble((String)product.get("a"));
-            c3Ref = Double.parseDouble((String)product.get("c3"));
-            c4Ref = Double.parseDouble((String)product.get("c4"));
-
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-        //Get generic product data from json - Should be replaced
-
-        EnvProductInfo envProductInfo;
-
-
-        double a = aRef * element.getQuantity();
-        double c3 = c3Ref * element.getQuantity();
-        double c4 = c4Ref * element.getQuantity();
+        double a = envProductInfo.getA() * element.getQuantity();
+        double c3 = envProductInfo.getC3() * element.getQuantity();
+        double c4 = envProductInfo.getC4() * element.getQuantity();
 
         return lcaCalc.CalculateLCABasic(a, c3, c4, area);
     }
