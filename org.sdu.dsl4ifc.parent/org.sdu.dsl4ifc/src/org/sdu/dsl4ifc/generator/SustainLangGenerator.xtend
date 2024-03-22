@@ -6,6 +6,9 @@ package org.sdu.dsl4ifc.generator
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel
 import java.io.File
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -13,7 +16,7 @@ import org.eclipse.ui.console.MessageConsoleStream
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import org.sdu.dsl4ifc.sustainLang.SourceCommand
+import org.sdu.dsl4ifc.sustainLang.Statement
 
 /**
  * Generates code from your model files on save.
@@ -22,7 +25,7 @@ import org.sdu.dsl4ifc.sustainLang.SourceCommand
  */
 class SustainLangGenerator extends AbstractGenerator {
 	
-	MessageConsoleStream out = null;
+	static MessageConsoleStream out = null;
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
@@ -32,17 +35,21 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val ifcModel = new IfcModel();
 		
-		val sourceCommands = resource.allContents.filter(SourceCommand);
+		val statements = resource.allContents.filter(Statement);
 		
-		val sourceCommand = sourceCommands.head
-		val file = new File(sourceCommand.path);
+		val sourceCommand = statements.head.source
+		
+		val file = sourceCommand.path.startsWith('.') ? resource.URI.fileFromRelativePath(sourceCommand.path) : new File(sourceCommand.path) 
+		
+		out.println('''Parsing file: «file.absolutePath»''')
+		
 		ifcModel.readStepFile(file)
 		
 		val walls = ifcModel.getCollection(IfcWall)
 		
 		walls.forEach[wall, index | out.println(wall.name.decodedValue) ]
 	}
-	
+		
 	def MessageConsole findConsole(String name) {
 	    val plugin = ConsolePlugin.getDefault()
 	    val conMan = plugin.getConsoleManager()
@@ -58,4 +65,11 @@ class SustainLangGenerator extends AbstractGenerator {
 	    conMan.addConsoles(consoles);
 	    return myConsole;
 	}
+	
+	def static File fileFromRelativePath(URI uri, String relativePath) {
+        val file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uri.toPlatformString(true)));
+        val path = new Path(file.location.toOSString)
+        val ifcPath = path.uptoSegment(path.segmentCount-1).append(relativePath).toOSString
+        return new File(ifcPath);
+    }
 }

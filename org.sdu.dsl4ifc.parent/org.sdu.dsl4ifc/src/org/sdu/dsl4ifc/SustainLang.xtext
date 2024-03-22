@@ -6,7 +6,7 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand from=FromCommand? filter=WhereCommand? calcs+=DoCommand* transforms=TranformationCommand? ';'?;
+    {Statement} source=SourceCommand from=FromCommand? filter=WhereCommand? do+=DoCommand? transforms=TranformationCommand? ';'?;
 
 SourceCommand:
     'SOURCE' 'MODEL' name=ID path=STRING;
