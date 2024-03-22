@@ -3,10 +3,10 @@ grammar org.sdu.dsl4ifc.SustainLang with org.eclipse.xtext.common.Terminals
 generate sustainLang "http://www.sdu.org/dsl4ifc/SustainLang"
 
 Model:
-    commands+=Command*;
+    statements+=Statement*;
 
-Command:
-    SourceCommand from=FromCommand? filter=WhereCommand? calcs=DoCommand transforms=TranformationCommand;
+Statement:
+    {Statement} source=SourceCommand from=FromCommand? filter=WhereCommand? calcs+=DoCommand* transforms=TranformationCommand? ';'?;
 
 SourceCommand:
     'SOURCE' 'MODEL' name=ID path=STRING;

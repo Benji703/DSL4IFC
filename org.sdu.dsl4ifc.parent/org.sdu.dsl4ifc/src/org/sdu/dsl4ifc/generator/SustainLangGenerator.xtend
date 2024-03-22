@@ -3,14 +3,17 @@
  */
 package org.sdu.dsl4ifc.generator
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel
+import java.io.File
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.ui.console.ConsolePlugin
+import org.eclipse.ui.console.MessageConsole
+import org.eclipse.ui.console.MessageConsoleStream
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
-import java.io.File
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 
 /**
  * Generates code from your model files on save.
@@ -18,25 +21,41 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class SustainLangGenerator extends AbstractGenerator {
+	
+	MessageConsoleStream out = null;
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
-		var ifcModel = new IfcModel();
+		val myConsole = findConsole("SusLang");
+		out = myConsole.newMessageStream();
+		out.println("Hello from Generic console sample action");
 		
-		var sourceCommands = resource.allContents.filter(SourceCommand);
+		val ifcModel = new IfcModel();
 		
-		var sourceCommand = sourceCommands.head
-		var file = new File(sourceCommand.path);
+		val sourceCommands = resource.allContents.filter(SourceCommand);
+		
+		val sourceCommand = sourceCommands.head
+		val file = new File(sourceCommand.path);
 		ifcModel.readStepFile(file)
 		
-		var walls = ifcModel.getCollection(IfcWall)
+		val walls = ifcModel.getCollection(IfcWall)
 		
-		walls.forEach[wall, index | System.out.println(wall.name.decodedValue) ]
-		
-//		fsa.generateFile('greetings.txt', 'People to greet: ' + 
-//			resource.allContents
-//				.filter(Greeting)
-//				.map[name]
-//				.join(', '))
+		walls.forEach[wall, index | out.println(wall.name.decodedValue) ]
+	}
+	
+	def MessageConsole findConsole(String name) {
+	    val plugin = ConsolePlugin.getDefault()
+	    val conMan = plugin.getConsoleManager()
+	    val existing = conMan.getConsoles()
+	    for (console : existing) {
+	        if (name.equals(console.getName())) {
+	            return console as MessageConsole
+	        }
+	    }
+	    // no console found, so create a new one
+	    val myConsole = new MessageConsole(name, null)
+	    val consoles = #[myConsole];
+	    conMan.addConsoles(consoles);
+	    return myConsole;
 	}
 }
