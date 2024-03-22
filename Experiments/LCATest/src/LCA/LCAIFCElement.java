@@ -1,3 +1,7 @@
+package LCA;
+
+import DomainClasses.IFCType;
+
 public class LCAIFCElement {
     private IFCType type;
     private double quantity;

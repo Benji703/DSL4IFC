@@ -1,6 +1,8 @@
-import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel;
+import DomainClasses.IFCType;
+import LCA.LCA;
+import LCA.LCAIFCElement;
+import LCA.LCAResult;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class Main {
@@ -24,6 +26,6 @@ public class Main {
 
         LCAResult lcaResult = lca.CalculateLCAWhole(elements, 200, 180, 1000);
 
-        System.out.println("LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
+        System.out.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
     }
 }
