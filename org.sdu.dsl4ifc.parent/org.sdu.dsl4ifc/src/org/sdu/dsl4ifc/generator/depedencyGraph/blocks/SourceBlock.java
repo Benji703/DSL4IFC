@@ -37,7 +37,7 @@ public class SourceBlock extends Block<File> {
 	}
 
 	private boolean isRelativePath() {
-		return path.startsWith(".");
+		return !path.startsWith("/");
 	}
 
 	private String getAbsolutePathFromRelativePath(String relativePath) {
