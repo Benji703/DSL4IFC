@@ -18,6 +18,7 @@ import org.eclipse.xtext.generator.IGeneratorContext
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SourceBlock
 import org.sdu.dsl4ifc.sustainLang.Statement
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 
 /**
  * Generates code from your model files on save.
@@ -41,15 +42,14 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val sourceBlock = new SourceBlock("Source", sourceCommand.path, resource)
 		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
+		val wallTypeBlock = new TypeBlock("Type", IfcWall);
 		
 		parserBlock.AddInput(sourceBlock)
+		wallTypeBlock.AddInput(parserBlock)
 		
-		val ifcModel = parserBlock.output
+		val walls = wallTypeBlock.output
 		
-		
-		val walls = ifcModel.getCollection(IfcWall)
-		
-		walls.forEach[wall, index | consoleOut.println(wall.name.decodedValue) ]
+		walls.forEach[wall | consoleOut.println(wall.name.decodedValue) ]
 	}
 		
 	def MessageConsole findConsole(String name) {
