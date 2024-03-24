@@ -4,7 +4,6 @@
 package org.sdu.dsl4ifc.generator
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
-import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel
 import java.io.File
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
@@ -16,6 +15,8 @@ import org.eclipse.ui.console.MessageConsoleStream
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SourceBlock
 import org.sdu.dsl4ifc.sustainLang.Statement
 
 /**
@@ -25,29 +26,30 @@ import org.sdu.dsl4ifc.sustainLang.Statement
  */
 class SustainLangGenerator extends AbstractGenerator {
 	
-	static MessageConsoleStream out = null;
+	public static MessageConsoleStream consoleOut = null;
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
 		val myConsole = findConsole("SusLang");
-		out = myConsole.newMessageStream();
-		out.println("Hello from Generic console sample action");
-		
-		val ifcModel = new IfcModel();
+		consoleOut = myConsole.newMessageStream();
+		consoleOut.println("SusLang Console");
 		
 		val statements = resource.allContents.filter(Statement);
 		
 		val sourceCommand = statements.head.source
 		
-		val file = sourceCommand.path.startsWith('.') ? resource.URI.fileFromRelativePath(sourceCommand.path) : new File(sourceCommand.path) 
 		
-		out.println('''Parsing file: «file.absolutePath»''')
+		val sourceBlock = new SourceBlock("Source", sourceCommand.path, resource)
+		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
 		
-		ifcModel.readStepFile(file)
+		parserBlock.AddInput(sourceBlock)
+		
+		val ifcModel = parserBlock.output
+		
 		
 		val walls = ifcModel.getCollection(IfcWall)
 		
-		walls.forEach[wall, index | out.println(wall.name.decodedValue) ]
+		walls.forEach[wall, index | consoleOut.println(wall.name.decodedValue) ]
 	}
 		
 	def MessageConsole findConsole(String name) {
@@ -65,11 +67,4 @@ class SustainLangGenerator extends AbstractGenerator {
 	    conMan.addConsoles(consoles);
 	    return myConsole;
 	}
-	
-	def static File fileFromRelativePath(URI uri, String relativePath) {
-        val file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uri.toPlatformString(true)));
-        val path = new Path(file.location.toOSString)
-        val ifcPath = path.uptoSegment(path.segmentCount-1).append(relativePath).toOSString
-        return new File(ifcPath);
-    }
 }
