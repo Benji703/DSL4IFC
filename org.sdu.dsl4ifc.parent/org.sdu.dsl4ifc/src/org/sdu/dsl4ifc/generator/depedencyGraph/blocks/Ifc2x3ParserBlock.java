@@ -33,6 +33,8 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 			return null;
 		}
 		
+        ifcModel.setTypeCacheEnabled(true);
+        
 		return ifcModel;
 	}
 

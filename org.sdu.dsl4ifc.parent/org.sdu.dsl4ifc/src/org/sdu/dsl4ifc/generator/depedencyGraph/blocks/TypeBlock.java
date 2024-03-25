@@ -10,11 +10,18 @@ import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel;
 public class TypeBlock<T> extends Block<Stream<T>> {
 
 	private Class<T> clazz;
+	
+	private String variableName;
+	
+	public String getVariableName() {
+		return variableName;
+	}
 
-	public TypeBlock(String name, Class<T> clazz) {
+	public TypeBlock(String name, String variableName, Class<T> clazz) {
 		super(name);
-		this.clazz = clazz;
 		
+		this.variableName = variableName;
+		this.clazz = clazz;
 	}
 
 	@Override
@@ -30,7 +37,7 @@ public class TypeBlock<T> extends Block<Stream<T>> {
 		if (!ifcModel.isTypeCacheEnabled())
 			ifcModel.setTypeCacheEnabled(true);
 		
-		SustainLangGenerator.consoleOut.println("Finding type " + clazz.getName() + "...");
+		SustainLangGenerator.consoleOut.println("Finding type for '" + variableName + "' " + clazz.getName() + "...");
 		var collection = ifcModel.getCollection(clazz);
 		SustainLangGenerator.consoleOut.println("Got " + collection.size() + " entities");
 		return collection.stream();

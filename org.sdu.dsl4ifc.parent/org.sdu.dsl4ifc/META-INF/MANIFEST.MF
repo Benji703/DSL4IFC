@@ -22,14 +22,15 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.core.resources;bundle-version="3.18.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.sdu.dsl4ifc,
- org.sdu.dsl4ifc.serializer,
- org.sdu.dsl4ifc.scoping,
  org.sdu.dsl4ifc.generator,
- org.sdu.dsl4ifc.sustainLang.impl,
- org.sdu.dsl4ifc.sustainLang,
- org.sdu.dsl4ifc.parser.antlr.internal,
- org.sdu.dsl4ifc.sustainLang.util,
+ org.sdu.dsl4ifc.generator.depedencyGraph.blocks,
  org.sdu.dsl4ifc.parser.antlr,
+ org.sdu.dsl4ifc.parser.antlr.internal,
+ org.sdu.dsl4ifc.scoping,
+ org.sdu.dsl4ifc.serializer,
  org.sdu.dsl4ifc.services,
+ org.sdu.dsl4ifc.sustainLang,
+ org.sdu.dsl4ifc.sustainLang.impl,
+ org.sdu.dsl4ifc.sustainLang.util,
  org.sdu.dsl4ifc.validation
 Import-Package: org.apache.log4j

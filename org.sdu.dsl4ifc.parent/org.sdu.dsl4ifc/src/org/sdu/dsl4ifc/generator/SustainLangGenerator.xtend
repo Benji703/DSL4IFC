@@ -42,7 +42,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val sourceBlock = new SourceBlock("Source", sourceCommand.path, resource)
 		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
-		val wallTypeBlock = new TypeBlock("Type", IfcWall);
+		val wallTypeBlock = new TypeBlock("Type", "w", IfcWall);
 		
 		parserBlock.AddInput(sourceBlock)
 		wallTypeBlock.AddInput(parserBlock)
