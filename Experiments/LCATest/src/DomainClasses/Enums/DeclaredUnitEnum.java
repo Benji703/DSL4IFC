@@ -5,6 +5,6 @@ public enum DeclaredUnitEnum {
     M2,
     M3,
     KG,
-    STK,
+    STK
 
 }

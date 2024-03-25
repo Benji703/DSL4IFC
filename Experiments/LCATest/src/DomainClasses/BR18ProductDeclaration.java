@@ -8,16 +8,16 @@ public class BR18ProductDeclaration {
         private String dataType;
         private String name;
         private String dkName;
-        private String a1a3;
-        private String c3;
-        private String c4;
-        private String d;
-        private String declaredFactor;
+        private Double a1a3;
+        private Double c3;
+        private Double c4;
+        private Double d;
+        private Double declaredFactor;
         private DeclaredUnitEnum declaredUnit;
-        private double massFactor;
+        private Double massFactor;
         private String url;
 
-    public BR18ProductDeclaration(String sortID, String dataType, String name, String dkName, String a1a3, String c3, String c4, String d, String declaredFactor, DeclaredUnitEnum declaredUnit, double massFactor, String url) {
+    public BR18ProductDeclaration(String sortID, String dataType, String name, String dkName, Double a1a3, Double c3, Double c4, Double d, Double declaredFactor, DeclaredUnitEnum declaredUnit, Double massFactor, String url) {
         this.sortID = sortID;
         this.dataType = dataType;
         this.name = name;
@@ -51,23 +51,23 @@ public class BR18ProductDeclaration {
             return dkName;
         }
 
-        public String getA1a3() {
+        public Double getA1a3() {
             return a1a3;
         }
 
-        public String getC3() {
+        public Double getC3() {
             return c3;
         }
 
-        public String getC4() {
+        public Double getC4() {
             return c4;
         }
 
-        public String getD() {
+        public Double getD() {
             return d;
         }
 
-        public String getDeclaredFactor() {
+        public Double getDeclaredFactor() {
             return declaredFactor;
         }
 
@@ -75,11 +75,29 @@ public class BR18ProductDeclaration {
             return declaredUnit;
         }
 
-        public double getMassFactor() {
+        public Double getMassFactor() {
             return massFactor;
         }
 
         public String getUrl() {
             return url;
         }
+
+    @Override
+    public String toString() {
+        return "BR18ProductDeclaration{" +
+                "sortID='" + sortID + '\'' +
+                ", dataType='" + dataType + '\'' +
+                ", name='" + name + '\'' +
+                ", dkName='" + dkName + '\'' +
+                ", a1a3=" + a1a3 +
+                ", c3=" + c3 +
+                ", c4=" + c4 +
+                ", d=" + d +
+                ", declaredFactor=" + declaredFactor +
+                ", declaredUnit=" + declaredUnit +
+                ", massFactor=" + massFactor +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }

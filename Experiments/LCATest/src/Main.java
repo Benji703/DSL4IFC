@@ -37,4 +37,5 @@ public class Main {
 
         Map<String, List<String>> list = br18.GetEPDDataByType(IFCTypeEnum.wall);
     }
+
 }
