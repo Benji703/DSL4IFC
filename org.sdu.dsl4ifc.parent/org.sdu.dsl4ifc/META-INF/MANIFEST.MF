@@ -23,6 +23,8 @@ Require-Bundle: org.eclipse.xtext,
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.sdu.dsl4ifc,
  org.sdu.dsl4ifc.generator,
+ org.sdu.dsl4ifc.generator.conditional.core,
+ org.sdu.dsl4ifc.generator.conditional.impls,
  org.sdu.dsl4ifc.generator.depedencyGraph.blocks,
  org.sdu.dsl4ifc.parser.antlr,
  org.sdu.dsl4ifc.parser.antlr.internal,

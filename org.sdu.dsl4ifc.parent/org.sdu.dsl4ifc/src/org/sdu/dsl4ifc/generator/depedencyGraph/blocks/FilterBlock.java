@@ -20,12 +20,17 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 	@Override
 	public Stream<T> Calculate() {
 		// TODO: Get all type blocks (you can combine variable references)
-		TypeBlock<T> source = findBlock(TypeBlock.class);
-		source.getVariableName()								
-		Stream<T> types = source.getOutput();
+		var sources = findAllBlocks(TypeBlock.class);
 		
-		types.filter(null)
+		for (TypeBlock<?> typeBlock : sources) {
+			
+			
+		}
 		
-		return types;
+		sources.forEach(block -> block.getVariableName());
+		
+		//types.filter(null)
+		
+		return null;
 	}
 }

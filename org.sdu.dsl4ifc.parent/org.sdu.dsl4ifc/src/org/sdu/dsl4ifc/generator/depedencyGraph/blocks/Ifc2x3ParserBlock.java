@@ -20,7 +20,7 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 
 	@Override
 	public IfcModel Calculate() {
-		SourceBlock source = findBlock(SourceBlock.class);
+		SourceBlock source = findFirstBlock(SourceBlock.class);
 		File file = source.getOutput();
 		
 		var ifcModel = new IfcModel();

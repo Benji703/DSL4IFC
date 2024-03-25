@@ -36,13 +36,24 @@ public abstract class Block<T> implements IOutOfDate, IRecalculation, ICalculati
         output = Calculate();
     }
 
-    public <U> U findBlock(Class<U> blockType) {
+    public <U> U findFirstBlock(Class<U> blockType) {
         for (Block<?> block : Inputs) {
             if (blockType.isInstance(block)) {
                 return blockType.cast(block);
             }
         }
         return null; // or throw an exception if the block is not found
+    }
+    
+    public <U> List<U> findAllBlocks(Class<U> blockType) {
+    	var returnList = new ArrayList<U>();
+    	
+        for (Block<?> block : Inputs) {
+            if (blockType.isInstance(block)) {
+            	returnList.add(blockType.cast(block));
+            }
+        }
+        return returnList;
     }
 }
 

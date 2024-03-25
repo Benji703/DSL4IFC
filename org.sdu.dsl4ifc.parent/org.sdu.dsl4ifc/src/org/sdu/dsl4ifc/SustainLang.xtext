@@ -39,12 +39,6 @@ Calculation:
 CalcReference returns Reference:
     {CalcReference}name=ID;
 
-Expression:
-    BinaryExpression ({BooleanExpression.left=current} op=('AND' | 'OR') right=BinaryExpression)*;
-
-BinaryExpression:
-    left=Atom op=BinaryOperator right=Atom;
-
 Atom:
 	Attribute | value=STRING
 ;
@@ -53,5 +47,18 @@ Attribute:
     reference=[Reference]'.'attribute=ID
 ;
 
-enum BinaryOperator:
-    EQUALS='=' | different='<>' | smallerThan='<' | largerThan='>' | smallerOrEqualThan='<=' | largerOrEqualThan='>=';
+enum BooleanOperator:
+	AND='AND' | OR='OR'
+;
+
+enum ComparisonOperator:
+    equals='=' | different='<>' | smallerThan='<' | largerThan='>' | smallerOrEqualThan='<=' | largerOrEqualThan='>='
+;
+
+Expression:
+    BooleanExpression ({BooleanExpression.left=current} op=BooleanOperator right=BooleanExpression)*;
+
+BooleanExpression:
+    left=Atom operator=ComparisonOperator right=Atom;
+    
+    

@@ -31,7 +31,7 @@ public class TypeBlock<T> extends Block<Stream<T>> {
 
 	@Override
 	public Stream<T> Calculate() {
-		Ifc2x3ParserBlock source = findBlock(Ifc2x3ParserBlock.class);
+		Ifc2x3ParserBlock source = findFirstBlock(Ifc2x3ParserBlock.class);
 		IfcModel ifcModel = source.getOutput();
 		
 		if (!ifcModel.isTypeCacheEnabled())

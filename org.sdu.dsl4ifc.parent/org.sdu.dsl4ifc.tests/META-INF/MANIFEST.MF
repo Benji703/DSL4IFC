@@ -14,4 +14,4 @@ Import-Package: org.junit;version="4.13.2",
  org.junit.jupiter.api;version="[5.1.0,6.0.0)",
  org.junit.jupiter.api.extension;version="[5.1.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: org.sdu.dsl4ifc.tests;x-internal=true
+Export-Package: org.sdu.dsl4ifc.tests;x-internal=true;uses:="org.sdu.dsl4ifc.generator.conditional.core"
