@@ -1,17 +1,10 @@
 package LCA;
 
 import java.util.ArrayList;
-import java.io.FileReader;
-import java.io.IOException;
 
-import DomainClasses.EnvProductInfo;
 import EPDConnectors.BR18Connector;
-import EPDConnectors.EcoPortalConnector;
 import Interfaces.IEPDConnector;
 import Interfaces.IEnvProductInfo;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class LCA {
     private LCACalc lcaCalc;
@@ -38,7 +31,7 @@ public class LCA {
         double c3Ref = 0;
         double c4Ref= 0;
 
-        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getType());
+        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getName());
 
         double a = envProductInfo.getA() * element.getQuantity();
         double c3 = envProductInfo.getC3() * element.getQuantity();

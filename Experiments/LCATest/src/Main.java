@@ -1,13 +1,8 @@
-import DomainClasses.BR18ProductDeclaration;
-import DomainClasses.Enums.IFCTypeEnum;
-import EPDConnectors.BR18Connector;
 import LCA.LCA;
 import LCA.LCAIFCElement;
 import LCA.LCAResult;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -15,7 +10,7 @@ public class Main {
         LCA lca = new LCA();
 
         String concrete = "Letbeton vægelement, 150 mm tyk væg, 10% udsparinger";
-        String floorS = "Fabriksbeton (C20/25 SCC) i eksponeringsklasserne X0 og XC1";
+        String floorS = "Celleglas-isolering 115 kg/m³";
 
         LCAIFCElement wall1 = new LCAIFCElement(concrete, 200);
         LCAIFCElement wall2 = new LCAIFCElement(concrete, 200);
@@ -32,6 +27,10 @@ public class Main {
         elements.add(floor);
 
         LCAResult lcaResult = lca.CalculateLCAWhole(elements, 200, 180, 1000);
+
+        LCAIFCElement br18 = lcaResult.getElements().stream().filter(e -> e.getName().equals(floorS)).findAny().orElse(null);
+
+        System.out.println(br18);
 
         System.out.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
     }

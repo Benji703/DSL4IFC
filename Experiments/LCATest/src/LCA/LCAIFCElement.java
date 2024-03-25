@@ -1,14 +1,12 @@
 package LCA;
 
-import DomainClasses.Enums.IFCTypeEnum;
-
 public class LCAIFCElement {
-    private String type;
+    private String name;
     private double quantity;
     private double lcaVal;
 
     public LCAIFCElement(String type, double quantity) {
-        this.type = type;
+        this.name = type;
         this.quantity = quantity;
     }
 
@@ -21,8 +19,8 @@ public class LCAIFCElement {
         this.lcaVal = lcaVal;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     public double getQuantity() {
