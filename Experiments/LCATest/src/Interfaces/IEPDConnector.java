@@ -1,9 +1,9 @@
 package Interfaces;
 
 import DomainClasses.EnvProductInfo;
-import DomainClasses.IFCType;
+import DomainClasses.Enums.IFCTypeEnum;
 
 public interface IEPDConnector {
 
-    EnvProductInfo GetEPDDataByType(IFCType type);
+    EnvProductInfo GetEPDDataByType(IFCTypeEnum type);
 }

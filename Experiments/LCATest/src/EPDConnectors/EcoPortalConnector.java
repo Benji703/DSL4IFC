@@ -1,7 +1,7 @@
 package EPDConnectors;
 
 import DomainClasses.EnvProductInfo;
-import DomainClasses.IFCType;
+import DomainClasses.Enums.IFCTypeEnum;
 import Interfaces.IEPDConnector;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,7 +9,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -20,7 +19,7 @@ public class EcoPortalConnector implements IEPDConnector {
     private final String epdUrl = "";
 
     @Override
-    public EnvProductInfo GetEPDDataByType(IFCType type) {
+    public EnvProductInfo GetEPDDataByType(IFCTypeEnum type) {
         double aRef = 0;
         double c3Ref = 0;
         double c4Ref = 0;

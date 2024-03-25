@@ -1,4 +1,4 @@
-import DomainClasses.IFCType;
+import DomainClasses.Enums.IFCTypeEnum;
 import LCA.LCA;
 import LCA.LCAIFCElement;
 import LCA.LCAResult;
@@ -10,12 +10,12 @@ public class Main {
 
         LCA lca = new LCA();
 
-        LCAIFCElement wall1 = new LCAIFCElement(IFCType.wall, 200);
-        LCAIFCElement wall2 = new LCAIFCElement(IFCType.wall, 200);
-        LCAIFCElement wall3 = new LCAIFCElement(IFCType.wall, 200);
-        LCAIFCElement wall4 = new LCAIFCElement(IFCType.wall, 200);
+        LCAIFCElement wall1 = new LCAIFCElement(IFCTypeEnum.wall, 200);
+        LCAIFCElement wall2 = new LCAIFCElement(IFCTypeEnum.wall, 200);
+        LCAIFCElement wall3 = new LCAIFCElement(IFCTypeEnum.wall, 200);
+        LCAIFCElement wall4 = new LCAIFCElement(IFCTypeEnum.wall, 200);
 
-        LCAIFCElement floor = new LCAIFCElement(IFCType.floor, 1000);
+        LCAIFCElement floor = new LCAIFCElement(IFCTypeEnum.floor, 1000);
 
         ArrayList<LCAIFCElement> elements = new ArrayList<>();
         elements.add(wall1);
