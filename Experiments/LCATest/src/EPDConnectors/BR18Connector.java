@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 public class BR18Connector {
 
-    public Map<String, List<String>> GetEPDDataByType(IFCTypeEnum type) {
+    public BR18ProductDeclaration GetEPDDataByType(String name) {
 
         Map<String, List<String>> epdData = new HashMap<String, List<String>>() {
         };
@@ -32,8 +32,12 @@ public class BR18Connector {
 
         List<BR18ProductDeclaration> productList = ConvertToBR18ObjectList(epdData);
 
+        BR18ProductDeclaration br18Declaration = productList.stream()
+                .filter(br18Dec -> br18Dec.getDkName().equals(name))
+                .findFirst().orElse(null);
 
-        return epdData;
+
+        return br18Declaration;
     }
 
     private List<BR18ProductDeclaration> ConvertToBR18ObjectList(Map<String, List<String>> epdData) {
@@ -54,14 +58,8 @@ public class BR18Connector {
             String url = set.getValue().get(10);
             String comment = set.getValue().get(11);
 
-            System.out.println("GO");
-
             productList.add(new BR18ProductDeclaration(sortID,dataType,name,nameDK,a1a3,c3,c4,d,declaredFactor,declaredUnit,mass,url));
         }
-
-        System.out.println("Size " + productList.size());
-
-        System.out.println(productList.get(0));
 
         return productList;
     }
@@ -90,7 +88,7 @@ public class BR18Connector {
             return null;
         }
 
-        if (s.contains("-")) {
+        if (s.equals("-")) {
             return null;
         }
 
@@ -114,8 +112,6 @@ public class BR18Connector {
             Sheet sheet = wb.getFirstSheet();
             List<Row> rows = sheet.read();
 
-            System.out.println(rows.size());
-
             for (int i = 4; i < rows.size(); i++) {
                 String rowID = rows.get(i).getCell(1).getRawValue();
                 data.put(rowID, new ArrayList<>());
@@ -123,8 +119,6 @@ public class BR18Connector {
                 for (int j = 2; j < rows.get(i).getCellCount(); j++) {
                     data.get(rowID).add(rows.get(i).getCell(j).getRawValue());
                 }
-
-                System.out.println(data.get(rowID));
             }
 
 

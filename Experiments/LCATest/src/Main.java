@@ -35,7 +35,9 @@ public class Main {
 
         BR18Connector br18 = new BR18Connector();
 
-        Map<String, List<String>> list = br18.GetEPDDataByType(IFCTypeEnum.wall);
+        BR18ProductDeclaration br18ProductDeclaration = br18.GetEPDDataByType("Letklinkerblok med grå EPS isolering");
+
+        System.out.println(br18ProductDeclaration);
     }
 
 }
