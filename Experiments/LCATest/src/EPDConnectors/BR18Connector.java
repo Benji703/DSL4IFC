@@ -2,9 +2,9 @@ package EPDConnectors;
 
 import DomainClasses.BR18ProductDeclaration;
 import DomainClasses.Enums.DeclaredUnitEnum;
-import DomainClasses.Enums.IFCTypeEnum;
 import DomainClasses.EnvProductInfo;
-import org.dhatim.fastexcel.reader.Cell;
+import Interfaces.IEPDConnector;
+import Interfaces.IEnvProductInfo;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
@@ -15,11 +15,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
-public class BR18Connector {
+public class BR18Connector implements IEPDConnector {
 
-    public BR18ProductDeclaration GetEPDDataByType(String name) {
+    private List<BR18ProductDeclaration> productList;
+
+
+    public IEnvProductInfo GetEPDDataByType(String name) {
+
+        if (productList != null) {
+            return productList.stream()
+                    .filter(br18Dec -> br18Dec.getDkName().equals(name))
+                    .findFirst().orElse(null);
+        }
 
         Map<String, List<String>> epdData = new HashMap<String, List<String>>() {
         };
@@ -30,12 +38,11 @@ public class BR18Connector {
             e.printStackTrace();
         }
 
-        List<BR18ProductDeclaration> productList = ConvertToBR18ObjectList(epdData);
+        productList = ConvertToBR18ObjectList(epdData);
 
         BR18ProductDeclaration br18Declaration = productList.stream()
                 .filter(br18Dec -> br18Dec.getDkName().equals(name))
                 .findFirst().orElse(null);
-
 
         return br18Declaration;
     }
@@ -66,7 +73,6 @@ public class BR18Connector {
     private double parseStringToDouble(String value) {
         return value == null || value.isEmpty() ? Double.NaN : Double.parseDouble(value);
     }
-
 
     private DeclaredUnitEnum ParseToEnum(String s) {
         DeclaredUnitEnum declaredEnum;
@@ -120,10 +126,9 @@ public class BR18Connector {
                     data.get(rowID).add(rows.get(i).getCell(j).getRawValue());
                 }
             }
-
-
         }
-
         return data;
     }
+
+
 }

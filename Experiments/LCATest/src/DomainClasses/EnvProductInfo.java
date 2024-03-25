@@ -1,6 +1,8 @@
 package DomainClasses;
 
-public class EnvProductInfo {
+import Interfaces.IEnvProductInfo;
+
+public class EnvProductInfo implements IEnvProductInfo {
     private String name;
     private double a;
     private double c3;
@@ -14,15 +16,15 @@ public class EnvProductInfo {
     }
 
 
-    public double getC4() {
+    public Double getC4() {
         return c4;
     }
 
-    public double getC3() {
+    public Double getC3() {
         return c3;
     }
 
-    public double getA() {
+    public Double getA() {
         return a;
     }
 

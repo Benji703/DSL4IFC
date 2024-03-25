@@ -3,6 +3,7 @@ package EPDConnectors;
 import DomainClasses.EnvProductInfo;
 import DomainClasses.Enums.IFCTypeEnum;
 import Interfaces.IEPDConnector;
+import Interfaces.IEnvProductInfo;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,7 +20,7 @@ public class EcoPortalConnector implements IEPDConnector {
     private final String epdUrl = "";
 
     @Override
-    public EnvProductInfo GetEPDDataByType(IFCTypeEnum type) {
+    public IEnvProductInfo GetEPDDataByType(String name) {
         double aRef = 0;
         double c3Ref = 0;
         double c4Ref = 0;
@@ -46,7 +47,7 @@ public class EcoPortalConnector implements IEPDConnector {
         JSONArray moduleArray = (JSONArray) ( (JSONObject) ( (JSONObject) ((JSONArray) ((JSONObject) edpData.get("exchanges")).get("exchange")).get(1)).get("other")).get("anies");
         System.out.println(moduleArray.toString());
 
-        return new EnvProductInfo(type.toString(), aRef, c3Ref, c4Ref);
+        return new EnvProductInfo("", aRef, c3Ref, c4Ref);
     }
 
     private JSONObject FetchEDPData(String url) {

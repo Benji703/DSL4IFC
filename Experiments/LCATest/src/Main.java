@@ -12,14 +12,17 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        /*LCA lca = new LCA();
+        LCA lca = new LCA();
 
-        LCAIFCElement wall1 = new LCAIFCElement(IFCTypeEnum.wall, 200);
-        LCAIFCElement wall2 = new LCAIFCElement(IFCTypeEnum.wall, 200);
-        LCAIFCElement wall3 = new LCAIFCElement(IFCTypeEnum.wall, 200);
-        LCAIFCElement wall4 = new LCAIFCElement(IFCTypeEnum.wall, 200);
+        String concrete = "Letbeton vægelement, 150 mm tyk væg, 10% udsparinger";
+        String floorS = "Fabriksbeton (C20/25 SCC) i eksponeringsklasserne X0 og XC1";
 
-        LCAIFCElement floor = new LCAIFCElement(IFCTypeEnum.floor, 1000);
+        LCAIFCElement wall1 = new LCAIFCElement(concrete, 200);
+        LCAIFCElement wall2 = new LCAIFCElement(concrete, 200);
+        LCAIFCElement wall3 = new LCAIFCElement(concrete, 200);
+        LCAIFCElement wall4 = new LCAIFCElement(concrete, 200);
+
+        LCAIFCElement floor = new LCAIFCElement(floorS, 1000);
 
         ArrayList<LCAIFCElement> elements = new ArrayList<>();
         elements.add(wall1);
@@ -31,13 +34,6 @@ public class Main {
         LCAResult lcaResult = lca.CalculateLCAWhole(elements, 200, 180, 1000);
 
         System.out.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
-        */
-
-        BR18Connector br18 = new BR18Connector();
-
-        BR18ProductDeclaration br18ProductDeclaration = br18.GetEPDDataByType("Letklinkerblok med grå EPS isolering");
-
-        System.out.println(br18ProductDeclaration);
     }
 
 }

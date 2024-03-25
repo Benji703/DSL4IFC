@@ -5,5 +5,5 @@ import DomainClasses.Enums.IFCTypeEnum;
 
 public interface IEPDConnector {
 
-    EnvProductInfo GetEPDDataByType(IFCTypeEnum type);
+    IEnvProductInfo GetEPDDataByType(String name);
 }

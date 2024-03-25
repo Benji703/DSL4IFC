@@ -1,8 +1,9 @@
 package DomainClasses;
 
 import DomainClasses.Enums.DeclaredUnitEnum;
+import Interfaces.IEnvProductInfo;
 
-public class BR18ProductDeclaration {
+public class BR18ProductDeclaration implements IEnvProductInfo {
 
         private String sortID;
         private String dataType;
@@ -51,7 +52,7 @@ public class BR18ProductDeclaration {
             return dkName;
         }
 
-        public Double getA1a3() {
+        public Double getA() {
             return a1a3;
         }
 
