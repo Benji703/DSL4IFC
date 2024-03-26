@@ -27,17 +27,34 @@ public class LCA {
     }
 
     public double CalculateLCAForElement(LCAIFCElement element, double area) {
-        double aRef = 0;
-        double c3Ref = 0;
-        double c4Ref= 0;
 
         IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getName());
 
-        double a = envProductInfo.getA() * element.getQuantity();
-        double c3 = envProductInfo.getC3() * element.getQuantity();
-        double c4 = envProductInfo.getC4() * element.getQuantity();
+        element.setaResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
+        element.setC3Result(MultiplyWithQuanitities(envProductInfo.getC3(),element));
+        element.setC4Result(MultiplyWithQuanitities(envProductInfo.getC4(),element));
 
-        return lcaCalc.CalculateLCABasic(a, c3, c4, area);
+        double aRes = TranslateNullToZero(element.getaResult());
+        double c3Res = TranslateNullToZero(element.getC3Result());
+        double c4Res = TranslateNullToZero(element.getC4Result());
+
+        return lcaCalc.CalculateLCABasic(aRes, c3Res, c4Res, area);
+    }
+
+    private double TranslateNullToZero(Double d) {
+        if (d == null) {
+            return 0;
+        }
+
+        return d;
+    }
+
+    private Double MultiplyWithQuanitities(Double envInfo, LCAIFCElement element) {
+        if (envInfo == null) {
+            return null;
+        }
+
+        return envInfo * element.getQuantity();
     }
 
     public LCAResult CalculateLCAWhole(ArrayList<LCAIFCElement> ifcElements, double area, double areaHeated, double b6) {
