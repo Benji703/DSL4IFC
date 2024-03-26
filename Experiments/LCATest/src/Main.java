@@ -2,7 +2,9 @@ import LCA.LCA;
 import LCA.LCAIFCElement;
 import LCA.LCAResult;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -33,6 +35,18 @@ public class Main {
         System.out.println(br18);
 
         System.out.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
+
+
+        lcaResult.getElements().forEach(e -> {
+            Map<String, Double> map = e.getResultMap();
+            System.out.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity());
+
+            for (Map.Entry<String, Double> set : map.entrySet()) {
+                if (set.getValue() == null) {
+                    System.out.println("   " + set.getKey() + " equals null");                }
+            }
+            System.out.println("}");
+        });
     }
 
 }

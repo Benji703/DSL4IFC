@@ -1,5 +1,8 @@
 package LCA;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LCAIFCElement {
     private String name;
     private double quantity;
@@ -52,5 +55,27 @@ public class LCAIFCElement {
 
     public double getQuantity() {
         return quantity;
+    }
+
+
+    public Map<String, Double> getResultMap() {
+        Map<String, Double> map = new HashMap<>();
+        map.put("A1-A3",aResult);
+        map.put("C3",c3Result);
+        map.put("C4",c4Result);
+
+        return map;
+    }
+
+    @Override
+    public String toString() {
+        return "LCAIFCElement{" +
+                "name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", aResult=" + aResult +
+                ", c3Result=" + c3Result +
+                ", c4Result=" + c4Result +
+                ", lcaVal=" + lcaVal +
+                '}';
     }
 }
