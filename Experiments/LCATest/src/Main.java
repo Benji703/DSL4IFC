@@ -43,7 +43,8 @@ public class Main {
 
             for (Map.Entry<String, Double> set : map.entrySet()) {
                 if (set.getValue() == null) {
-                    System.out.println("   " + set.getKey() + " equals null");                }
+                    System.out.println("   " + set.getKey() + " equals null");
+                }
             }
             System.out.println("}");
         });
