@@ -11,5 +11,13 @@ public class LCACalc {
         return (b6 / (aHeat * 50));
     }
 
+    public double CalculateLCAModuleDBasic(double dMat, double aRef) {
+        return (dMat /(aRef * 50));
+    }
+
+    public double CalculateLCAModuleDOperational(double dOp, double aHeat) {
+        return (dOp /(aHeat * 50));
+    }
+
 
 }
