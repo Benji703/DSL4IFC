@@ -13,6 +13,7 @@ import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsValueOperation
 
 import static org.junit.Assert.*
 import org.junit.jupiter.api.BeforeAll
+import org.sdu.dsl4ifc.generator.conditional.core.VariableStore
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -35,7 +36,7 @@ class ConditionTest {
     val valueToCompare = "1"
     val list = Arrays.asList("1", "2", "3")
     val operation = new ValueEqualsStreamOperation(list.stream)
-    assertTrue(operation.Evaluate(valueToCompare))
+    assertTrue(operation.Evaluate(valueToCompare, null))
   }
 
   @Test
@@ -43,7 +44,7 @@ class ConditionTest {
     val valueToCompare = "4"
     val list = Arrays.asList("1", "2", "3")
     val operation = new ValueEqualsStreamOperation<String, String>(list.stream)
-    assertFalse(operation.Evaluate(valueToCompare))
+    assertFalse(operation.Evaluate(valueToCompare, null))
   }
 
   @Test
@@ -51,7 +52,7 @@ class ConditionTest {
     val value1 = "test"
     val value2 = "test"
     val operation = new ValueEqualsValueOperation<String, String>(value2)
-    assertTrue(operation.Evaluate(value1))
+    assertTrue(operation.Evaluate(value1, null))
   }
 
   @Test
@@ -59,7 +60,7 @@ class ConditionTest {
     val mockLeft = new MockExpression(true)
     val mockRight = new MockExpression(true)
     val operation = new AndOperation(mockLeft, mockRight)
-    assertTrue(operation.Evaluate("does not matter"))
+    assertTrue(operation.Evaluate("does not matter", null))
   }
 
   @Test
@@ -67,7 +68,7 @@ class ConditionTest {
     val mockLeft = new MockExpression(false)
     val mockRight = new MockExpression(true)
     val operation = new AndOperation(mockLeft, mockRight)
-    assertFalse(operation.Evaluate("does not matter"))
+    assertFalse(operation.Evaluate("does not matter", null))
   }
 
   @Test
@@ -75,7 +76,7 @@ class ConditionTest {
     val mockLeft = new MockExpression(true)
     val mockRight = new MockExpression(false)
     val operation = new AndOperation(mockLeft, mockRight)
-    assertFalse(operation.Evaluate("does not matter"))
+    assertFalse(operation.Evaluate("does not matter", null))
   }
 }
 
@@ -86,7 +87,7 @@ class MockExpression<T> extends Expression<T> {
     this.value = value
   }
 
-  override Evaluate(T item)  {
+  override Evaluate(T item, VariableStore variables)  {
     return value
   }
 }

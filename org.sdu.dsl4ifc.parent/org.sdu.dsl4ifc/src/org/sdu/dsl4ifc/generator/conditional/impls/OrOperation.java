@@ -2,6 +2,7 @@ package org.sdu.dsl4ifc.generator.conditional.impls;
 
 import org.sdu.dsl4ifc.generator.conditional.core.BooleanOperation;
 import org.sdu.dsl4ifc.generator.conditional.core.Expression;
+import org.sdu.dsl4ifc.generator.conditional.core.VariableStore;
 
 public class OrOperation<T> extends BooleanOperation<T> {
     public OrOperation(Expression<T> left, Expression<T> right) {
@@ -9,7 +10,7 @@ public class OrOperation<T> extends BooleanOperation<T> {
     }
 
     @Override
-    public boolean Evaluate(T item) {
-        return this.left.Evaluate(item) || this.right.Evaluate(item);
+    public boolean Evaluate(T item, VariableStore variables) {
+        return this.left.Evaluate(item, variables) || this.right.Evaluate(item, variables);
     }
 }

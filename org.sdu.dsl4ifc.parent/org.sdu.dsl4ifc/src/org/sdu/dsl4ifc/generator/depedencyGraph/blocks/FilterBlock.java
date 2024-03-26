@@ -1,16 +1,18 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import org.sdu.dsl4ifc.generator.conditional.core.Expression;
+import org.sdu.dsl4ifc.generator.conditional.core.VariableStore;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 public class FilterBlock<T> extends Block<Stream<T>> {
 
 	private Expression<T> expression;
-	private Map<String, Stream<?>> variables = new HashMap<>();
+	private VariableStore variables = new VariableStore();
 	private String variableName;
 
 	// TODO: How do we represent the boolean condition with objects?
@@ -41,10 +43,10 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 				continue;
 			}
 			
-			variables.put(variableName, typeBlock.getOutput().toList().stream());
+			variables.put(variableName, (List<Object>) typeBlock.getOutput().toList());
 		}
 		
-		var result = toBeFiltered.filter(i -> expression.Evaluate(i));
+		var result = toBeFiltered.filter(i -> expression.Evaluate(i, variables));
 		
 		return result;
 	}

@@ -16,6 +16,10 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 
 import static extension org.junit.jupiter.api.Assertions.assertEquals
+import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsStreamOperation
+import java.util.List
+import static org.junit.Assert.assertArrayEquals
+import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsVariableOperation
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -41,7 +45,7 @@ class BlockTest {
 	}
 	
 	@Test
-	def void filterBlockTest() {
+	def void filterBlockSingleValueComparisonTest() {
 		
 		val valEq1 = new ValueEqualsValueOperation("1");
 		
@@ -54,6 +58,40 @@ class BlockTest {
 		val output = filterBlock.output.toList
 		output.size.assertEquals(1, "Should only hold one number")
 		output.head.assertEquals("1", "Object should be '1'")
+	}
+	
+	@Test
+	def void filterBlockMutipleValueComparisonTest() {
+		val compList = #["2", "3"];
+		val valEq1 = new ValueEqualsStreamOperation(compList.stream);
+		
+		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
+		
+		val list = #["1", "2", "3"];
+		val mockTypeBlock = new MockTypeBlock("T1", "w", String, list);
+		filterBlock.AddInput(mockTypeBlock);
+		
+		val output = filterBlock.output.toList
+		assertEquals(2, output.size, "Should only hold two numbers")
+		assertArrayEquals("Object should be '1' and '2'", List.of("2", "3").toArray(), output.toArray())
+	}
+	
+	@Test
+	def void filterBlockVariableComparisonTest() {
+		val valEq1 = new ValueEqualsVariableOperation("d");
+		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
+		
+		val list1 = #["1", "2", "3"];
+		val mockTypeBlock1 = new MockTypeBlock("T1", "w", String, list1);
+		filterBlock.AddInput(mockTypeBlock1);
+		
+		val list2 = #["2", "3"];
+		val mockTypeBlock2 = new MockTypeBlock("T2", "d", String, list2);
+		filterBlock.AddInput(mockTypeBlock2);
+		
+		val output = filterBlock.output.toList
+		assertEquals(2, output.size, "Should only hold two numbers")
+		assertArrayEquals("Object should be '1' and '2'", List.of("2", "3").toArray(), output.toArray())
 	}
 }
 
