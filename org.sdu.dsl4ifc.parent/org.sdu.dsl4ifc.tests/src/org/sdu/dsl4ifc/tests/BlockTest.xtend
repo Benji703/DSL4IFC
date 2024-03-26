@@ -4,13 +4,18 @@
 package org.sdu.dsl4ifc.tests
 
 import java.io.File
+import java.util.Collection
+import java.util.stream.Stream
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsValueOperation
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 
-import static org.junit.Assert.*
+import static extension org.junit.jupiter.api.Assertions.assertEquals
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -34,4 +39,36 @@ class BlockTest {
 	def void parseTest() {
 		
 	}
+	
+	@Test
+	def void filterBlockTest() {
+		
+		val valEq1 = new ValueEqualsValueOperation("1");
+		
+		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
+		
+		val list = #["1", "2", "3"];
+		val mockTypeBlock = new MockTypeBlock("T1", "w", String, list);
+		filterBlock.AddInput(mockTypeBlock);
+		
+		val output = filterBlock.output.toList
+		output.size.assertEquals(1, "Should only hold one number")
+		output.head.assertEquals("1", "Object should be '1'")
+	}
+}
+
+class MockTypeBlock<T> extends TypeBlock<T> {
+	
+	Collection<T> values;
+	
+	new(String name, String variableName, Class<T> clazz, Collection<T> values) {
+		super(name, variableName, clazz)
+		this.values = values;
+	}
+	
+	
+	override Stream<T> Calculate() {
+		return values.stream
+	}
+	
 }

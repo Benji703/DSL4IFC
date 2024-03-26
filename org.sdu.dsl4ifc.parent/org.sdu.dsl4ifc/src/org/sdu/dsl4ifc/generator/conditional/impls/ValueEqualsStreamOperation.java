@@ -4,19 +4,17 @@ import java.util.stream.Stream;
 
 import org.sdu.dsl4ifc.generator.conditional.core.ComparisonOperation;
 
-public class ValueEqualsStreamOperation<T,U> extends ComparisonOperation {
+public class ValueEqualsStreamOperation<T,U> extends ComparisonOperation<U> {
     // T is the type of the actual value to compare. Not the ifc object. The same with U
-    public ValueEqualsStreamOperation(T left, Stream<U> right) {
-        this.left = left;
+    public ValueEqualsStreamOperation(Stream<U> right) {
         this.right = right;
     }
 
-    private final T left;
     private final Stream<U> right;
 
     @Override
-    public boolean Evaluate() {
+    public boolean Evaluate(U item) {
         // Get the field values somehow
-        return right.anyMatch(r -> r.equals(left));
+        return right.anyMatch(r -> r.equals(item));
     }
 }

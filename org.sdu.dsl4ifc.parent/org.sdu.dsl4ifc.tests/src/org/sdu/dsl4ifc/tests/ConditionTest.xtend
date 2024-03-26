@@ -12,10 +12,15 @@ import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsStreamOperation
 import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsValueOperation
 
 import static org.junit.Assert.*
+import org.junit.jupiter.api.BeforeAll
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
 class ConditionTest {
+	
+  @BeforeAll
+	def static void setup() {
+	}
 
   @Test
   def testValueClass() {
@@ -29,24 +34,24 @@ class ConditionTest {
   def testValueEqualsStreamOperationPositive() {
     val valueToCompare = "1"
     val list = Arrays.asList("1", "2", "3")
-    val operation = new ValueEqualsStreamOperation(valueToCompare, list.stream)
-    assertTrue(operation.Evaluate())
+    val operation = new ValueEqualsStreamOperation(list.stream)
+    assertTrue(operation.Evaluate(valueToCompare))
   }
 
   @Test
   def testValueEqualsStreamOperationNegative() {
     val valueToCompare = "4"
     val list = Arrays.asList("1", "2", "3")
-    val operation = new ValueEqualsStreamOperation<String, String>(valueToCompare, list.stream)
-    assertFalse(operation.Evaluate())
+    val operation = new ValueEqualsStreamOperation<String, String>(list.stream)
+    assertFalse(operation.Evaluate(valueToCompare))
   }
 
   @Test
   def testValueEqualsValueOperation() {
     val value1 = "test"
     val value2 = "test"
-    val operation = new ValueEqualsValueOperation<String>(value1, value2)
-    assertTrue(operation.Evaluate())
+    val operation = new ValueEqualsValueOperation<String, String>(value2)
+    assertTrue(operation.Evaluate(value1))
   }
 
   @Test
@@ -54,7 +59,7 @@ class ConditionTest {
     val mockLeft = new MockExpression(true)
     val mockRight = new MockExpression(true)
     val operation = new AndOperation(mockLeft, mockRight)
-    assertTrue(operation.Evaluate())
+    assertTrue(operation.Evaluate("does not matter"))
   }
 
   @Test
@@ -62,7 +67,7 @@ class ConditionTest {
     val mockLeft = new MockExpression(false)
     val mockRight = new MockExpression(true)
     val operation = new AndOperation(mockLeft, mockRight)
-    assertFalse(operation.Evaluate())
+    assertFalse(operation.Evaluate("does not matter"))
   }
 
   @Test
@@ -70,18 +75,18 @@ class ConditionTest {
     val mockLeft = new MockExpression(true)
     val mockRight = new MockExpression(false)
     val operation = new AndOperation(mockLeft, mockRight)
-    assertFalse(operation.Evaluate())
+    assertFalse(operation.Evaluate("does not matter"))
   }
 }
 
-class MockExpression extends Expression {
+class MockExpression<T> extends Expression<T> {
   final boolean value
 
   new(boolean value) {
     this.value = value
   }
 
-  override Evaluate()  {
+  override Evaluate(T item)  {
     return value
   }
 }

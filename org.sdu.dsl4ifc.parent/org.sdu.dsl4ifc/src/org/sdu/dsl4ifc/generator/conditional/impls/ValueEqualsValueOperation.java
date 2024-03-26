@@ -2,19 +2,17 @@ package org.sdu.dsl4ifc.generator.conditional.impls;
 
 import org.sdu.dsl4ifc.generator.conditional.core.ComparisonOperation;
 
-public class ValueEqualsValueOperation<T> extends ComparisonOperation {
+public class ValueEqualsValueOperation<T, U> extends ComparisonOperation<U> {
     // T is the type of the actual value to compare. Not the ifc object. The same with U
-    public ValueEqualsValueOperation(T left, T right) {
-        this.left = left;
+    public ValueEqualsValueOperation(T right) {
         this.right = right;
     }
 
-    private final T left;
     private final T right;
 
     @Override
-    public boolean Evaluate() {
+    public boolean Evaluate(U item) {
         // Get the field values somehow
-        return left.equals(right);
+        return item.equals(right);
     }
 }

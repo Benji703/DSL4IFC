@@ -1,14 +1,23 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
+import org.sdu.dsl4ifc.generator.conditional.core.Expression;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 public class FilterBlock<T> extends Block<Stream<T>> {
 
+	private Expression<T> expression;
+	private Map<String, Stream<?>> variables = new HashMap<>();
+	private String variableName;
+
 	// TODO: How do we represent the boolean condition with objects?
-	public FilterBlock(String name) {
+	public FilterBlock(String name, String variableName, Expression<T> expression) {
 		super(name);
+		this.variableName = variableName;
+		this.expression = expression;
 	}
 
 	@Override
@@ -22,15 +31,21 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 		// TODO: Get all type blocks (you can combine variable references)
 		var sources = findAllBlocks(TypeBlock.class);
 		
+		Stream<T> toBeFiltered = null;
+		
 		for (TypeBlock<?> typeBlock : sources) {
+			var variableName = typeBlock.getVariableName();
 			
+			if (this.variableName == variableName) {	// Is the primary variable
+				toBeFiltered = (Stream<T>) typeBlock.getOutput();
+				continue;
+			}
 			
+			variables.put(variableName, typeBlock.getOutput().toList().stream());
 		}
 		
-		sources.forEach(block -> block.getVariableName());
+		var result = toBeFiltered.filter(i -> expression.Evaluate(i));
 		
-		//types.filter(null)
-		
-		return null;
+		return result;
 	}
 }
