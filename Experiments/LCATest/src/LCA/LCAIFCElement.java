@@ -10,6 +10,7 @@ public class LCAIFCElement {
     private Double aResult;
     private Double c3Result;
     private Double c4Result;
+    private Double dResult;
     private double lcaVal;
 
 
@@ -86,5 +87,13 @@ public class LCAIFCElement {
                 ", c4Result=" + c4Result +
                 ", lcaVal=" + lcaVal +
                 '}';
+    }
+
+    public Double getdResult() {
+        return dResult;
+    }
+
+    public void setdResult(Double dResult) {
+        this.dResult = dResult;
     }
 }
