@@ -15,7 +15,9 @@ public class Main {
         String floorS = "Celleglas-isolering 115 kg/m³";
 
         LCAIFCElement wall1 = new LCAIFCElement(concrete, 200);
+        wall1.setLifeTime(12);
         LCAIFCElement wall2 = new LCAIFCElement(concrete, 200);
+        wall2.setLifeTime(70);
         LCAIFCElement wall3 = new LCAIFCElement(concrete, 200);
         LCAIFCElement wall4 = new LCAIFCElement(concrete, 200);
 

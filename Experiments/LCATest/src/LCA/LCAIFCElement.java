@@ -6,6 +6,7 @@ import java.util.Map;
 public class LCAIFCElement {
     private String name;
     private double quantity;
+    private int lifeTime;
     private Double aResult;
     private Double c3Result;
     private Double c4Result;
@@ -55,6 +56,14 @@ public class LCAIFCElement {
 
     public double getQuantity() {
         return quantity;
+    }
+
+    public int getLifeTime() {
+        return lifeTime;
+    }
+
+    public void setLifeTime(int lifeTime) {
+        this.lifeTime = lifeTime;
     }
 
 
