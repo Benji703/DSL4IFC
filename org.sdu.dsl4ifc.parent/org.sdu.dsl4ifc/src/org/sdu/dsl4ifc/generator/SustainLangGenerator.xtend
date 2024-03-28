@@ -4,10 +4,6 @@
 package org.sdu.dsl4ifc.generator
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
-import java.io.File
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.Path
-import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -17,8 +13,12 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SourceBlock
-import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
+import org.sdu.dsl4ifc.sustainLang.Statement
+import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsVariableOperation
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
+import java.util.List
 
 /**
  * Generates code from your model files on save.
@@ -37,19 +37,45 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val statements = resource.allContents.filter(Statement);
 		
-		val sourceCommand = statements.head.source
+		val statement = statements.head
+		val sourceCommand = statement.source
 		
 		
 		val sourceBlock = new SourceBlock("Source", sourceCommand.path, resource)
 		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
-		val wallTypeBlock = new TypeBlock("Type", "w", IfcWall);
+		val wallTypeBlock = new TypeBlock("Type1", "w", IfcWall);
+		val doorTypeBlock = new TypeBlock("Type2", "d", IfcDoor);
 		
 		parserBlock.AddInput(sourceBlock)
 		wallTypeBlock.AddInput(parserBlock)
+		doorTypeBlock.AddInput(parserBlock)
 		
-		val walls = wallTypeBlock.output
+		filterBlockVariableComparisonTest(wallTypeBlock, doorTypeBlock)
 		
-		walls.forEach[wall | consoleOut.println(wall.name.decodedValue) ]
+		//val walls = wallTypeBlock.output
+		
+		//val extractor = new ParameterValueExtractor<IfcWall, String>("name")
+		
+		//val list = walls.map[w | extractor.getParameterValue(w)].toList
+		//list.forEach[name | consoleOut.println(name)]
+	}
+	
+	def void filterBlockVariableComparisonTest(TypeBlock<IfcWall> wallTypeBlock, TypeBlock<IfcDoor> doorTypeBlock) {
+		val extr1 = new ParameterValueExtractor<IfcWall, String>("name");
+		
+		val valEq1 = new ValueEqualsVariableOperation("d", extr1, extr1);
+		val filterBlock = new FilterBlock<IfcWall>("F1", "w", valEq1);
+		
+		filterBlock.AddInput(wallTypeBlock);
+		filterBlock.AddInput(doorTypeBlock);
+		
+		val output = filterBlock.output.toList
+		if (output.empty) {
+			consoleOut.println("No objects returned")
+		} else {
+			output.forEach[w | consoleOut.println(w.name.decodedValue)]
+		}
+		
 	}
 		
 	def MessageConsole findConsole(String name) {
@@ -67,4 +93,6 @@ class SustainLangGenerator extends AbstractGenerator {
 	    conMan.addConsoles(consoles);
 	    return myConsole;
 	}
+	
+	
 }

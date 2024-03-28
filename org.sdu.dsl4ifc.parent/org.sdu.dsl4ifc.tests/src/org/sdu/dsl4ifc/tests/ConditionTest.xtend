@@ -78,6 +78,7 @@ class ConditionTest {
     val operation = new AndOperation(mockLeft, mockRight)
     assertFalse(operation.Evaluate("does not matter", null))
   }
+  
 }
 
 class MockExpression<T> extends Expression<T> {
