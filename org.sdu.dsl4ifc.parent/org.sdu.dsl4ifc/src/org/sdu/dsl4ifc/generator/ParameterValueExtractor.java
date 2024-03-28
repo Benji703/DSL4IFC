@@ -1,5 +1,6 @@
 package org.sdu.dsl4ifc.generator;
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 
@@ -28,7 +29,8 @@ public class ParameterValueExtractor<T, U> {
 		if (item instanceof IfcRoot asIfcRoot) {
 			switch (parameterName) {
 			case "name":
-				return (U) asIfcRoot.getName().getDecodedValue();
+				IfcLabel name = asIfcRoot.getName();
+				return name == null ? null : (U) name.getDecodedValue();
 
 			default:
 				break;

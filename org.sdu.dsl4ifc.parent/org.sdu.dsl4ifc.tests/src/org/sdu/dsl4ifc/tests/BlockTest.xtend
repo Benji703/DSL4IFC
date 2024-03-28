@@ -16,10 +16,10 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 
 import static extension org.junit.jupiter.api.Assertions.assertEquals
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsStreamOperation
 import java.util.List
 import static org.junit.Assert.assertArrayEquals
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsVariableOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.EntityValueEqualsVariableValueOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.ValueInStreamOperation
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -63,7 +63,7 @@ class BlockTest {
 	@Test
 	def void filterBlockMutipleValueComparisonTest() {
 		val compList = #["2", "3"];
-		val valEq1 = new ValueEqualsStreamOperation(compList.stream);
+		val valEq1 = new ValueInStreamOperation(compList.stream);
 		
 		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
 		
@@ -80,7 +80,7 @@ class BlockTest {
 	def void filterBlockVariableComparisonTest() {
 		
 		
-		val valEq1 = new ValueEqualsVariableOperation("d", null, null);
+		val valEq1 = new EntityValueEqualsVariableValueOperation("d", null, null);
 		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
 		
 		val list1 = #["1", "2", "3"];

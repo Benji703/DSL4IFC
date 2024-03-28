@@ -3,13 +3,16 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Block<T> implements IOutOfDate, IRecalculation, ICalculation<T> {
+public abstract class Block<T> implements IOutOfDate, ICalculation<T> {
+	
     public String Name;
     private T output;
+    
     public T getOutput() {
         Invoke();
         return output;
     }
+    
     public final List<Block<?>> Inputs = new ArrayList<>();
 
     public Block(String name) {
@@ -30,7 +33,6 @@ public abstract class Block<T> implements IOutOfDate, IRecalculation, ICalculati
             Recalculate();
     }
 
-    @Override
     public void Recalculate() {
         System.out.println("Calculating " + Name);
         output = Calculate();

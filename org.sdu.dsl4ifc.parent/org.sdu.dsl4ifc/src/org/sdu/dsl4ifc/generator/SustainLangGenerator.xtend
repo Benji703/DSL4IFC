@@ -15,10 +15,11 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SourceBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.sustainLang.Statement
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsVariableOperation
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
 import java.util.List
+import org.sdu.dsl4ifc.generator.conditional.impls.EntityValueEqualsVariableValueOperation
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
 
 /**
  * Generates code from your model files on save.
@@ -44,7 +45,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		val sourceBlock = new SourceBlock("Source", sourceCommand.path, resource)
 		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
 		val wallTypeBlock = new TypeBlock("Type1", "w", IfcWall);
-		val doorTypeBlock = new TypeBlock("Type2", "d", IfcDoor);
+		val doorTypeBlock = new TypeBlock("Type2", "d", IfcRoot);
 		
 		parserBlock.AddInput(sourceBlock)
 		wallTypeBlock.AddInput(parserBlock)
@@ -60,10 +61,10 @@ class SustainLangGenerator extends AbstractGenerator {
 		//list.forEach[name | consoleOut.println(name)]
 	}
 	
-	def void filterBlockVariableComparisonTest(TypeBlock<IfcWall> wallTypeBlock, TypeBlock<IfcDoor> doorTypeBlock) {
+	def void filterBlockVariableComparisonTest(TypeBlock<?> wallTypeBlock, TypeBlock<?> doorTypeBlock) {
 		val extr1 = new ParameterValueExtractor<IfcWall, String>("name");
 		
-		val valEq1 = new ValueEqualsVariableOperation("d", extr1, extr1);
+		val valEq1 = new EntityValueEqualsVariableValueOperation("d", extr1, extr1);
 		val filterBlock = new FilterBlock<IfcWall>("F1", "w", valEq1);
 		
 		filterBlock.AddInput(wallTypeBlock);

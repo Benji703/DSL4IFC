@@ -6,14 +6,14 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 import org.sdu.dsl4ifc.generator.conditional.core.Expression
-import org.sdu.dsl4ifc.generator.conditional.core.Value
 import org.sdu.dsl4ifc.generator.conditional.impls.AndOperation
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsStreamOperation
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsValueOperation
 
 import static org.junit.Assert.*
 import org.junit.jupiter.api.BeforeAll
 import org.sdu.dsl4ifc.generator.conditional.core.VariableStore
+import org.sdu.dsl4ifc.generator.conditional.core.StringValue
+import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsValueOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.ValueInStreamOperation
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -26,7 +26,7 @@ class ConditionTest {
   @Test
   def testValueClass() {
     val testValue = "test"
-    val value = new Value(testValue)
+    val value = new StringValue(testValue)
     val expectedValues = Arrays.asList(testValue)
     assertEquals(expectedValues, value.getValues().toList())
   }
@@ -35,7 +35,7 @@ class ConditionTest {
   def testValueEqualsStreamOperationPositive() {
     val valueToCompare = "1"
     val list = Arrays.asList("1", "2", "3")
-    val operation = new ValueEqualsStreamOperation(list.stream)
+    val operation = new ValueInStreamOperation(list.stream)
     assertTrue(operation.Evaluate(valueToCompare, null))
   }
 
@@ -43,7 +43,7 @@ class ConditionTest {
   def testValueEqualsStreamOperationNegative() {
     val valueToCompare = "4"
     val list = Arrays.asList("1", "2", "3")
-    val operation = new ValueEqualsStreamOperation<String, String>(list.stream)
+    val operation = new ValueInStreamOperation<String>(list.stream)
     assertFalse(operation.Evaluate(valueToCompare, null))
   }
 
