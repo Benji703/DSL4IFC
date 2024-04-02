@@ -1,13 +1,13 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
-import java.util.stream.Stream;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel;
 
-public class TypeBlock<T> extends Block<Stream<T>> {
+public class TypeBlock<T> extends Block<List<T>> {
 
 	private Class<T> clazz;
 	
@@ -30,7 +30,7 @@ public class TypeBlock<T> extends Block<Stream<T>> {
 	}
 
 	@Override
-	public Stream<T> Calculate() {
+	public List<T> Calculate() {
 		Ifc2x3ParserBlock source = findFirstBlock(Ifc2x3ParserBlock.class);
 		IfcModel ifcModel = source.getOutput();
 		
@@ -40,7 +40,7 @@ public class TypeBlock<T> extends Block<Stream<T>> {
 		SustainLangGenerator.consoleOut.println("Finding type for '" + variableName + "' " + clazz.getName() + "...");
 		var collection = ifcModel.getCollection(clazz);
 		SustainLangGenerator.consoleOut.println("Got " + collection.size() + " entities");
-		return collection.stream();
+		return new ArrayList<>(collection);
 	}
 
 }

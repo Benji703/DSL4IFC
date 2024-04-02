@@ -32,6 +32,8 @@ public class ParameterValueExtractor<T, U> {
 				IfcLabel name = asIfcRoot.getName();
 				return name == null ? null : (U) name.getDecodedValue();
 
+			case "stepnumber":
+				return (U) (""+asIfcRoot.getStepLineNumber());
 			default:
 				break;
 			}

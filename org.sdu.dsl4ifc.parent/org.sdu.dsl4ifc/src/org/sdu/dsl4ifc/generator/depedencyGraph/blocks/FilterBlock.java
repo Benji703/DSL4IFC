@@ -12,6 +12,9 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 	private Expression<T> expression;
 	private VariableStore variables = new VariableStore();
 	private String variableName;
+	public String getVariableName() {
+		return variableName;
+	}
 
 	// TODO: How do we represent the boolean condition with objects?
 	public FilterBlock(String name, String variableName, Expression<T> expression) {
@@ -31,21 +34,23 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 		// TODO: Get all type blocks (you can combine variable references)
 		var sources = findAllBlocks(TypeBlock.class);
 		
-		Stream<T> toBeFiltered = null;
+		List<T> toBeFiltered = null;
 		
 		for (TypeBlock<?> typeBlock : sources) {
 			var variableName = typeBlock.getVariableName();
 			
 			if (this.variableName == variableName) {	// Is the primary variable
-				toBeFiltered = (Stream<T>) typeBlock.getOutput();
+				toBeFiltered = (List<T>) typeBlock.getOutput();
 				continue;
 			}
 			
-			variables.put(variableName, (List<Object>) typeBlock.getOutput().toList());
+			variables.put(variableName, (List<Object>) typeBlock.getOutput());
 		}
 		
-		var result = toBeFiltered.filter(i -> expression.Evaluate(i, variables));
+		var result = toBeFiltered.stream().filter(i -> expression.Evaluate(i, variables));
 		
-		return result;
+		var list = result.toList();
+		
+		return list.stream();
 	}
 }
