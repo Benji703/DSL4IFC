@@ -80,7 +80,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 		
 		var select = statement.select
-		val selectBlock = new SelectBlock("Select", #[new AttributeReference("w", "name", new ParameterValueExtractor("name")), new AttributeReference("w", "stepnumber", new ParameterValueExtractor("stepnumber"))]);
+		val selectBlock = new SelectBlock("Select", #[new AttributeReference("r", "name", new ParameterValueExtractor("name")), new AttributeReference("w", "stepnumber", new ParameterValueExtractor("stepnumber"))]);
 		typeBlocks.forEach[t | selectBlock.AddInput(t)]
 		
 		consoleOut.println('''Result: «selectBlock.Name»''')

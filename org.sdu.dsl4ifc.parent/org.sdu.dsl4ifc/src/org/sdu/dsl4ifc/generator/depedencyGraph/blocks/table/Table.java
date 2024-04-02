@@ -40,7 +40,10 @@ public class Table {
 	        // Accommodate header text and cell values
 	    	final int i1 = i;
 	        int maxLength = Math.max(headers.get(i).headerText.length(),
-	                rows.stream().mapToInt(row -> row.cells.get(i1).value.length()).max().orElse(0));
+	                rows.stream().mapToInt(row -> {
+	                	Cell cell = row.cells.get(i1);
+						return cell.value.length();
+	                }).max().orElse(0));
 	        columnWidths[i] = maxLength + 4; // Add padding
 	    }
 

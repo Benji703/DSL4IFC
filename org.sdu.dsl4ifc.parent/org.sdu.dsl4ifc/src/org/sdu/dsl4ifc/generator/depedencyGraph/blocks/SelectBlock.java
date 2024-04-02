@@ -66,11 +66,12 @@ public class SelectBlock extends Block<Table> {
 				for (var columnSource : attributeReferences) {
 					if (!columnSource.getReferenceName().equals(referenceName)) {
 						values.add("null");
+						continue;
 					}
 					
 					var extractor = columnSource.getExtractor();
 					String parameterValue = extractor.getParameterValue(entity);
-					values.add(parameterValue);
+					values.add(parameterValue == null ? "null" : parameterValue);
 				}
 				
 				table.addRow(values);
