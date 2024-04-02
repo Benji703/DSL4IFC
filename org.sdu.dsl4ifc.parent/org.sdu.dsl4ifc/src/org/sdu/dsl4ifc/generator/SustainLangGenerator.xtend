@@ -36,6 +36,7 @@ import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
+import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 
 /**
  * Generates code from your model files on save.
@@ -119,10 +120,14 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	
+	// Could be an "exists" as well
+	val defaultValue = new TrueValue()
+	
 	def dispatch Expression<?> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
 		var left = expression.left
 		var right = expression.right
 		
+		// Ensure active variable is on the left
 		if (right instanceof Attribute) {
 			
 			if (right.reference.name === variableReference.name) {	// Rotate if primary is on the right side
@@ -143,17 +148,31 @@ class SustainLangGenerator extends AbstractGenerator {
 			val leftAttribute = left as Attribute
 			val rightValue = right as Value
 			
+			// Should always be true
+			if (leftAttribute.reference.name !== variableReference.name) {
+				return defaultValue;
+			}
+			
 			return new CompareParameterValueToValueOperation(rightValue.stringValue, leftAttribute.toExtractor, expression.operator)
 		}
 		else if (left instanceof Value && right instanceof Attribute) {		// "name" = s.name	// s is secondary
 			val rightAttribute = right as Attribute
 			val leftValue = left as Value
 			
+			// Should always be true
+			if (rightAttribute.reference.name !== variableReference.name) {
+				return defaultValue;
+			}
+			
 			return new CompareValueToParameterValueOperation(leftValue.stringValue, rightAttribute.reference.name, rightAttribute.toExtractor, expression.operator)
 		}
 		else if (left instanceof Attribute && right instanceof Attribute) {	// p.name = s.name
 			val leftAttribute = left as Attribute
 			val rightAttribute = right as Attribute
+			
+			if (leftAttribute.reference.name !== variableReference.name && rightAttribute.reference.name !== variableReference.name) {
+				return defaultValue;
+			}
 			
 			val rightVariableName = rightAttribute.reference.name
 			return new CompareParameterValueToParameterValueOperation(rightVariableName, leftAttribute.toExtractor, rightAttribute.toExtractor, expression.operator)
