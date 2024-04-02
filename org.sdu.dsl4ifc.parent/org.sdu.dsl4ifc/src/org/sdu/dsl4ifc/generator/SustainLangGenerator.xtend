@@ -3,7 +3,11 @@
  */
 package org.sdu.dsl4ifc.generator
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
+import java.util.ArrayList
+import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -11,15 +15,27 @@ import org.eclipse.ui.console.MessageConsoleStream
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import org.sdu.dsl4ifc.generator.conditional.core.Expression
+import org.sdu.dsl4ifc.generator.conditional.impls.AndOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareParameterValueToParameterValueOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareParameterValueToValueOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareValueToParameterValueOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareValueToValueOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.OrOperation
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SourceBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
+import org.sdu.dsl4ifc.sustainLang.Attribute
+import org.sdu.dsl4ifc.sustainLang.BooleanExpression
+import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
+import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
+import org.sdu.dsl4ifc.sustainLang.IfcType
+import org.sdu.dsl4ifc.sustainLang.Reference
+import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
-import java.util.List
-import org.sdu.dsl4ifc.generator.conditional.impls.EntityValueEqualsVariableValueOperation
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
+import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.FilterCommand
 
 /**
  * Generates code from your model files on save.
@@ -38,10 +54,121 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val statements = resource.allContents.filter(Statement);
 		
-		val statement = statements.head
-		val sourceCommand = statement.source
+		statements.forEach[execute(resource)]
 		
+		//test(sourceCommand, resource)
+	}
 		
+	def execute(Statement statement, Resource resource) {
+		// TODO: This is wrong: Start from the bottom/end and build up using each blocks identities
+		
+		val source = statement.source
+		val sourceBlock = new SourceBlock("Source", source.path, resource)
+		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
+		parserBlock.AddInput(sourceBlock)
+		
+		val from = statement.from
+		val typeBlocks = new ArrayList<TypeBlock<?>>;
+		for (reference : from.types) {
+			val typeBlock = new TypeBlock('''Type «reference.name»''', reference.name, reference.ifcType.toIfcType);
+			typeBlock.AddInput(parserBlock)
+			typeBlocks.add(typeBlock)
+		}
+		
+		val filterCommands = statement.filters
+		var filters = List.of()
+		if (!filterCommands.empty) {
+			filters = filterCommands.map[type | type.createFilterBlock(typeBlocks)]
+			filters.forEach[f | f.output.forEach[e | consoleOut.println(e.toString)]]
+		}
+		
+		val dos = statement.^do
+		
+		val transforms = statement.transforms
+	}
+		
+	def FilterBlock<?> createFilterBlock(FilterCommand filterCommand, List<TypeBlock<?>> typeBlocks) {
+		val referenceName = filterCommand.reference.name
+		val filterBlock = new FilterBlock('''Filter «referenceName»''', referenceName, filterCommand.toExpression(filterCommand.reference))
+		// TODO: Actually only add if it depends on it (but this should be solved by building the graph from the bottom up)
+		typeBlocks.forEach[block | filterBlock.AddInput(block)]
+		return filterBlock
+	}
+		
+	def Expression<?> toExpression(FilterCommand command, Reference variableReference) {
+		val expression = command.condition.toBlockExpression;
+		return expression
+		// Do this
+	}
+		
+	def dispatch Expression<?> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression) {
+		throw new Exception("Cannot convert this expression to block expression: " + expression.class.name)
+	}
+
+	def dispatch Expression<?> toBlockExpression(BooleanExpression expression) {
+		
+		switch (expression.operator) {
+			case AND:
+				return new AndOperation(expression.left.toBlockExpression, expression.right.toBlockExpression)
+			case OR:
+				return new OrOperation(expression.left.toBlockExpression, expression.right.toBlockExpression)
+			default: throw new Exception("BooleanExpression operator has not been implemented")
+		}
+	}
+	
+	def dispatch Expression<?> toBlockExpression(ComparisonExpression expression) {
+		val left = expression.left
+		val right = expression.right
+		
+		if (left instanceof Value && right instanceof Value) {				// 1 = 1
+			val rightValue = right as Value
+			val leftValue = left as Value
+			
+			return new CompareValueToValueOperation(leftValue.stringValue, rightValue.stringValue, expression.operator)
+		}
+		else if (left instanceof Attribute && right instanceof Value) {		// w.name = "name"
+			val leftAttribute = left as Attribute
+			val rightValue = right as Value
+			
+			return new CompareParameterValueToValueOperation(rightValue.stringValue, leftAttribute.toExtractor, expression.operator)
+		}
+		else if (left instanceof Value && right instanceof Attribute) {		// "name" = w.name
+			val rightAttribute = right as Attribute
+			val leftValue = left as Value
+			
+			return new CompareValueToParameterValueOperation(leftValue.stringValue, rightAttribute.reference.name, rightAttribute.toExtractor, expression.operator)
+		}
+		else if (left instanceof Attribute && right instanceof Attribute) {
+			val leftAttribute = left as Attribute
+			val rightAttribute = right as Attribute
+			
+			val rightVariableName = rightAttribute.reference.name
+			return new CompareParameterValueToParameterValueOperation(rightVariableName, leftAttribute.toExtractor, rightAttribute.toExtractor, expression.operator)
+		}
+	}
+		
+	def ParameterValueExtractor<?, ?> toExtractor(Attribute attribute) {
+		return new ParameterValueExtractor(attribute.attribute)
+	}
+	
+	def toIfcType(IfcType type) {
+		switch (type) {
+			case IFC_WALL: {
+				return IfcWall
+			}
+			case IFC_DOOR: {
+				return IfcDoor
+			}
+			case IFC_ROOT: {
+				return IfcRoot
+			}
+			default: {
+				
+			}
+		}
+	}
+	
+	protected def void test(SourceCommand sourceCommand, Resource resource) {
 		val sourceBlock = new SourceBlock("Source", sourceCommand.path, resource)
 		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
 		val wallTypeBlock = new TypeBlock("Type1", "w", IfcWall);
@@ -52,19 +179,12 @@ class SustainLangGenerator extends AbstractGenerator {
 		doorTypeBlock.AddInput(parserBlock)
 		
 		filterBlockVariableComparisonTest(wallTypeBlock, doorTypeBlock)
-		
-		//val walls = wallTypeBlock.output
-		
-		//val extractor = new ParameterValueExtractor<IfcWall, String>("name")
-		
-		//val list = walls.map[w | extractor.getParameterValue(w)].toList
-		//list.forEach[name | consoleOut.println(name)]
 	}
 	
 	def void filterBlockVariableComparisonTest(TypeBlock<?> wallTypeBlock, TypeBlock<?> doorTypeBlock) {
 		val extr1 = new ParameterValueExtractor<IfcWall, String>("name");
 		
-		val valEq1 = new EntityValueEqualsVariableValueOperation("d", extr1, extr1);
+		val valEq1 = new CompareParameterValueToParameterValueOperation("d", extr1, extr1, ComparisonOperator.EQUALS);
 		val filterBlock = new FilterBlock<IfcWall>("F1", "w", valEq1);
 		
 		filterBlock.AddInput(wallTypeBlock);

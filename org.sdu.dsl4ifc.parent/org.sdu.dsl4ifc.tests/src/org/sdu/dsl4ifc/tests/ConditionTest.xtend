@@ -12,8 +12,8 @@ import static org.junit.Assert.*
 import org.junit.jupiter.api.BeforeAll
 import org.sdu.dsl4ifc.generator.conditional.core.VariableStore
 import org.sdu.dsl4ifc.generator.conditional.core.StringValue
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsValueOperation
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueInStreamOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareValueToValueOperation
+import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -32,26 +32,10 @@ class ConditionTest {
   }
 
   @Test
-  def testValueEqualsStreamOperationPositive() {
-    val valueToCompare = "1"
-    val list = Arrays.asList("1", "2", "3")
-    val operation = new ValueInStreamOperation(list.stream)
-    assertTrue(operation.Evaluate(valueToCompare, null))
-  }
-
-  @Test
-  def testValueEqualsStreamOperationNegative() {
-    val valueToCompare = "4"
-    val list = Arrays.asList("1", "2", "3")
-    val operation = new ValueInStreamOperation<String>(list.stream)
-    assertFalse(operation.Evaluate(valueToCompare, null))
-  }
-
-  @Test
   def testValueEqualsValueOperation() {
     val value1 = "test"
     val value2 = "test"
-    val operation = new ValueEqualsValueOperation<String, String>(value2)
+    val operation = new CompareValueToValueOperation<String, String>(value2, ComparisonOperator.EQUALS)
     assertTrue(operation.Evaluate(value1, null))
   }
 

@@ -11,15 +11,15 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueEqualsValueOperation
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 
 import static extension org.junit.jupiter.api.Assertions.assertEquals
 import java.util.List
 import static org.junit.Assert.assertArrayEquals
-import org.sdu.dsl4ifc.generator.conditional.impls.EntityValueEqualsVariableValueOperation
-import org.sdu.dsl4ifc.generator.conditional.impls.ValueInStreamOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareParameterValueToParameterValueOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareValueToValueOperation
+import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -47,7 +47,7 @@ class BlockTest {
 	@Test
 	def void filterBlockSingleValueComparisonTest() {
 		
-		val valEq1 = new ValueEqualsValueOperation("1");
+		val valEq1 = new CompareValueToValueOperation("1", ComparisonOperator.EQUALS);
 		
 		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
 		
@@ -60,27 +60,11 @@ class BlockTest {
 		output.head.assertEquals("1", "Object should be '1'")
 	}
 	
-	@Test
-	def void filterBlockMutipleValueComparisonTest() {
-		val compList = #["2", "3"];
-		val valEq1 = new ValueInStreamOperation(compList.stream);
-		
-		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
-		
-		val list = #["1", "2", "3"];
-		val mockTypeBlock = new MockTypeBlock("T1", "w", String, list);
-		filterBlock.AddInput(mockTypeBlock);
-		
-		val output = filterBlock.output.toList
-		assertEquals(2, output.size, "Should only hold two numbers")
-		assertArrayEquals("Object should be '1' and '2'", List.of("2", "3").toArray(), output.toArray())
-	}
-	
 	//@Test
 	def void filterBlockVariableComparisonTest() {
 		
 		
-		val valEq1 = new EntityValueEqualsVariableValueOperation("d", null, null);
+		val valEq1 = new CompareParameterValueToParameterValueOperation("d", null, null, ComparisonOperator.EQUALS);
 		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
 		
 		val list1 = #["1", "2", "3"];

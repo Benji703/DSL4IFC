@@ -6,20 +6,20 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand from=FromCommand? filter=WhereCommand? do+=DoCommand? transforms=TranformationCommand? ';'?;
+    {Statement} source=SourceCommand from=FromCommand? filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? ';'?;
 
 SourceCommand:
     'SOURCE' 'MODEL' name=ID path=STRING;
 
 FromCommand:
-    'FROM' types+=IfcTypeRef+;
+    'FROM' types+=IfcTypeRef (',' types+=IfcTypeRef)*;
     
 enum IfcType:
-	ifcWalls='IfcWalls'
+	ifcWall='IfcWall' | ifcDoor='IfcDoor' | ifcRoot='IfcRoot'
 ;
 
-WhereCommand:
-    'WHERE' condition=Condition;
+FilterCommand:
+    'FILTER' reference=[Reference] 'WHERE' condition=BooleanExpression;
 
 DoCommand:
     {DoCommand} 'DO' calculation+=Calculation*;
@@ -30,18 +30,11 @@ TranformationCommand:
 IfcTypeRef returns Reference:
     ifcType=IfcType name=ID?;
 
-Condition:
-    Expression;
-
 Calculation:
     'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
 
 CalcReference returns Reference:
-    {CalcReference}name=ID;
-
-Atom:
-	Attribute | value=STRING
-;
+    {CalcReference} name=ID;
 
 Attribute:
     reference=[Reference]'.'attribute=ID
@@ -55,10 +48,14 @@ enum ComparisonOperator:
     equals='=' | different='<>' | smallerThan='<' | largerThan='>' | smallerOrEqualThan='<=' | largerOrEqualThan='>='
 ;
 
-Expression:
-    BooleanExpression ({BooleanExpression.left=current} op=BooleanOperator right=BooleanExpression)*;
-
-BooleanExpression:
-    left=Atom operator=ComparisonOperator right=Atom;
+BooleanExpression returns Expression:
+    ComparisonExpression ({BooleanExpression.left=current} operator=BooleanOperator right=BooleanExpression)*;
+    
+ComparisonExpression returns Expression:
+    Atom ({ComparisonExpression.left=current} operator=ComparisonOperator right=Atom)*;
+    
+Atom returns Expression:
+	Attribute | ({Value} stringValue=STRING | intValue=INT)
+;
     
     
