@@ -35,7 +35,7 @@ class ConditionTest {
   def testValueEqualsValueOperation() {
     val value1 = "test"
     val value2 = "test"
-    val operation = new CompareValueToValueOperation<String, String>(value2, ComparisonOperator.EQUALS)
+    val operation = new CompareValueToValueOperation<String, String>(value1, value2, ComparisonOperator.EQUALS)
     assertTrue(operation.Evaluate(value1, null))
   }
 

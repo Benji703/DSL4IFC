@@ -1,10 +1,7 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
-
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 

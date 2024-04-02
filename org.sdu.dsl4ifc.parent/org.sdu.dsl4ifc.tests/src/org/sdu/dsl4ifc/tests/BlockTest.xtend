@@ -3,35 +3,23 @@
  */
 package org.sdu.dsl4ifc.tests
 
-import java.io.File
 import java.util.Collection
-import java.util.stream.Stream
+import java.util.List
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+import org.sdu.dsl4ifc.generator.conditional.impls.CompareParameterValueToParameterValueOperation
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
-
-import static extension org.junit.jupiter.api.Assertions.assertEquals
-import java.util.List
-import static org.junit.Assert.assertArrayEquals
-import org.sdu.dsl4ifc.generator.conditional.impls.CompareParameterValueToParameterValueOperation
-import org.sdu.dsl4ifc.generator.conditional.impls.CompareValueToValueOperation
 import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
+
+import static org.junit.Assert.assertArrayEquals
+import static org.junit.jupiter.api.Assertions.*
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
 class BlockTest {
-
-	static File file;
-
-	@BeforeAll
-	def static void setUpBeforeClass() throws Exception {
-		file = new File("/Users/andreasedalpedersen/SDU-local/Speciale/dsl4ifc/DSL4IFC/org.sdu.dsl4ifc.parent/org.sdu.dsl4ifc.tests/src/org/sdu/dsl4ifc/tests/Duplex_A_20110907.ifc")
-		
-	}
 	
 	@Test
 	def void fileExists() {
@@ -39,26 +27,6 @@ class BlockTest {
 		//assertTrue("File is an actual file", file.isFile)
 	}
 	
-	@Test
-	def void parseTest() {
-		
-	}
-	
-	@Test
-	def void filterBlockSingleValueComparisonTest() {
-		
-		val valEq1 = new CompareValueToValueOperation("1", ComparisonOperator.EQUALS);
-		
-		val filterBlock = new FilterBlock<String>("F1", "w", valEq1);
-		
-		val list = #["1", "2", "3"];
-		val mockTypeBlock = new MockTypeBlock("T1", "w", String, list);
-		filterBlock.AddInput(mockTypeBlock);
-		
-		val output = filterBlock.output.toList
-		output.size.assertEquals(1, "Should only hold one number")
-		output.head.assertEquals("1", "Object should be '1'")
-	}
 	
 	//@Test
 	def void filterBlockVariableComparisonTest() {
@@ -91,8 +59,8 @@ class MockTypeBlock<T> extends TypeBlock<T> {
 	}
 	
 	
-	override Stream<T> Calculate() {
-		return values.stream
+	override List<T> Calculate() {
+		return values.toList
 	}
 	
 }

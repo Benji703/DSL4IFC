@@ -105,7 +105,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		// Do this
 	}
 		
-	def dispatch Expression<?> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression) {
+	def dispatch Expression<?> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
 		throw new Exception("Cannot convert this expression to block expression: " + expression.class.name)
 	}
 
@@ -113,9 +113,9 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		switch (expression.operator) {
 			case AND:
-				return new AndOperation(expression.left.toBlockExpression, expression.right.toBlockExpression)
+				return new AndOperation(expression.left.toBlockExpression(variableReference), expression.right.toBlockExpression(variableReference))
 			case OR:
-				return new OrOperation(expression.left.toBlockExpression, expression.right.toBlockExpression)
+				return new OrOperation(expression.left.toBlockExpression(variableReference), expression.right.toBlockExpression(variableReference))
 			default: throw new Exception("BooleanExpression operator has not been implemented")
 		}
 	}
