@@ -21,12 +21,9 @@ class SustainLangParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			SOURCE MODEL m1 "path"              // Choose the model(s) source(s)
-			FROM IfcWalls r  // or wildcard?     // Way of specifying types 
-			DO LCA(                             // Run calculations
-			                                // Options? Fx the variable above: "BR18"
-			) lcaRes 
-			GROUP BY lcaRes.modules   
+			SOURCE MODEL m1 "../Molio_with_URIs.ifc"
+			FROM IfcWall w, IfcRoot r
+			FILTER w WHERE "170452" = r.stepNumber
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
