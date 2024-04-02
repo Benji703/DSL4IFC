@@ -12,6 +12,9 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 	private Expression<T> expression;
 	private VariableStore variables = new VariableStore();
 	private String variableName;
+	public String getVariableName() {
+		return variableName;
+	}
 
 	// TODO: How do we represent the boolean condition with objects?
 	public FilterBlock(String name, String variableName, Expression<T> expression) {

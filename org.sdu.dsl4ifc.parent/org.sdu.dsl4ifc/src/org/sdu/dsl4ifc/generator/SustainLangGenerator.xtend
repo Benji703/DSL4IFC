@@ -78,8 +78,11 @@ class SustainLangGenerator extends AbstractGenerator {
 		val filterCommands = statement.filters
 		var filters = List.of()
 		if (!filterCommands.empty) {
-			filters = filterCommands.map[type | type.createFilterBlock(typeBlocks)]
-			filters.forEach[f | f.output.forEach[e | consoleOut.println(e.toString)]]
+			filters = filterCommands.map[filter | filter.createFilterBlock(typeBlocks)]
+			filters.forEach[f | {
+				consoleOut.println('''Filter result: «f.variableName»''')
+				f.output.forEach[e | consoleOut.println(e.toString)]
+			}]
 		}
 		
 		val dos = statement.^do
@@ -96,7 +99,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 		
 	def Expression<?> toExpression(FilterCommand command, Reference variableReference) {
-		val expression = command.condition.toBlockExpression;
+		val expression = command.condition.toBlockExpression(variableReference);
 		return expression
 		// Do this
 	}
@@ -105,7 +108,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		throw new Exception("Cannot convert this expression to block expression: " + expression.class.name)
 	}
 
-	def dispatch Expression<?> toBlockExpression(BooleanExpression expression) {
+	def dispatch Expression<?> toBlockExpression(BooleanExpression expression, Reference variableReference) {
 		
 		switch (expression.operator) {
 			case AND:
@@ -116,9 +119,19 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	
-	def dispatch Expression<?> toBlockExpression(ComparisonExpression expression) {
-		val left = expression.left
-		val right = expression.right
+	def dispatch Expression<?> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
+		var left = expression.left
+		var right = expression.right
+		
+		if (right instanceof Attribute) {
+			
+			if (right.reference.name === variableReference.name) {	// Rotate if primary is on the right side
+				val oldRight = right
+				right = left
+				left = oldRight
+			}
+		}
+		
 		
 		if (left instanceof Value && right instanceof Value) {				// 1 = 1
 			val rightValue = right as Value
@@ -126,19 +139,19 @@ class SustainLangGenerator extends AbstractGenerator {
 			
 			return new CompareValueToValueOperation(leftValue.stringValue, rightValue.stringValue, expression.operator)
 		}
-		else if (left instanceof Attribute && right instanceof Value) {		// w.name = "name"
+		else if (left instanceof Attribute && right instanceof Value) {		// p.name = "name"	// p is primary
 			val leftAttribute = left as Attribute
 			val rightValue = right as Value
 			
 			return new CompareParameterValueToValueOperation(rightValue.stringValue, leftAttribute.toExtractor, expression.operator)
 		}
-		else if (left instanceof Value && right instanceof Attribute) {		// "name" = w.name
+		else if (left instanceof Value && right instanceof Attribute) {		// "name" = s.name	// s is secondary
 			val rightAttribute = right as Attribute
 			val leftValue = left as Value
 			
 			return new CompareValueToParameterValueOperation(leftValue.stringValue, rightAttribute.reference.name, rightAttribute.toExtractor, expression.operator)
 		}
-		else if (left instanceof Attribute && right instanceof Attribute) {
+		else if (left instanceof Attribute && right instanceof Attribute) {	// p.name = s.name
 			val leftAttribute = left as Attribute
 			val rightAttribute = right as Attribute
 			
