@@ -5,16 +5,13 @@ import java.util.stream.Stream;
 
 import org.sdu.dsl4ifc.generator.conditional.core.Expression;
 import org.sdu.dsl4ifc.generator.conditional.core.VariableStore;
-import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
+import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
 
-public class FilterBlock<T> extends Block<Stream<T>> {
+public class FilterBlock<T> extends VariableReferenceBlock<T> implements IVariableReference  {
 
 	private Expression<T> expression;
 	private VariableStore variables = new VariableStore();
 	private String variableName;
-	public String getVariableName() {
-		return variableName;
-	}
 
 	// TODO: How do we represent the boolean condition with objects?
 	public FilterBlock(String name, String variableName, Expression<T> expression) {
@@ -37,14 +34,14 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 		List<T> toBeFiltered = null;
 		
 		for (TypeBlock<?> typeBlock : sources) {
-			var variableName = typeBlock.getVariableName();
+			var variableName = typeBlock.getReferenceName();
 			
 			if (this.variableName == variableName) {	// Is the primary variable
-				toBeFiltered = (List<T>) typeBlock.getOutput();
+				toBeFiltered = ((Stream<T>) typeBlock.getOutput()).toList();
 				continue;
 			}
 			
-			variables.put(variableName, (List<Object>) typeBlock.getOutput());
+			variables.put(variableName, ((Stream<Object>) typeBlock.getOutput()).toList());
 		}
 		
 		var result = toBeFiltered.stream().filter(i -> expression.Evaluate(i, variables));
@@ -52,5 +49,10 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 		var list = result.toList();
 		
 		return list.stream();
+	}
+
+	@Override
+	public String getReferenceName() {
+		return variableName;
 	}
 }

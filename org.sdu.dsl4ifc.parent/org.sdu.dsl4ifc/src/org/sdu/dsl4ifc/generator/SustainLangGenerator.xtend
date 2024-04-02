@@ -37,6 +37,8 @@ import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SelectBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 
 /**
  * Generates code from your model files on save.
@@ -46,6 +48,7 @@ import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 class SustainLangGenerator extends AbstractGenerator {
 	
 	public static MessageConsoleStream consoleOut = null;
+	FilterBlockCatalog catalog = new FilterBlockCatalog;
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
@@ -76,12 +79,19 @@ class SustainLangGenerator extends AbstractGenerator {
 			typeBlocks.add(typeBlock)
 		}
 		
+		var select = statement.select
+		val selectBlock = new SelectBlock("Select", #[new AttributeReference("w", "name", new ParameterValueExtractor("name")), new AttributeReference("w", "stepnumber", new ParameterValueExtractor("stepnumber"))]);
+		typeBlocks.forEach[t | selectBlock.AddInput(t)]
+		
+		consoleOut.println('''Result: «selectBlock.Name»''')
+		consoleOut.println(selectBlock.output.toString)
+		/* 
 		val filterCommands = statement.filters
 		var filters = List.of()
 		if (!filterCommands.empty) {
 			filters = filterCommands.map[filter | filter.createFilterBlock(typeBlocks)]
 			filters.forEach[f | {
-				consoleOut.println('''Filter result: «f.variableName»''')
+				consoleOut.println('''Filter result: «f.referenceName»''')
 				f.output.forEach[e | consoleOut.println(e.toString)]
 			}]
 		}
@@ -89,6 +99,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		val dos = statement.^do
 		
 		val transforms = statement.transforms
+		* 
+		*/
 	}
 		
 	def FilterBlock<?> createFilterBlock(FilterCommand filterCommand, List<TypeBlock<?>> typeBlocks) {
@@ -102,7 +114,6 @@ class SustainLangGenerator extends AbstractGenerator {
 	def Expression<?> toExpression(FilterCommand command, Reference variableReference) {
 		val expression = command.condition.toBlockExpression(variableReference);
 		return expression
-		// Do this
 	}
 		
 	def dispatch Expression<?> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
