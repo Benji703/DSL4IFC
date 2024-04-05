@@ -54,7 +54,12 @@ public class LCA {
             return null;
         }
 
-        return envInfo * element.getQuantity();
+        int yearFactor = 1;
+        if (element.getLifeTime() >= 1) {
+            yearFactor = Math.ceilDiv(50, element.getLifeTime());
+        }
+
+        return envInfo * element.getQuantity() * yearFactor;
     }
 
     public LCAResult CalculateLCAWhole(ArrayList<LCAIFCElement> ifcElements, double area, double areaHeated, double b6) {

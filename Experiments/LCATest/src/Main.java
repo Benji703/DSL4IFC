@@ -15,7 +15,9 @@ public class Main {
         String floorS = "Celleglas-isolering 115 kg/m³";
 
         LCAIFCElement wall1 = new LCAIFCElement(concrete, 200);
+        wall1.setLifeTime(12);
         LCAIFCElement wall2 = new LCAIFCElement(concrete, 200);
+        wall2.setLifeTime(70);
         LCAIFCElement wall3 = new LCAIFCElement(concrete, 200);
         LCAIFCElement wall4 = new LCAIFCElement(concrete, 200);
 
@@ -40,6 +42,7 @@ public class Main {
         lcaResult.getElements().forEach(e -> {
             Map<String, Double> map = e.getResultMap();
             System.out.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity());
+            System.out.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
 
             for (Map.Entry<String, Double> set : map.entrySet()) {
                 if (set.getValue() == null) {

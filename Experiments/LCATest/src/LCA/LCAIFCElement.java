@@ -6,9 +6,11 @@ import java.util.Map;
 public class LCAIFCElement {
     private String name;
     private double quantity;
+    private int lifeTime;
     private Double aResult;
     private Double c3Result;
     private Double c4Result;
+    private Double dResult;
     private double lcaVal;
 
 
@@ -57,6 +59,14 @@ public class LCAIFCElement {
         return quantity;
     }
 
+    public int getLifeTime() {
+        return lifeTime;
+    }
+
+    public void setLifeTime(int lifeTime) {
+        this.lifeTime = lifeTime;
+    }
+
 
     public Map<String, Double> getResultMap() {
         Map<String, Double> map = new HashMap<>();
@@ -77,5 +87,13 @@ public class LCAIFCElement {
                 ", c4Result=" + c4Result +
                 ", lcaVal=" + lcaVal +
                 '}';
+    }
+
+    public Double getdResult() {
+        return dResult;
+    }
+
+    public void setdResult(Double dResult) {
+        this.dResult = dResult;
     }
 }
