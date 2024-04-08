@@ -178,6 +178,8 @@ class SustainLangGenerator extends AbstractGenerator {
 			return new CompareParameterValueToParameterValueOperation(rightVariableName, leftAttribute.toExtractor, rightAttribute.toExtractor, expression.operator)
 		}
 	}
+	
+	
 		
 	def ParameterValueExtractor<?, ?> toExtractor(Attribute attribute) {
 		return new ParameterValueExtractor(attribute.attribute)
