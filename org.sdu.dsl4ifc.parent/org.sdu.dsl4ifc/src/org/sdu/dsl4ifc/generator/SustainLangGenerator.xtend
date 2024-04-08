@@ -37,6 +37,7 @@ import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
 
 /**
  * Generates code from your model files on save.
@@ -85,6 +86,9 @@ class SustainLangGenerator extends AbstractGenerator {
 				f.output.forEach[e | consoleOut.println(e.toString)]
 			}]
 		}
+		
+		val lcaBlock = new LcaBlock("DoLCA");
+		val s = lcaBlock.Calculate();
 		
 		val dos = statement.^do
 		

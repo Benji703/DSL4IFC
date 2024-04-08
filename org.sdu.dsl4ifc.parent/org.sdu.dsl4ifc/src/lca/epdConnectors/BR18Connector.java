@@ -33,7 +33,7 @@ public class BR18Connector implements IEPDConnector {
         };
 
         try {
-            epdData = readExcel("src/ExcelData/BR18v2_201222_clean.xlsx");
+            epdData = readExcel("C:\\Users\\Benjamin\\Documents\\Speciale\\DSL4IFC\\org.sdu.dsl4ifc.parent\\org.sdu.dsl4ifc\\src\\lca\\ExcelData\\BR18v2_201222_clean.xlsx");
         } catch (IOException e) {
             e.printStackTrace();
         }
