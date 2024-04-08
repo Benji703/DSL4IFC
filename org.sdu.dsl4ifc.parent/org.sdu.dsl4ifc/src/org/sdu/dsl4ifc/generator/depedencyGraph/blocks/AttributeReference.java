@@ -12,7 +12,6 @@ public class AttributeReference<T, U> {
 		this.referenceName = referenceName;
 		this.attributeName = attributeName;
 		this.extractor = extractor;
-		
 	}
 
 	public String getReferenceName() {
