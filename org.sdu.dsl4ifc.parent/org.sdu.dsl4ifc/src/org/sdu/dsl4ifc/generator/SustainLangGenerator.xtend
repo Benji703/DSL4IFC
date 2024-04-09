@@ -38,6 +38,8 @@ import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
+import lca.LCA.LCAResult
+import java.util.Map
 
 /**
  * Generates code from your model files on save.
@@ -88,11 +90,29 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 		
 		val lcaBlock = new LcaBlock("DoLCA");
-		val lcaResult = lcaBlock.Calculate();
+		var lcaResult = lcaBlock.Calculate();
+		lcaResult.printLcaResult;
 		
 		val dos = statement.^do
 		
 		val transforms = statement.transforms
+	}
+	
+	def printLcaResult(LCAResult lcaResult) {
+		consoleOut.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
+		
+		lcaResult.elements.forEach(e | {
+			var map = e.resultMap;
+			consoleOut.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
+			consoleOut.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
+			
+			map.forEach(k,v | {
+				if (v === null) {
+					consoleOut.println("   " + k + " equals null");
+				}
+			})
+			consoleOut.println("}");
+		})
 	}
 		
 	def FilterBlock<?> createFilterBlock(FilterCommand filterCommand, List<TypeBlock<?>> typeBlocks) {

@@ -50,22 +50,6 @@ public class LcaBlock extends Block<LCAResult> {
         LCAIFCElement br18 = lcaResult.getElements().stream().filter(e -> e.getName().equals(floorS)).findAny().orElse(null);
 
         System.out.println(br18);
-
-        System.out.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
-
-
-        lcaResult.getElements().forEach(e -> {
-            Map<String, Double> map = e.getResultMap();
-            System.out.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
-            System.out.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
-
-            for (Map.Entry<String, Double> set : map.entrySet()) {
-                if (set.getValue() == null) {
-                    System.out.println("   " + set.getKey() + " equals null");
-                }
-            }
-            System.out.println("}");
-        });
 		
 		return lcaResult;
 	}
