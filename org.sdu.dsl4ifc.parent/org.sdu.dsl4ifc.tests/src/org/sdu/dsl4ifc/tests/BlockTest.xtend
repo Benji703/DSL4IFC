@@ -16,6 +16,7 @@ import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
 
 import static org.junit.Assert.assertArrayEquals
 import static org.junit.jupiter.api.Assertions.*
+import java.util.stream.Stream
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -59,8 +60,8 @@ class MockTypeBlock<T> extends TypeBlock<T> {
 	}
 	
 	
-	override List<T> Calculate() {
-		return values.toList
+	override Stream<T> Calculate() {
+		return values.stream
 	}
 	
 }
