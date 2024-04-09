@@ -56,7 +56,7 @@ public class LCA {
 
         int yearFactor = 1;
         if (element.getLifeTime() >= 1) {
-            yearFactor = (int) Math.ceil(50 / element.getLifeTime());
+            yearFactor = (int) Math.ceil((50.0 / element.getLifeTime()));
         }
 
         return envInfo * element.getQuantity() * yearFactor;

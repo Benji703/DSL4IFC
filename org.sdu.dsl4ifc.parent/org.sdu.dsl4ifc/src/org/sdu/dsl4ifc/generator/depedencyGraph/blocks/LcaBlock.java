@@ -53,7 +53,7 @@ public class LcaBlock extends Block<String> {
 
         lcaResult.getElements().forEach(e -> {
             Map<String, Double> map = e.getResultMap();
-            System.out.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity());
+            System.out.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
             System.out.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
 
             for (Map.Entry<String, Double> set : map.entrySet()) {
