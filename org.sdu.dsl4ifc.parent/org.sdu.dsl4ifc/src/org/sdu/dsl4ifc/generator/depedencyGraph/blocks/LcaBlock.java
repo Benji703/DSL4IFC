@@ -46,10 +46,6 @@ public class LcaBlock extends Block<LCAResult> {
         elements.add(floor);
 
         LCAResult lcaResult = lca.CalculateLCAWhole(elements, 200, 180, 1000);
-
-        LCAIFCElement br18 = lcaResult.getElements().stream().filter(e -> e.getName().equals(floorS)).findAny().orElse(null);
-
-        System.out.println(br18);
 		
 		return lcaResult;
 	}
