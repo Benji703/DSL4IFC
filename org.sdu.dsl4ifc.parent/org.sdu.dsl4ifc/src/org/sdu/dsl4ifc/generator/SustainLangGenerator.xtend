@@ -38,19 +38,12 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
-import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SelectCommand
-import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
-import java.util.HashSet
-import java.util.Collection
-import java.util.Map
-import java.util.LinkedHashMap
-import java.util.function.Function
 
 /**
  * Generates code from your model files on save.
@@ -132,8 +125,6 @@ class SustainLangGenerator extends AbstractGenerator {
 		return filterBlock
 	}
 	
-	var Ifc2x3ParserBlock parserBlock = null;
-	
 	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
 		val typeBlock = new TypeBlock('''Type: "«reference.name»" «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
 		
@@ -142,6 +133,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		return typeBlock
 	}
+	
+	var Ifc2x3ParserBlock parserBlock = null;
 	
 	def Ifc2x3ParserBlock getParserBlock(Statement statement, Resource resource) {
 		
@@ -177,26 +170,6 @@ class SustainLangGenerator extends AbstractGenerator {
 		command.selects.map[attribute | {
 			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
 		}]
-	}
-		
-	def execute(Statement statement, Resource resource) {
-		// TODO: This is wrong: Start from the bottom/end and build up using each blocks identities
-		
-		var select = statement.select
-		val selectBlock = select.createBlock(statement, resource)
-		
-		return selectBlock
-	}
-	
-	def dispatch Block<?> createBlock(SelectCommand select, Statement statement, Resource resource) {
-		val selectBlock = new SelectBlock("Select", select.toAttributeReferences)
-		
-		// Create necesarry inputs		
-		for (attribute : select.selects.distinctBy[s | s.reference.name]) {
-			addSelectBlockInputs(statement, attribute, resource, selectBlock)
-		}
-		
-		return selectBlock
 	}
 	
 	protected def void addSelectBlockInputs(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
@@ -215,79 +188,6 @@ class SustainLangGenerator extends AbstractGenerator {
 			val typeBlock = type.createBlock(statement, resource)
 			selectBlock.AddInput(typeBlock)
 		}
-	}
-	
-	def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
-		val filterBlock = new FilterBlock('''Filter: «filter.reference.name»''', filter.reference.name, filter.toExpression)
-		
-		// Create necesarry inputs
-		val typeBlock = filter.reference.createBlock(statement, resource)
-		filterBlock.AddInput(typeBlock)
-		
-		val references = new HashSet()
-		filter.condition.addAllVariableReferences(references)
-		
-		references.filter[ref | ref.name !== filter.reference.name].forEach[reference | {
-			val block = reference.createBlock(statement, resource)
-			filterBlock.AddInput(block)
-		}]
-		
-		return filterBlock
-	}
-	
-	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
-		val typeBlock = new TypeBlock('''Type: "«reference.name»" «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
-		
-		// Create necesarry inputs
-		typeBlock.AddInput(getParserBlock(statement, resource))
-		
-		return typeBlock
-	}
-	
-	var Ifc2x3ParserBlock parserBlock = null;
-	
-	def Ifc2x3ParserBlock getParserBlock(Statement statement, Resource resource) {
-		
-		if (this.parserBlock === null) {
-			val source = statement.source
-			val sourceBlock = new SourceBlock("Source", source.path, resource)
-			val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
-			parserBlock.AddInput(sourceBlock)
-			this.parserBlock = parserBlock
-		}
-		
-		return this.parserBlock;
-	}
-	
-	def void addAllVariableReferences(org.sdu.dsl4ifc.sustainLang.Expression expression, Collection<Reference> references) {
-		
-		switch (expression) {
-			BooleanExpression: {
-				expression.left.addAllVariableReferences(references)
-				expression.right.addAllVariableReferences(references)
-			}
-			ComparisonExpression: {
-				expression.left.addAllVariableReferences(references)
-				expression.right.addAllVariableReferences(references)
-			}
-			Attribute: {
-				references.add(expression.reference)
-			}
-		}
-	}
-	
-	def List<AttributeReference<Object, String>> toAttributeReferences(SelectCommand command) {
-		command.selects.map[attribute | {
-			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
-		}]
-	}
-		
-	def FilterBlock<?> createFilterBlock(FilterCommand filterCommand, List<TypeBlock<?>> typeBlocks) {
-		val referenceName = filterCommand.reference.name
-		val filterBlock = new FilterBlock('''Filter «referenceName»''', referenceName, filterCommand.toExpression)
-		// TODO: Actually only add if it depends on it (but this should be solved by building the graph from the bottom up)
-		typeBlocks.forEach[block | filterBlock.AddInput(block)]
-		return filterBlock
 	}
 		
 	def Expression<?> toExpression(FilterCommand command) {
