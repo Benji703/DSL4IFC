@@ -22,21 +22,30 @@ import org.sdu.dsl4ifc.generator.conditional.impls.CompareParameterValueToValueO
 import org.sdu.dsl4ifc.generator.conditional.impls.CompareValueToParameterValueOperation
 import org.sdu.dsl4ifc.generator.conditional.impls.CompareValueToValueOperation
 import org.sdu.dsl4ifc.generator.conditional.impls.OrOperation
+import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SelectBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SourceBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
 import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
+import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.Reference
+import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
-import org.sdu.dsl4ifc.sustainLang.FilterCommand
-import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
+import java.util.HashSet
+import java.util.Collection
+import java.util.Map
+import java.util.LinkedHashMap
+import java.util.function.Function
 
 /**
  * Generates code from your model files on save.
@@ -46,6 +55,7 @@ import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 class SustainLangGenerator extends AbstractGenerator {
 	
 	public static MessageConsoleStream consoleOut = null;
+	FilterBlockCatalog catalog = new FilterBlockCatalog;
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
@@ -55,9 +65,113 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val statements = resource.allContents.filter(Statement);
 		
-		statements.forEach[execute(resource)]
+		val blocks = statements.map[constructGraph(resource)]
+		
+		blocks.forEach[block | consoleOut.println(block.output.toString)]
 		
 		//test(sourceCommand, resource)
+	}
+		
+	def Block<?> constructGraph(Statement statement, Resource resource) {
+		
+		var select = statement.select
+		val selectBlock = select.createBlock(statement, resource)
+		
+		return selectBlock
+	}
+	
+	def dispatch Block<?> createBlock(SelectCommand select, Statement statement, Resource resource) {
+		val selectBlock = new SelectBlock("Select", select.toAttributeReferences)
+		
+		// Create necesarry inputs		
+		for (attribute : select.selects.distinctBy[s | s.reference.name]) {
+			addInputs(statement, attribute, resource, selectBlock)
+		}
+		
+		return selectBlock
+	}
+	
+	protected def void addInputs(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
+		
+		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.reference.name]
+		if (!filtersForAttribute.isEmpty) { // References a filter
+			val filter = filtersForAttribute.head
+			val filterBlock = filter.createBlock(statement, resource)
+			selectBlock.AddInput(filterBlock)
+			return
+		}
+		
+		val typesForAttribute = statement.from.types.filter[type | attribute.reference.name === type.name]
+		if (!typesForAttribute.isEmpty) { // References a from
+			val type = typesForAttribute.head
+			val typeBlock = type.createBlock(statement, resource)
+			selectBlock.AddInput(typeBlock)
+		}
+	}
+	
+	def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
+		val filterBlock = new FilterBlock('''Filter: «filter.reference.name»''', filter.reference.name, filter.toExpression)
+		
+		// Create necesarry inputs
+		val typeBlock = filter.reference.createBlock(statement, resource)
+		filterBlock.AddInput(typeBlock)
+		
+		val references = new HashSet()
+		filter.condition.addAllVariableReferences(references)
+		
+		references.filter[ref | ref.name !== filter.reference.name].forEach[reference | {
+			val block = reference.createBlock(statement, resource)
+			filterBlock.AddInput(block)
+		}]
+		
+		return filterBlock
+	}
+	
+	var Ifc2x3ParserBlock parserBlock = null;
+	
+	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
+		val typeBlock = new TypeBlock('''Type: "«reference.name»" «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
+		
+		// Create necesarry inputs
+		typeBlock.AddInput(getParserBlock(statement, resource))
+		
+		return typeBlock
+	}
+	
+	def Ifc2x3ParserBlock getParserBlock(Statement statement, Resource resource) {
+		
+		if (this.parserBlock === null) {
+			val source = statement.source
+			val sourceBlock = new SourceBlock("Source", source.path, resource)
+			val parserBlock = new Ifc2x3ParserBlock("Parser 2x3")
+			parserBlock.AddInput(sourceBlock)
+			this.parserBlock = parserBlock
+		}
+		
+		return this.parserBlock;
+	}
+	
+	def void addAllVariableReferences(org.sdu.dsl4ifc.sustainLang.Expression expression, Collection<Reference> references) {
+		
+		switch (expression) {
+			BooleanExpression: {
+				expression.left.addAllVariableReferences(references)
+				expression.right.addAllVariableReferences(references)
+			}
+			ComparisonExpression: {
+				expression.left.addAllVariableReferences(references)
+				expression.right.addAllVariableReferences(references)
+			}
+			Attribute: {
+				references.add(expression.reference)
+			}
+		}
+	}
+	
+	def List<AttributeReference<Object, String>> toAttributeReferences(SelectCommand command) {
+		command.selects.map[attribute | {
+			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
+		}]
 	}
 		
 	def execute(Statement statement, Resource resource) {
@@ -76,12 +190,19 @@ class SustainLangGenerator extends AbstractGenerator {
 			typeBlocks.add(typeBlock)
 		}
 		
+		var select = statement.select
+		val selectBlock = new SelectBlock("Select", #[new AttributeReference("r", "name", new ParameterValueExtractor("name")), new AttributeReference("w", "stepnumber", new ParameterValueExtractor("stepnumber"))]);
+		typeBlocks.forEach[t | selectBlock.AddInput(t)]
+		
+		consoleOut.println('''Result: «selectBlock.Name»''')
+		consoleOut.println(selectBlock.output.toString)
+		/* 
 		val filterCommands = statement.filters
 		var filters = List.of()
 		if (!filterCommands.empty) {
 			filters = filterCommands.map[filter | filter.createFilterBlock(typeBlocks)]
 			filters.forEach[f | {
-				consoleOut.println('''Filter result: «f.variableName»''')
+				consoleOut.println('''Filter result: «f.referenceName»''')
 				f.output.forEach[e | consoleOut.println(e.toString)]
 			}]
 		}
@@ -89,20 +210,21 @@ class SustainLangGenerator extends AbstractGenerator {
 		val dos = statement.^do
 		
 		val transforms = statement.transforms
+		* 
+		*/
 	}
 		
 	def FilterBlock<?> createFilterBlock(FilterCommand filterCommand, List<TypeBlock<?>> typeBlocks) {
 		val referenceName = filterCommand.reference.name
-		val filterBlock = new FilterBlock('''Filter «referenceName»''', referenceName, filterCommand.toExpression(filterCommand.reference))
+		val filterBlock = new FilterBlock('''Filter «referenceName»''', referenceName, filterCommand.toExpression)
 		// TODO: Actually only add if it depends on it (but this should be solved by building the graph from the bottom up)
 		typeBlocks.forEach[block | filterBlock.AddInput(block)]
 		return filterBlock
 	}
 		
-	def Expression<?> toExpression(FilterCommand command, Reference variableReference) {
-		val expression = command.condition.toBlockExpression(variableReference);
+	def Expression<?> toExpression(FilterCommand command) {
+		val expression = command.condition.toBlockExpression(command.reference);
 		return expression
-		// Do this
 	}
 		
 	def dispatch Expression<?> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
@@ -246,6 +368,14 @@ class SustainLangGenerator extends AbstractGenerator {
 	    conMan.addConsoles(consoles);
 	    return myConsole;
 	}
+	
+	def static <T, K> List<T> distinctBy(List<T> list, Function<T, K> keyExtractor) {
+        val Map<K, T> map = new LinkedHashMap();
+        for (T element : list) {
+            map.putIfAbsent(keyExtractor.apply(element), element);
+        }
+        return new ArrayList(map.values());
+    }
 	
 	
 }

@@ -41,8 +41,4 @@ public class ParameterValueExtractor<T, U> {
 		return null;
 		
 	}
-
-	ParameterValueExtractor() {
-	  throw new UnsupportedOperationException("TODO: auto-generated method stub");
-	}
 }
