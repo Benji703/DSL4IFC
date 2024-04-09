@@ -31,7 +31,6 @@ public class FilterBlock<T> extends Block<Stream<T>> {
 
 	@Override
 	public Stream<T> Calculate() {
-		// TODO: Get all type blocks (you can combine variable references)
 		var sources = findAllBlocks(TypeBlock.class);
 		
 		List<T> toBeFiltered = null;
