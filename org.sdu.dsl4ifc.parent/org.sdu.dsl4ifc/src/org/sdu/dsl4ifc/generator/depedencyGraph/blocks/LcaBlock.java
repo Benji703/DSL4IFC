@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import lca.LCA.*;
 
-public class LcaBlock extends Block<String> {
+public class LcaBlock extends Block<LCAResult> {
 
 	public LcaBlock(String name) {
 		super(name);
@@ -19,7 +19,10 @@ public class LcaBlock extends Block<String> {
 	}
 
 	@Override
-	public String Calculate() {
+	public LCAResult Calculate() {
+		
+		//var sources = findAllBlocks(FilterBlock.class);
+		//sources.get(0).getOutput;
 		
 		LCA lca = new LCA();
 
@@ -64,7 +67,7 @@ public class LcaBlock extends Block<String> {
             System.out.println("}");
         });
 		
-		return null;
+		return lcaResult;
 	}
 
 }

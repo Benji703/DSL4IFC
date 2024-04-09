@@ -88,7 +88,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 		
 		val lcaBlock = new LcaBlock("DoLCA");
-		val s = lcaBlock.Calculate();
+		val lcaResult = lcaBlock.Calculate();
 		
 		val dos = statement.^do
 		
