@@ -5,16 +5,19 @@ import java.util.stream.Stream;
 
 import org.sdu.dsl4ifc.generator.conditional.core.Expression;
 import org.sdu.dsl4ifc.generator.conditional.core.VariableStore;
+import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
 
-public class FilterBlock<T> extends VariableReferenceBlock<T> implements IVariableReference  {
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 
-	private Expression<T> expression;
+public class FilterBlock extends VariableReferenceBlock<IfcRoot> implements IVariableReference  {
+
+	private Expression<IfcRoot> expression;
 	private VariableStore variables = new VariableStore();
 	private String variableName;
 
 	// TODO: How do we represent the boolean condition with objects?
-	public FilterBlock(String name, String variableName, Expression<T> expression) {
+	public FilterBlock(String name, String variableName, Expression<IfcRoot> expression) {
 		super(name);
 		this.variableName = variableName;
 		this.expression = expression;
@@ -27,20 +30,20 @@ public class FilterBlock<T> extends VariableReferenceBlock<T> implements IVariab
 	}
 
 	@Override
-	public Stream<T> Calculate() {
+	public Stream<IfcRoot> Calculate() {
 		var sources = findAllBlocks(TypeBlock.class);
 		
-		List<T> toBeFiltered = null;
+		List<IfcRoot> toBeFiltered = null;
 		
 		for (TypeBlock<?> typeBlock : sources) {
 			var variableName = typeBlock.getReferenceName();
 			
 			if (this.variableName == variableName) {	// Is the primary variable
-				toBeFiltered = ((Stream<T>) typeBlock.getOutput()).toList();
+				toBeFiltered = ((Stream<IfcRoot>) typeBlock.getOutput()).toList();
 				continue;
 			}
 			
-			variables.put(variableName, ((Stream<Object>) typeBlock.getOutput()).toList());
+			variables.put(variableName, (List<IfcRoot>) typeBlock.getOutput().toList());
 		}
 		
 		var result = toBeFiltered.stream().filter(i -> expression.Evaluate(i, variables));
@@ -53,5 +56,18 @@ public class FilterBlock<T> extends VariableReferenceBlock<T> implements IVariab
 	@Override
 	public String getReferenceName() {
 		return variableName;
+	}
+	
+	@Override
+	public String generateCacheKey() {
+		StringBuilder keyBuilder = new StringBuilder(Name);
+		
+		keyBuilder.append(variableName+",");
+		keyBuilder.append(expression.toString()+",");
+		
+        for (Block<?> block : Inputs) {
+            keyBuilder.append(block.generateCacheKey()+";");
+        }
+        return keyBuilder.toString();
 	}
 }

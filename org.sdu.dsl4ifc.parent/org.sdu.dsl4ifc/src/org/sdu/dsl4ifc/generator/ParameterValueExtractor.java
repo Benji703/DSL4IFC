@@ -8,6 +8,9 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 public class ParameterValueExtractor<T, U> {
 
 	private String parameterName;
+	public String getParameterName() {
+		return parameterName;
+	}
 
 	// T : Input type (IfcWall fx), U : Output parameter value type (String fx)
 	

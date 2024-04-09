@@ -13,4 +13,9 @@ public class AndOperation<T> extends BooleanOperation<T> {
     public boolean Evaluate(T item, VariableStore variables) {
         return this.left.Evaluate(item, variables) && this.right.Evaluate(item, variables);
     }
+    
+    @Override
+    public String toString() {
+    	return left.toString() + " AND " + right.toString();
+    }
 }

@@ -29,4 +29,9 @@ public class CompareValueToValueOperation<T, U> extends ComparisonOperation<U, T
         // Get the field values somehow
         return left.equals(right);
     }
+    
+    @Override
+    public String toString() {
+    	return left + " " + this.comparison +" " + right;
+    }
 }

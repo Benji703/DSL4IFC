@@ -3,10 +3,11 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Block<T> implements IOutOfDate, ICalculation<T> {
+public abstract class Block<T> implements IOutOfDate, ICalculation<T>, ICacheKeyGenerator {
 	
     public String Name;
     private T output;
+    private long timeOfCalculation = 0;
     
     public T getOutput() {
         Invoke();
@@ -35,6 +36,7 @@ public abstract class Block<T> implements IOutOfDate, ICalculation<T> {
 
     public void Recalculate() {
         System.out.println("Calculating " + Name);
+        timeOfCalculation = System.currentTimeMillis();
         output = Calculate();
     }
 
@@ -56,6 +58,11 @@ public abstract class Block<T> implements IOutOfDate, ICalculation<T> {
             }
         }
         return returnList;
+    }
+    
+    @Override
+	public long GetTimeOfCalculation() {
+		return timeOfCalculation;
     }
 }
 

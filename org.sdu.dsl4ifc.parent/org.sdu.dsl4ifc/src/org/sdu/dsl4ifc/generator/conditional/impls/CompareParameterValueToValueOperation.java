@@ -35,6 +35,9 @@ public class CompareParameterValueToValueOperation<U, Y, T> extends ComparisonOp
     	return Compare(primaryValue, rightValue);
     }
 
-
+    @Override
+    public String toString() {
+    	return leftValueExtractor.getParameterName() + " " + this.comparison +" " + rightValue;
+    }
 	
 }
