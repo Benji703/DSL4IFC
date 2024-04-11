@@ -40,6 +40,7 @@ import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
 import lca.LCA.LCAResult
 import java.util.Map
+import org.sdu.dsl4ifc.sustainLang.LcaCalculation
 
 /**
  * Generates code from your model files on save.
@@ -89,11 +90,17 @@ class SustainLangGenerator extends AbstractGenerator {
 			}]
 		}
 		
+		/*
 		val lcaBlock = new LcaBlock("DoLCA");
 		var lcaResult = lcaBlock.Calculate();
 		lcaResult.printLcaResult;
+		*/
 		
 		val dos = statement.^do
+		
+		if (dos.calculation instanceof LcaCalculation) {
+			
+		}
 		
 		val transforms = statement.transforms
 	}

@@ -31,7 +31,14 @@ IfcTypeRef returns Reference:
     ifcType=IfcType name=ID?;
 
 Calculation:
-    'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
+	LcaCalculation
+;
+/* 
+LcaCalculation returns Calculation:
+    {LcaCalculation} 'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
+*/
+LcaCalculation returns Calculation:
+    {LcaCalculation} 'LCA' '(' sourceVar=[Reference]',' quantPath=ID')' reference=CalcReference;
 
 CalcReference returns Reference:
     {CalcReference} name=ID;

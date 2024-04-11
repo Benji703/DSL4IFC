@@ -18,6 +18,4 @@ public class LCACalc {
     public double CalculateLCAModuleDOperational(double dOp, double aHeat) {
         return (dOp /(aHeat * 50));
     }
-
-
 }
