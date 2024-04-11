@@ -51,12 +51,12 @@ public class SelectBlock extends Block<Table> {
 
 		// Get correct inputs
 		// Compute variables
-		var outputMap = new HashMap<String, Stream<?>>();
+		var outputMap = new HashMap<String, List<?>>();
 		for (AttributeReference<?, String> attributeReference : attributeReferences) {
 			var referenceName = attributeReference.getReferenceName();
 			
 			var block = referenceNameToInputBlock.get(referenceName);
-			Stream<?> entities = block.getOutput();
+			List<?> entities = block.getOutput();
 			
 			outputMap.put(referenceName, entities);
 			

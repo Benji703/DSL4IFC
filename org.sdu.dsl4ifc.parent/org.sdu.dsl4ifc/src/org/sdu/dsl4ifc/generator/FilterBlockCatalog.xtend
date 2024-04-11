@@ -4,6 +4,7 @@
 package org.sdu.dsl4ifc.generator
 
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
+import java.util.HashMap
 
 /**
  * Generates code from your model files on save.
@@ -12,17 +13,41 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
  */
 class FilterBlockCatalog { 
 	
-	Block<?> select;
 	
-	// One statement support
+	// TODO: Make one for each query as multiple queries may have similar blocks. Use root block key as map
+	
+	var currentBlocks = new HashMap<String, Block<?>>()
 	
 	new() {
-		
-		
-		
 	}
 	
-	def Block<?> selectBlock() {
+	def void setupNewRun() {
+		//oldBlocks = currentBlocks
+		//currentBlocks = new HashMap()
+	}
+	
+	def boolean blockExists(Block<?> block) {
+		currentBlocks.containsKey(block.generateCacheKey)
+	}
+	
+	def Block<?> getBlock(Block<?> block) {
+		return currentBlocks.get(block.generateCacheKey)
+	}
+	
+	def Block<?> ensureExistingIsUsed(Block<?> block) {
+		val key = block.generateCacheKey
+		if (currentBlocks.containsKey(key)) {
+			System.out.println('''Reusing block "«key»"''')
+			return currentBlocks.get(key)
+		}
 		
+		System.out.println('''First encounter of block "«key»"''')
+		currentBlocks.put(key, block)
+		
+		return block
+	}
+	
+	def void registerBlock(Block<?> block) {
+		currentBlocks.put(block.generateCacheKey, block)
 	}
 }

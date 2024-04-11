@@ -1,7 +1,6 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.sdu.dsl4ifc.generator.conditional.core.Expression;
 import org.sdu.dsl4ifc.generator.conditional.core.VariableStore;
@@ -30,7 +29,7 @@ public class FilterBlock extends VariableReferenceBlock<IfcRoot> implements IVar
 	}
 
 	@Override
-	public Stream<IfcRoot> Calculate() {
+	public List<IfcRoot> Calculate() {
 		var sources = findAllBlocks(TypeBlock.class);
 		
 		List<IfcRoot> toBeFiltered = null;
@@ -38,19 +37,19 @@ public class FilterBlock extends VariableReferenceBlock<IfcRoot> implements IVar
 		for (TypeBlock<?> typeBlock : sources) {
 			var variableName = typeBlock.getReferenceName();
 			
-			if (this.variableName == variableName) {	// Is the primary variable
-				toBeFiltered = ((Stream<IfcRoot>) typeBlock.getOutput()).toList();
+			if (this.variableName.equals(variableName)) {	// Is the primary variable
+				toBeFiltered = (List<IfcRoot>) typeBlock.getOutput();
 				continue;
 			}
 			
-			variables.put(variableName, (List<IfcRoot>) typeBlock.getOutput().toList());
+			variables.put(variableName, (List<IfcRoot>) typeBlock.getOutput());
 		}
 		
 		var result = toBeFiltered.stream().filter(i -> expression.Evaluate(i, variables));
 		
 		var list = result.toList();
 		
-		return list.stream();
+		return list;
 	}
 
 	@Override

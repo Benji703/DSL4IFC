@@ -14,7 +14,7 @@ public abstract class Block<T> implements IOutOfDate, ICalculation<T>, ICacheKey
         return output;
     }
     
-    public final List<Block<?>> Inputs = new ArrayList<>();
+    public List<Block<?>> Inputs = new ArrayList<>();
 
     public Block(String name) {
         Name = name;
