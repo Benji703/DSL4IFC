@@ -34,7 +34,6 @@ public class SelectBlock extends Block<Table> {
 		// They could implement an interface that is variable
 		for (VariableReferenceBlock<?> reference : references) {
 			var variableName = reference.getReferenceName();
-			
 			referenceNameToInputBlock.put(variableName, reference);
 		}
 		

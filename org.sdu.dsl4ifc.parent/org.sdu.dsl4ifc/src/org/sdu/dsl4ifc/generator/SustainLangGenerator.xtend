@@ -50,6 +50,8 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
 import lca.LCA.LCAResult
 import java.util.Map
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
+import org.sdu.dsl4ifc.sustainLang.Calculation
+import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
 
 /**
  * Generates code from your model files on save.
@@ -105,13 +107,23 @@ class SustainLangGenerator extends AbstractGenerator {
 		var lcaResult = lcaBlock.Calculate();
 		lcaResult.printLcaResult;
 		*/
+		val filterBlock = statement.filters.head.createBlock(statement,resource);
 		
 		val dos = statement.^do
-		val calc = dos.calculation
+		val calcs = dos.calculation
 		
-		if (calc instanceof LcaCalculation) {
-			val lcaBlock = new LcaBlock("LcaBlock",calc.sourceVar.toString(),calc.quantPath);
-		}
+	    for (Calculation cal : calcs) {
+	    	consoleOut.println(cal.class.toString())
+			if (cal instanceof LcaCalculationImpl) {
+				val lcaBlock = new LcaBlock("LcaBlock",cal.sourceVar.toString(),cal.quantPath);
+				lcaBlock.AddInput(filterBlock);
+				val lcaResult = lcaBlock.Calculate();
+				if (lcaResult !== null) {
+					lcaResult.printLcaResult;
+				}
+				
+			}
+	    }
 		
 		val transforms = statement.transforms
 		return selectBlock

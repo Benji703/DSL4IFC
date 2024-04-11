@@ -34,7 +34,7 @@ TranformationCommand:
 IfcTypeRef returns Reference:
     ifcType=IfcType name=ID?;
 
-Calculation:
+Calculation returns Calculation:
 	LcaCalculation
 ;
 /* 
