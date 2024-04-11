@@ -97,9 +97,10 @@ class SustainLangGenerator extends AbstractGenerator {
 		*/
 		
 		val dos = statement.^do
+		val calc = dos.calculation
 		
-		if (dos.calculation instanceof LcaCalculation) {
-			
+		if (calc instanceof LcaCalculation) {
+			val lcaBlock = new LcaBlock("LcaBlock",calc.sourceVar.toString(),calc.quantPath);
 		}
 		
 		val transforms = statement.transforms

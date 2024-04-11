@@ -6,10 +6,13 @@ import java.util.Map;
 import lca.LCA.*;
 
 public class LcaBlock extends Block<LCAResult> {
-
-	public LcaBlock(String name) {
+	private String sourceVarName;
+	private String path;
+	
+	public LcaBlock(String name, String sourceVarName, String path) {
 		super(name);
-		// TODO Auto-generated constructor stub
+		this.sourceVarName = sourceVarName;
+		this.path = path;
 	}
 
 	@Override
@@ -20,8 +23,6 @@ public class LcaBlock extends Block<LCAResult> {
 
 	@Override
 	public LCAResult Calculate() {
-		
-		//var sources = findAllBlocks(FilterBlock.class);
 		//sources.get(0).getOutput;
 		
 		LCA lca = new LCA();
