@@ -7,4 +7,6 @@ public interface ICalculation<T> {
      * @throws Exception 
      */
     T Calculate();
+    
+    long GetTimeOfCalculation();
 }

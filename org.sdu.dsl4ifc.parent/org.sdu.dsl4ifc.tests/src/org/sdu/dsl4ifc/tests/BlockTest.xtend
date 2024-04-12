@@ -30,6 +30,7 @@ class BlockTest {
 	
 	
 	//@Test
+	/*
 	def void filterBlockVariableComparisonTest() {
 		
 		
@@ -48,8 +49,12 @@ class BlockTest {
 		assertEquals(2, output.size, "Should only hold two numbers")
 		assertArrayEquals("Object should be '1' and '2'", List.of("2", "3").toArray(), output.toArray())
 	}
+	* 
+	*/
 }
 
+/*
+ *  
 class MockTypeBlock<T> extends TypeBlock<T> {
 	
 	Collection<T> values;
@@ -65,3 +70,5 @@ class MockTypeBlock<T> extends TypeBlock<T> {
 	}
 	
 }
+* 
+*/

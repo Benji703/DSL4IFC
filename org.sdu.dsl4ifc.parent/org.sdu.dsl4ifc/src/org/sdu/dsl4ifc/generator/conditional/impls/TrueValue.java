@@ -9,5 +9,10 @@ public class TrueValue<T> extends Expression<T> {
 	public boolean Evaluate(T item, VariableStore variables) {
 		return true;
 	}
+	
+	@Override
+    public String toString() {
+    	return "TRUE";
+    }
 
 }
