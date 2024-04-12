@@ -43,6 +43,11 @@
 				<artifactId>ifc2x3tool</artifactId>
 				<version>4.5.1</version>
 			</dependency>
+			<dependency>
+				<groupId>org.dhatim</groupId>
+				<artifactId>fastexcel-reader</artifactId>
+				<version>0.17.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -299,7 +304,4 @@
 			</properties>
 		</profile>
 	</profiles>
-
-	<dependencies>
-	</dependencies>
 </project>

@@ -43,6 +43,14 @@ import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.FilterCommand
+import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
+import lca.LCA.LCAResult
+import java.util.Map
+import org.sdu.dsl4ifc.sustainLang.LcaCalculation
+import org.sdu.dsl4ifc.sustainLang.Calculation
+import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
@@ -80,6 +88,26 @@ class SustainLangGenerator extends AbstractGenerator {
 		val select = statement.select
 		val selectBlock = select.createBlock(statement, resource)
 		
+		val filterBlock = statement.filters.head.createBlock(statement,resource);
+		
+		val dos = statement.^do
+		val calcs = dos.calculation
+		
+	    for (Calculation cal : calcs) {
+	    	consoleOut.println(cal.class.toString())
+			if (cal instanceof LcaCalculationImpl) {
+				val lcaBlock = new LcaBlock("LcaBlock",cal.sourceVar.toString(),cal.quantPath);
+				lcaBlock.AddInput(filterBlock);
+				val lcaResult = lcaBlock.Calculate();
+				if (lcaResult !== null) {
+					lcaResult.printLcaResult;
+				}
+				
+			}
+	    }
+		
+		val transforms = statement.transforms
+    
 		val checkedBlock = searchAndReplaceNodes(selectBlock)
 		
 		// TODO: Run through all nodes and run this on the block getOldBlockIfExists
@@ -101,6 +129,23 @@ class SustainLangGenerator extends AbstractGenerator {
 		block.Inputs = new ArrayList(block.Inputs.map[b | searchAndReplaceNodes(b)])
 		
 		return block
+	}
+	
+	def printLcaResult(LCAResult lcaResult) {
+		consoleOut.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
+		
+		lcaResult.elements.forEach(e | {
+			var map = e.resultMap;
+			consoleOut.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
+			consoleOut.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
+			
+			map.forEach(k,v | {
+				if (v === null) {
+					consoleOut.println("   " + k + " equals null");
+				}
+			})
+			consoleOut.println("}");
+		})
 	}
 	
 	def dispatch Block<?> createBlock(SelectCommand select, Statement statement, Resource resource) {
@@ -285,6 +330,8 @@ class SustainLangGenerator extends AbstractGenerator {
 			return new CompareParameterValueToParameterValueOperation(rightVariableName, leftAttribute.toExtractor, rightAttribute.toExtractor, expression.operator)
 		}
 	}
+	
+	
 		
 	def ParameterValueExtractor<?, ?> toExtractor(Attribute attribute) {
 		return new ParameterValueExtractor(attribute.attribute)

@@ -12,6 +12,12 @@
 	<build>
 		<plugins>
 			<plugin>
+			  <groupId>org.eclipse.tycho</groupId>
+			  <artifactId>tycho-maven-plugin</artifactId>
+			  <version>${tycho-version}</version>
+			  <extensions>true</extensions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>3.0.0</version>
@@ -45,6 +51,11 @@
 						<groupId>com.apstex.ifc2x3tool</groupId>
 						<artifactId>ifc2x3tool</artifactId>
 						<version>4.5.1</version>
+					</dependency>
+					<dependency>
+						<groupId>org.dhatim</groupId>
+						<artifactId>fastexcel-reader</artifactId>
+						<version>0.17.0</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -136,5 +147,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
 </project>
