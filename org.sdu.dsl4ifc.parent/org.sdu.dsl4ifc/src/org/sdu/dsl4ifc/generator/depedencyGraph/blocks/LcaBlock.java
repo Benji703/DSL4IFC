@@ -65,6 +65,8 @@ public class LcaBlock extends Block<LCAResult> {
 	    	
 	    	volume = getIfcVolume(invSet);
 	    	
+	    	String matName = getIfcMat();
+	    	
 	    	elements.add(new LCAIFCElement("Letbeton vægelement, 150 mm tyk væg, 10% udsparinger",volume));
 	    }
 	    
@@ -74,6 +76,11 @@ public class LcaBlock extends Block<LCAResult> {
         LCAResult lcaResult = lca.CalculateLCAWhole(elements, area, areaHeat, b6);
 		
 		return lcaResult;
+	}
+
+	private String getIfcMat() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private double getIfcVolume(SET<IfcRelDefines> invSet) {
