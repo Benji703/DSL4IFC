@@ -8,15 +8,16 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
+import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 
-public class FilterBlock extends VariableReferenceBlock<IfcRoot> implements IVariableReference  {
+public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> implements IVariableReference  {
 
-	private Expression<IfcRoot> expression;
+	private Expression<InternalAccessClass> expression;
 	private VariableStore variables = new VariableStore();
 	private String variableName;
 
 	// TODO: How do we represent the boolean condition with objects?
-	public FilterBlock(String name, String variableName, Expression<IfcRoot> expression) {
+	public FilterBlock(String name, String variableName, Expression<InternalAccessClass> expression) {
 		super(name);
 		this.variableName = variableName;
 		this.expression = expression;
@@ -29,20 +30,20 @@ public class FilterBlock extends VariableReferenceBlock<IfcRoot> implements IVar
 	}
 
 	@Override
-	public List<IfcRoot> Calculate() {
+	public List<InternalAccessClass> Calculate() {
 		var sources = findAllBlocks(TypeBlock.class);
 		
-		List<IfcRoot> toBeFiltered = null;
+		List<InternalAccessClass> toBeFiltered = null;
 		
 		for (TypeBlock<?> typeBlock : sources) {
 			var variableName = typeBlock.getReferenceName();
 			
 			if (this.variableName.equals(variableName)) {	// Is the primary variable
-				toBeFiltered = (List<IfcRoot>) typeBlock.getOutput();
+				toBeFiltered = (List<InternalAccessClass>) typeBlock.getOutput();
 				continue;
 			}
 			
-			variables.put(variableName, (List<IfcRoot>) typeBlock.getOutput());
+			variables.put(variableName, (List<InternalAccessClass>) typeBlock.getOutput());
 		}
 		
 		var result = toBeFiltered.stream().filter(i -> expression.Evaluate(i, variables));

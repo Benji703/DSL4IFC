@@ -1,8 +1,10 @@
 package org.sdu.dsl4ifc.generator;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
+import com.apstex.step.core.ClassInterface;
 
 // Make one for each ifcType
 public class ParameterValueExtractor<T, U> {
@@ -29,14 +31,32 @@ public class ParameterValueExtractor<T, U> {
 			}
 			
 		}
+		if (item instanceof ClassInterface asClassInterface) {
+			switch (parameterName) {
+			case "stepnumber":
+				return (U) (""+asClassInterface.getStepLineNumber());
+			default:
+				break;
+			}
+		}
 		if (item instanceof IfcRoot asIfcRoot) {
 			switch (parameterName) {
 			case "name":
 				IfcLabel name = asIfcRoot.getName();
 				return name == null ? null : (U) name.getDecodedValue();
+			default:
+				break;
+			}
+		}
+		
+		if (item instanceof IfcMaterial asIfcMaterial) {
+			switch (parameterName) {
+			case "name":
+				IfcLabel name = asIfcMaterial.getName();
+				return name == null ? null : (U) name.getDecodedValue();
 
 			case "stepnumber":
-				return (U) (""+asIfcRoot.getStepLineNumber());
+				return (U) (""+asIfcMaterial.getStepLineNumber());
 			default:
 				break;
 			}

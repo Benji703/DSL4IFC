@@ -19,7 +19,7 @@ FromCommand:
     'FROM' types+=IfcTypeRef (',' types+=IfcTypeRef)*;
     
 enum IfcType:
-	ifcWall='IfcWall' | ifcDoor='IfcDoor' | ifcRoot='IfcRoot'
+	ifcWall='IfcWall' | ifcDoor='IfcDoor' | ifcRoot='IfcRoot' | ifcMaterial='IfcMaterial'
 ;
 
 FilterCommand:

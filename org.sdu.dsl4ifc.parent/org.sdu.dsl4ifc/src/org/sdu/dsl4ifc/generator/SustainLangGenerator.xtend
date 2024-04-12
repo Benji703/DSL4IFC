@@ -44,6 +44,8 @@ import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
+import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -205,16 +207,16 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 		
-	def Expression<IfcRoot> toExpression(FilterCommand command) {
+	def Expression<InternalAccessClass> toExpression(FilterCommand command) {
 		val expression = command.condition.toBlockExpression(command.reference);
 		return expression
 	}
 		
-	def dispatch Expression<IfcRoot> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
+	def dispatch Expression<InternalAccessClass> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
 		throw new Exception("Cannot convert this expression to block expression: " + expression.class.name)
 	}
 
-	def dispatch Expression<IfcRoot> toBlockExpression(BooleanExpression expression, Reference variableReference) {
+	def dispatch Expression<InternalAccessClass> toBlockExpression(BooleanExpression expression, Reference variableReference) {
 		
 		switch (expression.operator) {
 			case AND:
@@ -226,9 +228,9 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	// Could be an "exists" as well
-	val defaultValue = new TrueValue<IfcRoot>()
+	val defaultValue = new TrueValue<InternalAccessClass>()
 	
-	def dispatch Expression<IfcRoot> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
+	def dispatch Expression<InternalAccessClass> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
 		var left = expression.left
 		var right = expression.right
 		
@@ -298,6 +300,9 @@ class SustainLangGenerator extends AbstractGenerator {
 			}
 			case IFC_ROOT: {
 				return IfcRoot
+			}
+			case IFC_MATERIAL: {
+				return IfcMaterial
 			}
 			default: {
 				
