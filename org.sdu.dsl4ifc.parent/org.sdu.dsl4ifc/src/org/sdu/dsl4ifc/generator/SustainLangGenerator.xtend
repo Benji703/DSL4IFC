@@ -94,7 +94,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	    for (Calculation cal : calcs) {
 	    	consoleOut.println(cal.class.toString())
 			if (cal instanceof LcaCalculationImpl) {
-				val lcaBlock = new LcaBlock("LcaBlock",cal.sourceVar.toString(),cal.quantPath);
+				val lcaBlock = new LcaBlock("LcaBlock",cal.sourceVar.toString(),cal.area,cal.areaHeat,cal.b6);
 				lcaBlock.AddInput(filterBlock);
 				val lcaResult = lcaBlock.Calculate();
 				if (lcaResult !== null) {

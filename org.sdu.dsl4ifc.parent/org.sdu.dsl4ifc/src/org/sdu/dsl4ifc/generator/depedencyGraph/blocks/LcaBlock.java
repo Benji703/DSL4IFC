@@ -22,11 +22,16 @@ import lca.LCA.*;
 public class LcaBlock extends Block<LCAResult> {
 	private String sourceVarName;
 	private String path;
+	private int area;
+	private int areaHeat;
+	private int b6;
 	
-	public LcaBlock(String name, String sourceVarName, String path) {
+	public LcaBlock(String name, String sourceVarName, int area, int areaHeat, int b6) {
 		super(name);
 		this.sourceVarName = sourceVarName;
-		this.path = path;
+		this.area = area;
+		this.areaHeat = areaHeat;
+		this.b6 = b6;
 	}
 
 	@Override
