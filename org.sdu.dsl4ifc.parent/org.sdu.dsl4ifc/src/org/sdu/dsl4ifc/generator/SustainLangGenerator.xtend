@@ -54,6 +54,8 @@ import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.impl.LcaParamsImpl
 import org.sdu.dsl4ifc.sustainLang.LcaParams
+import org.sdu.dsl4ifc.sustainLang.MatDef
+import java.util.HashMap
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -97,7 +99,15 @@ class SustainLangGenerator extends AbstractGenerator {
 	    	consoleOut.println(cal.class.toString())
 			if (cal instanceof LcaCalculation) {
 				val lcaPar = cal.lcaParams;
-				val lcaBlock = new LcaBlock("LcaBlock",lcaPar.sourceVar.toString(),lcaPar.area,lcaPar.areaHeat,lcaPar.b6);
+				val matDefs = cal.matDefs
+				
+			 	var matDefMap = new HashMap<String,String>
+				
+				for (MatDef matDef : matDefs) {
+					matDefMap.put(matDef.ifcMat,matDef.epdMatId);
+				}
+				
+				val lcaBlock = new LcaBlock("LcaBlock",lcaPar.sourceVar.toString(),lcaPar.area,lcaPar.areaHeat,lcaPar.b6,matDefMap);
 				lcaBlock.AddInput(filterBlock);
 				val lcaResult = lcaBlock.Calculate();
 				if (lcaResult !== null) {

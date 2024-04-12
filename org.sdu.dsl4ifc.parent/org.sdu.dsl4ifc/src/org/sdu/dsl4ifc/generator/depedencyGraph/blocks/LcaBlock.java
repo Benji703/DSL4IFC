@@ -25,13 +25,15 @@ public class LcaBlock extends Block<LCAResult> {
 	private int area;
 	private int areaHeat;
 	private int b6;
+	private Map<String,String> matDefs;
 	
-	public LcaBlock(String name, String sourceVarName, int area, int areaHeat, int b6) {
+	public LcaBlock(String name, String sourceVarName, int area, int areaHeat, int b6, Map<String,String> matDefs) {
 		super(name);
 		this.sourceVarName = sourceVarName;
 		this.area = area;
 		this.areaHeat = areaHeat;
 		this.b6 = b6;
+		this.matDefs = matDefs;
 	}
 
 	@Override
@@ -61,22 +63,7 @@ public class LcaBlock extends Block<LCAResult> {
 	    	var invSet = iWall.getIsDefinedBy_Inverse();
 	    	double volume = 0;
 	    	
-	    	for (IfcRelDefines iRel : invSet) {
-	    		
-	    		if (iRel.getClass() != IfcRelDefinesByProperties.class) {
-	    			continue;
-	    		}
-	    		
-	    		var iRelProp = (IfcRelDefinesByProperties)iRel;
-	    		
-	    		if (iRelProp.getRelatingPropertyDefinition().getClass() != IfcElementQuantity.class) {
-	    			continue;
-	    		}
-	    		
-	    		IfcElementQuantity elementQuant = (IfcElementQuantity)iRelProp.getRelatingPropertyDefinition();
-	    		
-	    		volume = GetQuanityVolume(elementQuant);
-	    	}
+	    	volume = getIfcVolume(invSet);
 	    	
 	    	elements.add(new LCAIFCElement("Letbeton vægelement, 150 mm tyk væg, 10% udsparinger",volume));
 	    }
@@ -87,6 +74,28 @@ public class LcaBlock extends Block<LCAResult> {
         LCAResult lcaResult = lca.CalculateLCAWhole(elements, area, areaHeat, b6);
 		
 		return lcaResult;
+	}
+
+	private double getIfcVolume(SET<IfcRelDefines> invSet) {
+		double volume = 0;
+		
+		for (IfcRelDefines iRel : invSet) {
+			
+			if (iRel.getClass() != IfcRelDefinesByProperties.class) {
+				continue;
+			}
+			
+			var iRelProp = (IfcRelDefinesByProperties)iRel;
+			
+			if (iRelProp.getRelatingPropertyDefinition().getClass() != IfcElementQuantity.class) {
+				continue;
+			}
+			
+			IfcElementQuantity elementQuant = (IfcElementQuantity)iRelProp.getRelatingPropertyDefinition();
+			
+			volume = GetQuanityVolume(elementQuant);
+		}
+		return volume;
 	}
 
 	private double GetQuanityVolume(IfcElementQuantity elementQuant) {

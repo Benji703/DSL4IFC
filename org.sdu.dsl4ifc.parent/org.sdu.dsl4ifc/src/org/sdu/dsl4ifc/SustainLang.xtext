@@ -47,7 +47,7 @@ LcaCalculation returns Calculation:
 //sourceVar=[Reference]',' quantPath=ID
 
 MatDef:
-	ifcMat=STRING '->' edpMatId=STRING
+	ifcMat=STRING '->' epdMatId=STRING
 ;
 
 LcaParams:
