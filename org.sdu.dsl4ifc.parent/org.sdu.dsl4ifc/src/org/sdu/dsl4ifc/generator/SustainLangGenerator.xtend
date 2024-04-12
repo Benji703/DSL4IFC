@@ -62,7 +62,9 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		statements.forEach[statement | {
 				val timeStart = System.currentTimeMillis()
+				System.out.println("[CREATING GRAPH]")
 				val graph = constructGraph(statement, resource)
+				System.out.println("[EXECUTING]")
 				val output = graph.output
 				consoleOut.println(output.toString)
 				val timeMsg = '''Done [«System.currentTimeMillis-timeStart» ms]'''
@@ -150,14 +152,14 @@ class SustainLangGenerator extends AbstractGenerator {
 		val typeBlock = new TypeBlock('''Type: "«reference.name»" «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
 		
 		// Create necesarry inputs
-		val parserBlock = statement.source.createBlock(resource)
+		val parserBlock = statement.source.createBlock(statement, resource)
 		typeBlock.AddInput(parserBlock)
 		
 		return catalog.ensureExistingIsUsed(typeBlock)
 	}
 	
-	def dispatch Block<?> createBlock(SourceCommand source, Resource resource) {
-		val parserBlock = new Ifc2x3ParserBlock("Parser 2x3", source.path, resource)
+	def dispatch Block<?> createBlock(SourceCommand source, Statement statement, Resource resource) {
+		val parserBlock = new Ifc2x3ParserBlock("IFC Parser 2x3", source.path, resource)
 		
 		return catalog.ensureExistingIsUsed(parserBlock)
 	}
