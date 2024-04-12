@@ -46,4 +46,9 @@ public class CompareValueToParameterValueOperation<Y, T> extends ComparisonOpera
 				return Compare(leftValue, secondaryValue);
 			});
     }
+    
+    @Override
+    public String toString() {
+    	return leftValue + " " + this.comparison +" " + rightValueExtractor.getParameterName();
+    }
 }

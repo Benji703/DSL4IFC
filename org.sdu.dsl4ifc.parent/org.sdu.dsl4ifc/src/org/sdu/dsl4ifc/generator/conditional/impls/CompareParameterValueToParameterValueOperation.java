@@ -46,4 +46,9 @@ public class CompareParameterValueToParameterValueOperation<U, Y, T> extends Com
 				return Compare(primaryValue, secondaryValue);
 			});
     }
+    
+    @Override
+    public String toString() {
+    	return primaryValueExtractor.getParameterName() + " " + this.comparison +" " + secondaryValueExtractor.getParameterName();
+    }
 }

@@ -3,7 +3,7 @@ package org.sdu.dsl4ifc.generator.conditional.core;
 import org.sdu.dsl4ifc.sustainLang.ComparisonOperator;
 
 public abstract class ComparisonOperation<T, U> extends Expression<T> {
-	private ComparisonOperator comparison;
+	protected ComparisonOperator comparison;
 	
 	public ComparisonOperation(ComparisonOperator comparison) {
 		this.comparison = comparison;

@@ -19,7 +19,13 @@ public class SelectBlock extends Block<Table> {
 
 	@Override
 	public boolean IsOutOfDate() {
-		// Check a checksum of the file? Or the change date and length?
+		
+		boolean inputsAreNewer = Inputs.stream().anyMatch(input -> input.GetTimeOfCalculation() > GetTimeOfCalculation());
+		
+		if (inputsAreNewer) {
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -45,12 +51,12 @@ public class SelectBlock extends Block<Table> {
 
 		// Get correct inputs
 		// Compute variables
-		var outputMap = new HashMap<String, Stream<?>>();
+		var outputMap = new HashMap<String, List<?>>();
 		for (AttributeReference<?, String> attributeReference : attributeReferences) {
 			var referenceName = attributeReference.getReferenceName();
 			
 			var block = referenceNameToInputBlock.get(referenceName);
-			Stream<?> entities = block.getOutput();
+			List<?> entities = block.getOutput();
 			
 			outputMap.put(referenceName, entities);
 			
@@ -80,6 +86,18 @@ public class SelectBlock extends Block<Table> {
 		}
 	
 		return table;
+	}
+
+	@Override
+	public String generateCacheKey() {
+		StringBuilder keyBuilder = new StringBuilder(Name);
+		for (AttributeReference<?,?> ref : attributeReferences) {
+            keyBuilder.append(ref.getReferenceName()+"."+ref.getAttributeName()+",");
+        }
+        for (Block<?> block : Inputs) {
+            keyBuilder.append(block.generateCacheKey()+";");
+        }
+        return keyBuilder.toString();
 	}
 
 }
