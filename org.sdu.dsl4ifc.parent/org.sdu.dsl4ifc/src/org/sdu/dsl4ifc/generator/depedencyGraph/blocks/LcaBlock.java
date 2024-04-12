@@ -84,7 +84,7 @@ public class LcaBlock extends Block<LCAResult> {
 		
 		LCA lca = new LCA();
 
-        LCAResult lcaResult = lca.CalculateLCAWhole(elements, 200, 180, 1000);
+        LCAResult lcaResult = lca.CalculateLCAWhole(elements, area, areaHeat, b6);
 		
 		return lcaResult;
 	}
