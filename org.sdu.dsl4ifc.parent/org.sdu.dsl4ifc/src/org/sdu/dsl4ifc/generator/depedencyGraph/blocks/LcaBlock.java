@@ -49,7 +49,7 @@ public class LcaBlock extends Block<LCAResult> {
 		
 	    var sourceVar = (VariableReferenceBlock<?>)references.get(0);
 	    
-	    List<IfcWall> ifcElements = (List<IfcWall>)sourceVar.getOutput().toList();
+	    List<IfcWall> ifcElements = (List<IfcWall>)sourceVar.getOutput();
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcWall iWall : ifcElements) {
@@ -93,6 +93,18 @@ public class LcaBlock extends Block<LCAResult> {
 		}
 		
 		return 0.0;
+	}
+
+	@Override
+	public String generateCacheKey() {
+		StringBuilder keyBuilder = new StringBuilder(Name);
+		
+		keyBuilder.append(sourceVarName+",");
+		
+        for (Block<?> block : Inputs) {
+            keyBuilder.append(block.generateCacheKey()+";");
+        }
+        return keyBuilder.toString();
 	}
 
 }
