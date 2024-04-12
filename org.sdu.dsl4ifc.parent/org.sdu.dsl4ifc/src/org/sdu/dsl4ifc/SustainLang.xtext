@@ -42,12 +42,16 @@ LcaCalculation returns Calculation:
     {LcaCalculation} 'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
 */
 LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '('sourceVar=[Reference]',' lcaParams=LcaParams ')' reference=CalcReference;
+    {LcaCalculation} 'LCA' '('lcaParams=LcaParams 'MATDEF' '(' matDefs+=MatDef* ')' ')' reference=CalcReference;
 
 //sourceVar=[Reference]',' quantPath=ID
 
+MatDef:
+	ifcMat=STRING '->' edpMatId=STRING
+;
+
 LcaParams:
-	'AREA' area=INT & 'AREAHEAT' areaHeat=INT & 'B6' b6=INT
+	'SOURCE' sourceVar=[Reference] & 'AREA' area=INT & 'AREAHEAT' areaHeat=INT & 'B6' b6=INT
 ;
 
 CalcReference returns Reference:
