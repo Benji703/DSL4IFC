@@ -50,9 +50,11 @@ public class LcaBlock extends Block<LCAResult> {
 	    var sourceVar = (VariableReferenceBlock<?>)references.get(0);
 	    
 	    List<IfcWall> ifcElements = (List<IfcWall>)sourceVar.getOutput().toList();
+	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcWall iWall : ifcElements) {
 	    	var invSet = iWall.getIsDefinedBy_Inverse();
+	    	double volume = 0;
 	    	
 	    	for (IfcRelDefines iRel : invSet) {
 	    		
@@ -68,31 +70,14 @@ public class LcaBlock extends Block<LCAResult> {
 	    		
 	    		IfcElementQuantity elementQuant = (IfcElementQuantity)iRelProp.getRelatingPropertyDefinition();
 	    		
-	    		double volume = GetQuanityVolume(elementQuant);
+	    		volume = GetQuanityVolume(elementQuant);
 	    	}
+	    	
+	    	elements.add(new LCAIFCElement("Letbeton vægelement, 150 mm tyk væg, 10% udsparinger",volume));
 	    }
 	    
 		
 		LCA lca = new LCA();
-
-        String concrete = "Letbeton vægelement, 150 mm tyk væg, 10% udsparinger";
-        String floorS = "Celleglas-isolering 115 kg/m³";
-
-        LCAIFCElement wall1 = new LCAIFCElement(concrete, 200);
-        wall1.setLifeTime(12);
-        LCAIFCElement wall2 = new LCAIFCElement(concrete, 200);
-        wall2.setLifeTime(70);
-        LCAIFCElement wall3 = new LCAIFCElement(concrete, 200);
-        LCAIFCElement wall4 = new LCAIFCElement(concrete, 200);
-
-        LCAIFCElement floor = new LCAIFCElement(floorS, 1000);
-
-        ArrayList<LCAIFCElement> elements = new ArrayList<>();
-        elements.add(wall1);
-        elements.add(wall2);
-        elements.add(wall3);
-        elements.add(wall4);
-        elements.add(floor);
 
         LCAResult lcaResult = lca.CalculateLCAWhole(elements, 200, 180, 1000);
 		
