@@ -37,15 +37,15 @@ IfcTypeRef returns Reference:
 Calculation returns Calculation:
 	LcaCalculation
 ;
-/* 
-LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
-*/
-LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '(' sourceVar=[Reference]',' quantPath=ID')' reference=CalcReference;
 
-CalcReference returns Reference:
-    {CalcReference} name=ID;
+LcaCalculation returns Calculation:
+    {LcaCalculation} 'LCA' '(' sourceVar=[Reference] ')' summaryReference=LcaSummaryReference (',' lcaEntitiesReference=LcaEntitiesReference)?;
+
+LcaSummaryReference returns Reference:
+    {LcaSummaryReference} name=ID;
+    
+LcaEntitiesReference returns Reference:
+    {LcaEntitiesReference} name=ID;
 
 Attribute:
     reference=[Reference]'.'attribute=ID

@@ -43,6 +43,7 @@ public class SelectBlock extends Block<Table> {
 			referenceNameToInputBlock.put(variableName, reference);
 		}
 		
+		
 		var table = new Table();
 		this.attributeReferences.forEach(reference -> 
 				table.addColumn(reference.getReferenceName() + "." + reference.getAttributeName(), reference)

@@ -1,10 +1,11 @@
 package lca.LCA;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LCAResult {
     private double lcaResult;
-    private ArrayList<LCAIFCElement> elements;
+    private List<LCAIFCElement> elements;
 
     public LCAResult(double lcaResult) {
         this.lcaResult = lcaResult;
@@ -16,7 +17,7 @@ public class LCAResult {
         this.elements = elements;
     }
 
-    public ArrayList<LCAIFCElement> getElements() {
+    public List<LCAIFCElement> getElements() {
         return elements;
     }
 

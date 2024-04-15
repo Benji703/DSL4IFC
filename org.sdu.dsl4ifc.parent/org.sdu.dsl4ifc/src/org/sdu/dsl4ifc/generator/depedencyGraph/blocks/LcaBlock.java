@@ -21,12 +21,15 @@ import lca.LCA.*;
 
 public class LcaBlock extends Block<LCAResult> {
 	private String sourceVarName;
-	private String path;
+	private String summaryVariableName;
+	private String entitiesVariableName;
 	
-	public LcaBlock(String name, String sourceVarName, String path) {
+	
+	public LcaBlock(String name, String sourceVarName, String summaryVariableName, String entitiesVariableName) {
 		super(name);
 		this.sourceVarName = sourceVarName;
-		this.path = path;
+		this.summaryVariableName = summaryVariableName;
+		this.entitiesVariableName = entitiesVariableName;
 	}
 
 	@Override
@@ -105,6 +108,14 @@ public class LcaBlock extends Block<LCAResult> {
             keyBuilder.append(block.generateCacheKey()+";");
         }
         return keyBuilder.toString();
+	}
+
+	public String getEntitiesVariableName() {
+		return entitiesVariableName;
+	}
+
+	public String getSummaryVariableName() {
+		return summaryVariableName;
 	}
 
 }
