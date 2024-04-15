@@ -74,9 +74,9 @@ public class LCA {
         return ifcElementResults;
     }
 
-    public LCAResult CalculateLCAWhole(ArrayList<LCAIFCElement> ifcElements, double areaHeated, double b6) {
+    public LCAResult CalculateLCAWhole(List<LCAIFCElement> ifcElements, double areaHeated, double b6) {
 
-        double baseResult = ifcElements.stream().mapToDouble(LCAIFCElement::getLcaVal).sum();
+        double baseResult = ifcElements.stream().filter(t -> t != null).mapToDouble(LCAIFCElement::getLcaVal).sum();
         double opResult = lcaCalc.CalculateLCAOperational(b6, areaHeated);
         double result = baseResult + opResult;
 

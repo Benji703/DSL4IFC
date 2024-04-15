@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import lca.LCA.*;
 
-public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
+public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
 	private String path;
 	private int area;
@@ -54,7 +54,7 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 		
 	    var sourceVar = (VariableReferenceBlock<?>)references.get(0);
 	    
-	    List<IfcWall> ifcElements = (List<IfcWall>)sourceVar.getOutput();
+	    List<IfcWall> ifcElements = (List<IfcWall>) sourceVar.getOutput();
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcWall iWall : ifcElements) {
@@ -128,5 +128,10 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
             keyBuilder.append(block.generateCacheKey()+";");
         }
         return keyBuilder.toString();
+	}
+
+	@Override
+	public String getReferenceName() {
+		return sourceVarName;
 	}
 }

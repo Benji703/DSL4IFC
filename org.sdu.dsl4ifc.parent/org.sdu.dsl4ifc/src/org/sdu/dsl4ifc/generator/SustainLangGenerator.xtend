@@ -64,7 +64,7 @@ import java.util.HashMap
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 
 import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
-
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -117,20 +117,21 @@ class SustainLangGenerator extends AbstractGenerator {
 				}
 				
 
-				val lcaBlock = new LcaCalcBlock("LcaBlock",lcaPar.sourceVar.toString(),lcaPar.area,matDefMap);
+				val lcaBlock = new LcaCalcBlock("LCA Calculation", lcaPar.sourceVar.toString(), lcaPar.area, matDefMap);
 
 				lcaBlock.AddInput(filterBlock);
-				val lcaResult = lcaBlock.Calculate();
 				
+				val lcaSummaryBlock = new LcaSummaryBlock("LCA Summary", cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6);
+				lcaSummaryBlock.AddInput(lcaBlock);
+				
+				val summary = lcaSummaryBlock.Calculate();
+				consoleOut.println(summary.head.lcaResult.toString)
 			}
 	    }
 		
 		val transforms = statement.transforms
     
 		val checkedBlock = searchAndReplaceNodes(selectBlock)
-		
-		// TODO: Run through all nodes and run this on the block getOldBlockIfExists
-			// If the block was replaces then don't go further down that branch as it will be the old ones either way
 		
 		return checkedBlock
 	}

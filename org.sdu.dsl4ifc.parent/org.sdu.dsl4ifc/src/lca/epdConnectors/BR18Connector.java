@@ -1,7 +1,11 @@
 package lca.epdConnectors;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +14,9 @@ import java.util.Map;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
+import org.eclipse.core.runtime.FileLocator;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import lca.DomainClasses.BR18ProductDeclaration;
 import lca.DomainClasses.Enums.DeclaredUnitEnum;
@@ -29,11 +36,21 @@ public class BR18Connector implements IEPDConnector {
                     .findFirst().orElse(null);
         }
 
-        Map<String, List<String>> epdData = new HashMap<String, List<String>>() {
-        };
+        Map<String, List<String>> epdData = new HashMap<String, List<String>>();
 
         try {
-            epdData = readExcel("C:\\Users\\Benjamin\\Documents\\Speciale\\DSL4IFC\\org.sdu.dsl4ifc.parent\\org.sdu.dsl4ifc\\src\\lca\\ExcelData\\BR18v2_201222_clean.xlsx");
+        	Bundle bundle = FrameworkUtil.getBundle(BR18Connector.class);
+            
+        	URL fileURL = bundle.getEntry("/src/lca/ExcelData/BR18v2_201222_clean.xlsx"); // Replace "/path/to/your/file.xlsx" with the path to your file within the plugin
+
+            // Resolve the file URL to a filesystem path
+            URL resolvedFileURL = FileLocator.toFileURL(fileURL);
+            String filePath = resolvedFileURL.getPath();
+            
+            // Create a File object from the resolved path
+            File file = new File(filePath);
+      
+            epdData = readExcel(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,10 +128,10 @@ public class BR18Connector implements IEPDConnector {
         return d;
     }
 
-    public Map<String, List<String>> readExcel(String fileLocation) throws IOException {
+    public Map<String, List<String>> readExcel(File file) throws IOException {
         Map<String, List<String>> data = new HashMap<>();
 
-        try (FileInputStream file = new FileInputStream(fileLocation); ReadableWorkbook wb = new ReadableWorkbook(file)) {
+        try (ReadableWorkbook wb = new ReadableWorkbook(file)) {
             Sheet sheet = wb.getFirstSheet();
             List<Row> rows = sheet.read();
 

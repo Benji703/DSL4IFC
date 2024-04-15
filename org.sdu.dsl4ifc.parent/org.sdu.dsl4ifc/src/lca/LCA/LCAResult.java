@@ -12,7 +12,7 @@ public class LCAResult {
         elements = new ArrayList<>();
     }
 
-    public LCAResult(double lcaResult, ArrayList<LCAIFCElement> elements) {
+    public LCAResult(double lcaResult, List<LCAIFCElement> elements) {
         this.lcaResult = lcaResult;
         this.elements = elements;
     }
@@ -21,7 +21,7 @@ public class LCAResult {
         return elements;
     }
 
-    public void setElements(ArrayList<LCAIFCElement> elements) {
+    public void setElements(List<LCAIFCElement> elements) {
         this.elements = elements;
     }
 

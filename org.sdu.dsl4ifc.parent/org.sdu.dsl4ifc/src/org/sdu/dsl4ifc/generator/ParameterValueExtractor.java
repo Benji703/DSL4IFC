@@ -68,7 +68,7 @@ public class ParameterValueExtractor<T, U> {
 		if (item instanceof LCAResult asLcaResult) {
 			switch (parameterName) {
 			case "result":
-				return (U) (asLcaResult.getLcaResult()+" kg. CO2 ævk. / m2 / år");
+				return (U) (asLcaResult.getLcaResult()+" kg. CO₂ ævk. / m² / år");
 
 			default:
 				break;
@@ -88,9 +88,9 @@ public class ParameterValueExtractor<T, U> {
 			case "d":
 				return (U) (""+asLcaElement.getdResult());
 			case "result":
-				return (U) (""+asLcaElement.getLcaVal() + " kg. CO2 ævk. / m2 / år");
+				return (U) (""+asLcaElement.getLcaVal() + " kg. CO₂ ævk. / m² / år");
 			case "quantity":
-				return (U) (asLcaElement.getQuantity() + " m3");
+				return (U) (asLcaElement.getQuantity() + " m³");
 			case "lifetime":
 				return (U) (asLcaElement.getLifeTime() + " year(s)");
 
