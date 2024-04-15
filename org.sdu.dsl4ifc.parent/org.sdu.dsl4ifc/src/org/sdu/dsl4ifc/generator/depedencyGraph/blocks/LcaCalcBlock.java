@@ -3,6 +3,8 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSet;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialSelect;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
@@ -11,6 +13,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
 
 
@@ -27,6 +30,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private int area;
 	private Map<String,String> matDefs;
 	private String referenceName;
+	private LCA lca = new LCA();
 	
 	public LcaCalcBlock(String name, String sourceVarName, String referenceName, int area, Map<String,String> matDefs) {
 		super(name);
@@ -65,23 +69,35 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	
 	    	volume = getIfcVolume(invSet);
 	    	
-	    	String matName = getIfcMat(iWall.getHasAssociations_Inverse());
+	    	String matId = getIfcMatId(iWall.getHasAssociations_Inverse());
 	    	
-	    	elements.add(new LCAIFCElement("Letbeton vægelement, 150 mm tyk væg, 10% udsparinger",volume));
+	    	elements.add(new LCAIFCElement(matId,volume));
 	    }
-	    
-		
-		LCA lca = new LCA();
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
 		
 		return lcaElements;
 	}
 
-	private String getIfcMat(SET<IfcRelAssociates> matSet) {
+	private String getIfcMatId(SET<IfcRelAssociates> matSet) {
 		
 		for (IfcRelAssociates relAss : matSet) {
+			if (!(relAss instanceof IfcRelAssociatesMaterial)) {
+				continue;
+			}
 			
+			var relAssMat = (IfcRelAssociatesMaterial)relAss;
+			
+			if (!(relAssMat.getRelatingMaterial() instanceof IfcMaterialLayerSetUsage)) {
+				continue;
+			}
+			
+			var relMat = ((IfcMaterialLayerSetUsage)relAssMat.getRelatingMaterial()).getForLayerSet();
+			
+			var ifcMatLayer = relMat.getMaterialLayers().get(0);
+			
+			var s = ifcMatLayer.getMaterial().getName().getValue();
+			return matDefs.get(s);
 		}
 		
 		return null;
@@ -92,13 +108,13 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
 		for (IfcRelDefines iRel : invSet) {
 			
-			if (iRel.getClass() != IfcRelDefinesByProperties.class) {
+			if (!(iRel instanceof IfcRelDefinesByProperties)) {
 				continue;
 			}
 			
 			var iRelProp = (IfcRelDefinesByProperties)iRel;
 			
-			if (iRelProp.getRelatingPropertyDefinition().getClass() != IfcElementQuantity.class) {
+			if (!(iRelProp.getRelatingPropertyDefinition() instanceof IfcElementQuantity)) {
 				continue;
 			}
 			
@@ -112,7 +128,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private double GetQuanityVolume(IfcElementQuantity elementQuant) {
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q.getClass() == IfcQuantityVolume.class) {
+			if (q instanceof IfcQuantityVolume) {
 				return ((IfcQuantityVolume)q).getVolumeValue().getValue();
 			}
 		}

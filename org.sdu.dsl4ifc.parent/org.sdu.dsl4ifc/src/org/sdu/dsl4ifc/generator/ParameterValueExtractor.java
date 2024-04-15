@@ -78,7 +78,7 @@ public class ParameterValueExtractor<T, U> {
 		if (item instanceof LCAIFCElement asLcaElement) {
 			switch (parameterName) {
 			case "name":
-				return (U) asLcaElement.getName();
+				return (U) asLcaElement.getEpdId();
 			case "a":
 				return (U) (""+asLcaElement.getaResult());
 			case "c3":
