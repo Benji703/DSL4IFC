@@ -125,6 +125,7 @@ class SustainLangGenerator extends AbstractGenerator {
 				lcaSummaryBlock.AddInput(lcaBlock);
 				
 				val summary = lcaSummaryBlock.Calculate();
+				summary.get(0).printLcaResult;
 				consoleOut.println(summary.head.lcaResult.toString)
 			}
 	    }
@@ -156,7 +157,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		lcaResult.elements.forEach(e | {
 			var map = e.resultMap;
-			consoleOut.println("{ Name: " + e.getEpdId() + " With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
+			consoleOut.println("{ EPD Name: " + e.getEpdName() + ", EPD ID: " + e.getEpdId + ", IFC Material: " + e.getIfcName + ", With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
 			consoleOut.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
 			
 			map.forEach(k,v | {
