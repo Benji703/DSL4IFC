@@ -69,9 +69,9 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	
 	    	volume = getIfcVolume(invSet);
 	    	
-	    	String matId = getIfcMatId(iWall.getHasAssociations_Inverse());
+	    	String ifcMatName = getIfcMatId(iWall.getHasAssociations_Inverse());
 	    	
-	    	elements.add(new LCAIFCElement(matId,volume));
+	    	elements.add(new LCAIFCElement(matDefs.get(ifcMatName),ifcMatName,volume));
 	    }
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
@@ -95,9 +95,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			var relMat = ((IfcMaterialLayerSetUsage)relAssMat.getRelatingMaterial()).getForLayerSet();
 			
 			var ifcMatLayer = relMat.getMaterialLayers().get(0);
-			
-			var s = ifcMatLayer.getMaterial().getName().getValue();
-			return matDefs.get(s);
+	
+			return ifcMatLayer.getMaterial().getName().getValue();
 		}
 		
 		return null;

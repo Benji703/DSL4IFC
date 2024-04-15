@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LCAIFCElement {
+	private String ifcName;
+	private String epdName;
     private String epdId;
     private Double quantity;
     private int lifeTime;
@@ -14,8 +16,9 @@ public class LCAIFCElement {
     private Double lcaVal;
 
 
-    public LCAIFCElement(String type, double quantity) {
-        this.epdId = type;
+    public LCAIFCElement(String id, String ifcName, double quantity) {
+        this.epdId = id;
+        this.ifcName = ifcName;
         this.quantity = quantity;
     }
 
@@ -96,4 +99,20 @@ public class LCAIFCElement {
     public void setdResult(Double dResult) {
         this.dResult = dResult;
     }
+
+	public String getIfcName() {
+		return ifcName;
+	}
+
+	public void setIfcName(String ifcName) {
+		this.ifcName = ifcName;
+	}
+
+	public String getEpdName() {
+		return epdName;
+	}
+
+	public void setEpdName(String epdName) {
+		this.epdName = epdName;
+	}
 }

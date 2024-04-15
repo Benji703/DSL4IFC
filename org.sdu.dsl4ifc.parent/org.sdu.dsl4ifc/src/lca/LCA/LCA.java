@@ -34,6 +34,8 @@ public class LCA {
         if (envProductInfo == null) {
         	return null;
         }
+        
+        element.setEpdName(envProductInfo.getName());
 
         element.setaResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
         element.setC3Result(MultiplyWithQuanitities(envProductInfo.getC3(),element));
