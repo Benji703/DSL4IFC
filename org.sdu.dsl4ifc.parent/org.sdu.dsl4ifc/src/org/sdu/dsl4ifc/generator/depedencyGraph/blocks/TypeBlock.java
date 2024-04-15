@@ -8,9 +8,10 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
+import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel;
 
-public class TypeBlock<T extends IfcRoot> extends VariableReferenceBlock<IfcRoot> implements IVariableReference  {
+public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceBlock<InternalAccessClass> implements IVariableReference  {
 
 	private Class<T> clazz;
 	
@@ -29,7 +30,7 @@ public class TypeBlock<T extends IfcRoot> extends VariableReferenceBlock<IfcRoot
 	}
 
 	@Override
-	public List<IfcRoot> Calculate() {
+	public List<InternalAccessClass> Calculate() {
 		Ifc2x3ParserBlock source = findFirstBlock(Ifc2x3ParserBlock.class);
 		IfcModel ifcModel = source.getOutput();
 		

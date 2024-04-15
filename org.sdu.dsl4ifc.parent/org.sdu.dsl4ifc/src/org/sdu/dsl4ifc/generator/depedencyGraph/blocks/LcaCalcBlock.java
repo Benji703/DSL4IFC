@@ -129,5 +129,4 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
         }
         return keyBuilder.toString();
 	}
-
 }

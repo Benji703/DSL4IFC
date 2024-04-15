@@ -4,8 +4,10 @@
 package org.sdu.dsl4ifc.generator
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
+import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashSet
@@ -13,6 +15,7 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.function.Function
+import lca.LCA.LCAResult
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -31,16 +34,19 @@ import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SelectBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
+import org.sdu.dsl4ifc.sustainLang.Calculation
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SelectCommand
+import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
@@ -56,6 +62,9 @@ import org.sdu.dsl4ifc.sustainLang.LcaParams
 import org.sdu.dsl4ifc.sustainLang.MatDef
 import java.util.HashMap
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
+
+import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
+
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -107,7 +116,9 @@ class SustainLangGenerator extends AbstractGenerator {
 					matDefMap.put(matDef.ifcMat,matDef.epdMatId);
 				}
 				
+
 				val lcaBlock = new LcaCalcBlock("LcaBlock",lcaPar.sourceVar.toString(),lcaPar.area,matDefMap);
+
 				lcaBlock.AddInput(filterBlock);
 				val lcaResult = lcaBlock.Calculate();
 				
@@ -235,7 +246,7 @@ class SustainLangGenerator extends AbstractGenerator {
 			}
 		}
 	}
-	
+	 
 	def List<AttributeReference<Object, String>> toAttributeReferences(SelectCommand command) {
 		command.selects.map[attribute | {
 			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
@@ -260,16 +271,16 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 		
-	def Expression<IfcRoot> toExpression(FilterCommand command) {
+	def Expression<InternalAccessClass> toExpression(FilterCommand command) {
 		val expression = command.condition.toBlockExpression(command.reference);
 		return expression
 	}
 		
-	def dispatch Expression<IfcRoot> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
+	def dispatch Expression<InternalAccessClass> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
 		throw new Exception("Cannot convert this expression to block expression: " + expression.class.name)
 	}
 
-	def dispatch Expression<IfcRoot> toBlockExpression(BooleanExpression expression, Reference variableReference) {
+	def dispatch Expression<InternalAccessClass> toBlockExpression(BooleanExpression expression, Reference variableReference) {
 		
 		switch (expression.operator) {
 			case AND:
@@ -281,9 +292,9 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	// Could be an "exists" as well
-	val defaultValue = new TrueValue<IfcRoot>()
+	val defaultValue = new TrueValue<InternalAccessClass>()
 	
-	def dispatch Expression<IfcRoot> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
+	def dispatch Expression<InternalAccessClass> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
 		var left = expression.left
 		var right = expression.right
 		
@@ -355,6 +366,9 @@ class SustainLangGenerator extends AbstractGenerator {
 			}
 			case IFC_ROOT: {
 				return IfcRoot
+			}
+			case IFC_MATERIAL: {
+				return IfcMaterial
 			}
 			default: {
 				
