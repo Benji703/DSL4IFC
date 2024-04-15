@@ -10,6 +10,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
 import java.util.ArrayList
 import java.util.Collection
+import java.util.HashMap
 import java.util.HashSet
 import java.util.LinkedHashMap
 import java.util.List
@@ -35,36 +36,22 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SelectBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
-import org.sdu.dsl4ifc.sustainLang.Calculation
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.IfcType
+import org.sdu.dsl4ifc.sustainLang.LcaCalculation
+import org.sdu.dsl4ifc.sustainLang.MatDef
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
-import org.sdu.dsl4ifc.sustainLang.FilterCommand
-import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
-import lca.LCA.LCAResult
-import java.util.Map
-import org.sdu.dsl4ifc.sustainLang.LcaCalculation
-import org.sdu.dsl4ifc.sustainLang.Calculation
-import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
-import org.sdu.dsl4ifc.sustainLang.SourceCommand
-import org.sdu.dsl4ifc.sustainLang.impl.LcaParamsImpl
-import org.sdu.dsl4ifc.sustainLang.LcaParams
-import org.sdu.dsl4ifc.sustainLang.MatDef
-import java.util.HashMap
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
-
-import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -82,15 +69,22 @@ class SustainLangGenerator extends AbstractGenerator {
 		catalog.setupNewRun
 		
 		statements.forEach[statement | {
-				val timeStart = System.currentTimeMillis()
-				System.out.println("[CREATING GRAPH]")
-				val graph = constructGraph(statement, resource)
-				System.out.println("[EXECUTING]")
-				val output = graph.output
-				consoleOut.println(output.toString)
-				val timeMsg = '''Done [«System.currentTimeMillis-timeStart» ms]'''
-				consoleOut.println(timeMsg)
-				System.out.println(timeMsg)
+			
+				try {
+					val timeStart = System.currentTimeMillis()
+					System.out.println("[CREATING GRAPH]")
+					val graph = constructGraph(statement, resource)
+					System.out.println("[EXECUTING]")
+					val output = graph.output
+					consoleOut.println(output.toString)
+					val timeMsg = '''Done [«System.currentTimeMillis-timeStart» ms]'''
+					consoleOut.println(timeMsg)
+					System.out.println(timeMsg)
+				} catch (Exception e) {
+					consoleOut.println("Error during the execution of the query!")
+					throw e;
+				}
+				
 			}]
 	}
 		
@@ -98,39 +92,6 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val select = statement.select
 		val selectBlock = select.createBlock(statement, resource)
-		
-		val filterBlock = statement.filters.head.createBlock(statement,resource);
-		
-		val dos = statement.^do
-		val calcs = dos.calculation
-		
-	    for (Calculation cal : calcs) {
-	    	consoleOut.println(cal.class.toString())
-			if (cal instanceof LcaCalculation) {
-				val lcaPar = cal.lcaParams;
-				val matDefs = cal.matDefs
-				
-			 	var matDefMap = new HashMap<String,String>
-				
-				for (MatDef matDef : matDefs) {
-					matDefMap.put(matDef.ifcMat,matDef.epdMatId);
-				}
-				
-
-				val lcaBlock = new LcaCalcBlock("LCA Calculation", lcaPar.sourceVar.toString(), lcaPar.area, matDefMap);
-
-				lcaBlock.AddInput(filterBlock);
-				
-				val lcaSummaryBlock = new LcaSummaryBlock("LCA Summary", cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6);
-				lcaSummaryBlock.AddInput(lcaBlock);
-				
-				val summary = lcaSummaryBlock.Calculate();
-				consoleOut.println(summary.head.lcaResult.toString)
-			}
-	    }
-		
-		val transforms = statement.transforms
-    
 		val checkedBlock = searchAndReplaceNodes(selectBlock)
 		
 		return checkedBlock
@@ -173,13 +134,13 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		// Create necesarry inputs		
 		for (attribute : select.selects.distinctBy[s | s.reference.name]) {
-			addInputs(statement, attribute, resource, selectBlock)
+			addInputsToSelect(statement, attribute, resource, selectBlock)
 		}
 		
 		return catalog.ensureExistingIsUsed(selectBlock)
 	}
 	
-	protected def void addInputs(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
+	protected def void addInputsToSelect(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
 		
 		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.reference.name]
 		if (!filtersForAttribute.isEmpty) { // References a filter
@@ -194,6 +155,22 @@ class SustainLangGenerator extends AbstractGenerator {
 			val type = typesForAttribute.head
 			val typeBlock = type.createBlock(statement, resource)
 			selectBlock.AddInput(catalog.ensureExistingIsUsed(typeBlock))
+			return
+		}
+		
+		val lcaCalcsForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | attribute.reference.name === lca.lcaEntitiesReference.name]
+		if (!lcaCalcsForAttribute.isEmpty) { // References a lca calculation
+			val calc = lcaCalcsForAttribute.head
+			val calcBlock = calc.createLcaCalculationBlock(statement, resource)
+			selectBlock.AddInput(catalog.ensureExistingIsUsed(calcBlock))
+			return
+		}
+		val lcaSummariesForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | attribute.reference.name === lca.summaryReference.name]
+		if (!lcaSummariesForAttribute.isEmpty) { // References a lca calculation
+			val calc = lcaSummariesForAttribute.head
+			val calcBlock = calc.createLcaSummaryBlock(statement, resource)
+			selectBlock.AddInput(catalog.ensureExistingIsUsed(calcBlock))
+			return
 		}
 	}
 	
@@ -223,6 +200,55 @@ class SustainLangGenerator extends AbstractGenerator {
 		typeBlock.AddInput(parserBlock)
 		
 		return catalog.ensureExistingIsUsed(typeBlock)
+	}
+	
+	def Block<?> createLcaSummaryBlock(LcaCalculation cal, Statement statement, Resource resource) {
+		
+		val lcaPar = cal.lcaParams;
+		
+		val lcaSummaryBlock = new LcaSummaryBlock('''LCA Summary (source: «lcaPar.sourceVar.name»)''', lcaPar.sourceVar.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6);
+		
+		// Create necesarry inputs
+		val lcaCalcBlock = cal.createLcaCalculationBlock(statement, resource)
+		
+		lcaSummaryBlock.AddInput(lcaCalcBlock)
+		
+		return catalog.ensureExistingIsUsed(lcaSummaryBlock)
+	}
+	
+	def Block<?> createLcaCalculationBlock(LcaCalculation cal, Statement statement, Resource resource) {
+		
+		val lcaPar = cal.lcaParams;
+		val matDefs = cal.matDefs
+		
+	 	var matDefMap = new HashMap<String,String>
+		
+		for (MatDef matDef : matDefs) {
+			matDefMap.put(matDef.ifcMat,matDef.epdMatId);
+		}
+		
+		val lcaCalcBlock = new LcaCalcBlock('''LCA Calculation (source: «lcaPar.sourceVar.name»)''', lcaPar.sourceVar.name, cal.lcaEntitiesReference.name, lcaPar.area, matDefMap);
+		
+		// Create necesarry inputs
+		// Can be types or filters
+		val inputBlock = createInputFromReference(statement, resource, lcaPar.sourceVar)
+		lcaCalcBlock.AddInput(catalog.ensureExistingIsUsed(inputBlock))
+		
+		return catalog.ensureExistingIsUsed(lcaCalcBlock)
+	}
+	
+	def Block<?> createInputFromReference(Statement statement, Resource resource, Reference reference) {
+		val filtersForAttribute = statement.filters.filter[filter | reference.name === filter.reference.name]
+		if (!filtersForAttribute.isEmpty) { // References a 'filter'
+			val filter = filtersForAttribute.head
+			return filter.createBlock(statement, resource)
+		}
+		
+		val typesForAttribute = statement.from.types.filter[type | reference.name === type.name]
+		if (!typesForAttribute.isEmpty) { // References a 'from'
+			val type = typesForAttribute.head
+			return type.createBlock(statement, resource)
+		}
 	}
 	
 	def dispatch Block<?> createBlock(SourceCommand source, Statement statement, Resource resource) {

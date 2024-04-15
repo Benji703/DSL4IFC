@@ -25,10 +25,12 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	private String sourceVarName;
 	private double heatedArea;
 	private double b6;
+	private String referenceName;
 	
-	public LcaSummaryBlock(String name, String sourceVarName, double heatedArea, double b6) {
+	public LcaSummaryBlock(String name, String sourceVarName, String referenceName, double heatedArea, double b6) {
 		super(name);
 		this.sourceVarName = sourceVarName;
+		this.referenceName = referenceName;
 		this.heatedArea = heatedArea;
 		this.b6 = b6;
 	}
@@ -68,6 +70,6 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 
 	@Override
 	public String getReferenceName() {
-		return sourceVarName;
+		return referenceName;
 	}
 }
