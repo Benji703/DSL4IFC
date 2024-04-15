@@ -4,6 +4,8 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
@@ -19,20 +21,16 @@ import java.util.Map;
 import java.util.Set;
 import lca.LCA.*;
 
-public class LcaBlock extends Block<LCAResult> {
+public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 	private String sourceVarName;
 	private String path;
 	private int area;
-	private int areaHeat;
-	private int b6;
 	private Map<String,String> matDefs;
 	
-	public LcaBlock(String name, String sourceVarName, int area, int areaHeat, int b6, Map<String,String> matDefs) {
+	public LcaCalcBlock(String name, String sourceVarName, int area, Map<String,String> matDefs) {
 		super(name);
 		this.sourceVarName = sourceVarName;
 		this.area = area;
-		this.areaHeat = areaHeat;
-		this.b6 = b6;
 		this.matDefs = matDefs;
 	}
 
@@ -43,7 +41,7 @@ public class LcaBlock extends Block<LCAResult> {
 	}
 
 	@Override
-	public LCAResult Calculate() {
+	public List<LCAIFCElement> Calculate() {
 		//sources.get(0).getOutput;
 		
 		List<VariableReferenceBlock> references = findAllBlocks(VariableReferenceBlock.class);
@@ -65,7 +63,7 @@ public class LcaBlock extends Block<LCAResult> {
 	    	
 	    	volume = getIfcVolume(invSet);
 	    	
-	    	String matName = getIfcMat();
+	    	String matName = getIfcMat(iWall.getHasAssociations_Inverse());
 	    	
 	    	elements.add(new LCAIFCElement("Letbeton vægelement, 150 mm tyk væg, 10% udsparinger",volume));
 	    }
@@ -73,13 +71,17 @@ public class LcaBlock extends Block<LCAResult> {
 		
 		LCA lca = new LCA();
 
-        LCAResult lcaResult = lca.CalculateLCAWhole(elements, area, areaHeat, b6);
+        List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
 		
-		return lcaResult;
+		return lcaElements;
 	}
 
-	private String getIfcMat() {
-		// TODO Auto-generated method stub
+	private String getIfcMat(SET<IfcRelAssociates> matSet) {
+		
+		for (IfcRelAssociates relAss : matSet) {
+			
+		}
+		
 		return null;
 	}
 

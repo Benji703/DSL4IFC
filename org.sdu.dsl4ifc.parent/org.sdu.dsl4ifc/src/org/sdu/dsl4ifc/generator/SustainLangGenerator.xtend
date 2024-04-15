@@ -45,7 +45,6 @@ import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
 import lca.LCA.LCAResult
 import java.util.Map
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
@@ -56,6 +55,7 @@ import org.sdu.dsl4ifc.sustainLang.impl.LcaParamsImpl
 import org.sdu.dsl4ifc.sustainLang.LcaParams
 import org.sdu.dsl4ifc.sustainLang.MatDef
 import java.util.HashMap
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -107,12 +107,9 @@ class SustainLangGenerator extends AbstractGenerator {
 					matDefMap.put(matDef.ifcMat,matDef.epdMatId);
 				}
 				
-				val lcaBlock = new LcaBlock("LcaBlock",lcaPar.sourceVar.toString(),lcaPar.area,lcaPar.areaHeat,lcaPar.b6,matDefMap);
+				val lcaBlock = new LcaCalcBlock("LcaBlock",lcaPar.sourceVar.toString(),lcaPar.area,matDefMap);
 				lcaBlock.AddInput(filterBlock);
 				val lcaResult = lcaBlock.Calculate();
-				if (lcaResult !== null) {
-					lcaResult.printLcaResult;
-				}
 				
 			}
 	    }

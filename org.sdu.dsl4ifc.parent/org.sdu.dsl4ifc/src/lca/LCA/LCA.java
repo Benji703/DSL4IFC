@@ -1,6 +1,7 @@
 package lca.LCA;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lca.epdConnectors.BR18Connector;
 import lca.Interfaces.IEPDConnector;
@@ -61,12 +62,19 @@ public class LCA {
 
         return envInfo * element.getQuantity() * yearFactor;
     }
-
-    public LCAResult CalculateLCAWhole(ArrayList<LCAIFCElement> ifcElements, double area, double areaHeated, double b6) {
-
+    
+    public List<LCAIFCElement> calculateLCAByElement(List<LCAIFCElement> ifcElements, double area) {
+    	ArrayList<LCAIFCElement> ifcElementResults = new ArrayList<LCAIFCElement>(); 
+    	
         for (LCAIFCElement element : ifcElements) {
             element.setLcaVal(CalculateLCAForElement(element, area));
+            ifcElementResults.add(element);
         }
+        
+        return ifcElementResults;
+    }
+
+    public LCAResult CalculateLCAWhole(ArrayList<LCAIFCElement> ifcElements, double areaHeated, double b6) {
 
         double baseResult = ifcElements.stream().mapToDouble(LCAIFCElement::getLcaVal).sum();
         double opResult = lcaCalc.CalculateLCAOperational(b6, areaHeated);
