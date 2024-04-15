@@ -52,6 +52,7 @@ import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -390,6 +391,9 @@ class SustainLangGenerator extends AbstractGenerator {
 			}
 			case IFC_DOOR: {
 				return IfcDoor
+			}
+			case IFC_BUILDING_ELEMENT: {
+				return IfcBuildingElement
 			}
 			case IFC_ROOT: {
 				return IfcRoot
