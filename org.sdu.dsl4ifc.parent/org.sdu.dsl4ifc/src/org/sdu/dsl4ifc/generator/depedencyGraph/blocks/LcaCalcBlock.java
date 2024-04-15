@@ -80,7 +80,7 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 	private String getIfcMatId(SET<IfcRelAssociates> matSet) {
 		
 		for (IfcRelAssociates relAss : matSet) {
-			if (relAss.getClass() != IfcRelAssociatesMaterial.class) {
+			if (!(relAss instanceof IfcRelAssociatesMaterial)) {
 				continue;
 			}
 			
@@ -106,13 +106,13 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 		
 		for (IfcRelDefines iRel : invSet) {
 			
-			if (iRel.getClass() != IfcRelDefinesByProperties.class) {
+			if (!(iRel instanceof IfcRelDefinesByProperties)) {
 				continue;
 			}
 			
 			var iRelProp = (IfcRelDefinesByProperties)iRel;
 			
-			if (iRelProp.getRelatingPropertyDefinition().getClass() != IfcElementQuantity.class) {
+			if (!(iRelProp.getRelatingPropertyDefinition() instanceof IfcElementQuantity)) {
 				continue;
 			}
 			
@@ -126,7 +126,7 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 	private double GetQuanityVolume(IfcElementQuantity elementQuant) {
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q.getClass() == IfcQuantityVolume.class) {
+			if (q instanceof IfcQuantityVolume) {
 				return ((IfcQuantityVolume)q).getVolumeValue().getValue();
 			}
 		}
