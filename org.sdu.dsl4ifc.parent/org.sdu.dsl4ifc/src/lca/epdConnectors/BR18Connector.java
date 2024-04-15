@@ -21,12 +21,10 @@ public class BR18Connector implements IEPDConnector {
     private List<BR18ProductDeclaration> productList;
 
 
-    public IEnvProductInfo GetEPDDataByType(String name) {
+    public IEnvProductInfo GetEPDDataByType(String id) {
 
         if (productList != null) {
-            return productList.stream()
-                    .filter(br18Dec -> br18Dec.getDkName().equals(name))
-                    .findFirst().orElse(null);
+            return getProdDecById(id);
         }
 
         Map<String, List<String>> epdData = new HashMap<String, List<String>>() {
@@ -40,11 +38,13 @@ public class BR18Connector implements IEPDConnector {
 
         productList = ConvertToBR18ObjectList(epdData);
 
-        BR18ProductDeclaration br18Declaration = productList.stream()
-                .filter(br18Dec -> br18Dec.getDkName().equals(name))
+        return getProdDecById(id);
+    }
+    
+    private BR18ProductDeclaration getProdDecById(String id) {
+    	return productList.stream()
+                .filter(br18Dec -> br18Dec.getSortID().equals(id))
                 .findFirst().orElse(null);
-
-        return br18Declaration;
     }
 
     private List<BR18ProductDeclaration> ConvertToBR18ObjectList(Map<String, List<String>> epdData) {

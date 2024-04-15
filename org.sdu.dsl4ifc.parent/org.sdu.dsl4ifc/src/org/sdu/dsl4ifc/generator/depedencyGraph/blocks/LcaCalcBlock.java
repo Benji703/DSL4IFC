@@ -13,6 +13,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
 
 
@@ -85,15 +86,16 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 			
 			var relAssMat = (IfcRelAssociatesMaterial)relAss;
 			
-			if (relAssMat.getRelatingMaterial().getClass() != IfcMaterialLayerSet.class) {
+			if (!(relAssMat.getRelatingMaterial() instanceof IfcMaterialLayerSetUsage)) {
 				continue;
 			}
 			
-			var relMat = (IfcMaterialLayerSet)relAssMat.getRelatingMaterial();
+			var relMat = ((IfcMaterialLayerSetUsage)relAssMat.getRelatingMaterial()).getForLayerSet();
 			
 			var ifcMatLayer = relMat.getMaterialLayers().get(0);
 			
-			return matDefs.get(ifcMatLayer.getMaterial().getName().toString());
+			var s = ifcMatLayer.getMaterial().getName().getValue();
+			return matDefs.get(s);
 		}
 		
 		return null;
