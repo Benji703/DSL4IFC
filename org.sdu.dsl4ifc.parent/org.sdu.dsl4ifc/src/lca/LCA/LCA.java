@@ -29,7 +29,7 @@ public class LCA {
 
     public double CalculateLCAForElement(LCAIFCElement element, double area) {
 
-        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getName());
+        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getEpdId());
 
         element.setaResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
         element.setC3Result(MultiplyWithQuanitities(envProductInfo.getC3(),element));

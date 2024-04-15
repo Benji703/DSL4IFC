@@ -3,6 +3,8 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSet;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialSelect;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
@@ -26,6 +28,7 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 	private String path;
 	private int area;
 	private Map<String,String> matDefs;
+	private LCA lca = new LCA();
 	
 	public LcaCalcBlock(String name, String sourceVarName, int area, Map<String,String> matDefs) {
 		super(name);
@@ -63,23 +66,34 @@ public class LcaCalcBlock extends Block<List<LCAIFCElement>> {
 	    	
 	    	volume = getIfcVolume(invSet);
 	    	
-	    	String matName = getIfcMat(iWall.getHasAssociations_Inverse());
+	    	String matId = getIfcMatId(iWall.getHasAssociations_Inverse());
 	    	
-	    	elements.add(new LCAIFCElement("Letbeton vægelement, 150 mm tyk væg, 10% udsparinger",volume));
+	    	elements.add(new LCAIFCElement(matId,volume));
 	    }
-	    
-		
-		LCA lca = new LCA();
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
 		
 		return lcaElements;
 	}
 
-	private String getIfcMat(SET<IfcRelAssociates> matSet) {
+	private String getIfcMatId(SET<IfcRelAssociates> matSet) {
 		
 		for (IfcRelAssociates relAss : matSet) {
+			if (relAss.getClass() != IfcRelAssociatesMaterial.class) {
+				continue;
+			}
 			
+			var relAssMat = (IfcRelAssociatesMaterial)relAss;
+			
+			if (relAssMat.getRelatingMaterial().getClass() != IfcMaterialLayerSet.class) {
+				continue;
+			}
+			
+			var relMat = (IfcMaterialLayerSet)relAssMat.getRelatingMaterial();
+			
+			var ifcMatLayer = relMat.getMaterialLayers().get(0);
+			
+			return matDefs.get(ifcMatLayer.getMaterial().getName().toString());
 		}
 		
 		return null;

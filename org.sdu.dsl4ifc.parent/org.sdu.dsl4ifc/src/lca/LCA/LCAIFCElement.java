@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LCAIFCElement {
-    private String name;
+    private String epdId;
     private double quantity;
     private int lifeTime;
     private Double aResult;
@@ -15,7 +15,7 @@ public class LCAIFCElement {
 
 
     public LCAIFCElement(String type, double quantity) {
-        this.name = type;
+        this.epdId = type;
         this.quantity = quantity;
     }
 
@@ -51,8 +51,8 @@ public class LCAIFCElement {
         this.lcaVal = lcaVal;
     }
 
-    public String getName() {
-        return name;
+    public String getEpdId() {
+        return epdId;
     }
 
     public double getQuantity() {
@@ -80,7 +80,7 @@ public class LCAIFCElement {
     @Override
     public String toString() {
         return "LCAIFCElement{" +
-                "name='" + name + '\'' +
+                "name='" + epdId + '\'' +
                 ", quantity=" + quantity +
                 ", aResult=" + aResult +
                 ", c3Result=" + c3Result +
