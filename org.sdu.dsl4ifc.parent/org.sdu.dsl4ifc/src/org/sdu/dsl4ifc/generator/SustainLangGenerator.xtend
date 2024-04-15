@@ -34,7 +34,7 @@ import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SelectBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
@@ -49,7 +49,22 @@ import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.FilterCommand
+import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
+import lca.LCA.LCAResult
+import java.util.Map
+import org.sdu.dsl4ifc.sustainLang.LcaCalculation
+import org.sdu.dsl4ifc.sustainLang.Calculation
 import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
+import org.sdu.dsl4ifc.sustainLang.SourceCommand
+import org.sdu.dsl4ifc.sustainLang.impl.LcaParamsImpl
+import org.sdu.dsl4ifc.sustainLang.LcaParams
+import org.sdu.dsl4ifc.sustainLang.MatDef
+import java.util.HashMap
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
+
+import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
+
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -91,13 +106,21 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 	    for (Calculation cal : calcs) {
 	    	consoleOut.println(cal.class.toString())
-			if (cal instanceof LcaCalculationImpl) {
-				val lcaBlock = new LcaBlock("LcaBlock",cal.sourceVar.toString(), cal.summaryReference.name, cal.lcaEntitiesReference.name);
+			if (cal instanceof LcaCalculation) {
+				val lcaPar = cal.lcaParams;
+				val matDefs = cal.matDefs
+				
+			 	var matDefMap = new HashMap<String,String>
+				
+				for (MatDef matDef : matDefs) {
+					matDefMap.put(matDef.ifcMat,matDef.epdMatId);
+				}
+				
+
+				val lcaBlock = new LcaCalcBlock("LcaBlock",lcaPar.sourceVar.toString(),lcaPar.area,matDefMap);
+
 				lcaBlock.AddInput(filterBlock);
 				val lcaResult = lcaBlock.Calculate();
-				if (lcaResult !== null) {
-					lcaResult.printLcaResult;
-				}
 				
 			}
 	    }
