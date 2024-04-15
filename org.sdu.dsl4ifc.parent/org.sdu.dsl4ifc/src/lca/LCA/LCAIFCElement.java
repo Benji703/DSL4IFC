@@ -5,13 +5,13 @@ import java.util.Map;
 
 public class LCAIFCElement {
     private String epdId;
-    private double quantity;
+    private Double quantity;
     private int lifeTime;
     private Double aResult;
     private Double c3Result;
     private Double c4Result;
     private Double dResult;
-    private double lcaVal;
+    private Double lcaVal;
 
 
     public LCAIFCElement(String type, double quantity) {
@@ -43,11 +43,11 @@ public class LCAIFCElement {
         this.c4Result = c4Result;
     }
 
-    public double getLcaVal() {
+    public Double getLcaVal() {
         return lcaVal;
     }
 
-    public void setLcaVal(double lcaVal) {
+    public void setLcaVal(Double lcaVal) {
         this.lcaVal = lcaVal;
     }
 
@@ -55,7 +55,7 @@ public class LCAIFCElement {
         return epdId;
     }
 
-    public double getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 

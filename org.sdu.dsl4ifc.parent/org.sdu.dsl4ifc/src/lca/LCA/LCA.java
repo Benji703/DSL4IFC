@@ -27,9 +27,13 @@ public class LCA {
         return lcaCalc.CalculateLCABasic(a,c3,c4,aRef);
     }
 
-    public double CalculateLCAForElement(LCAIFCElement element, double area) {
+    public Double CalculateLCAForElement(LCAIFCElement element, double area) {
 
         IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getEpdId());
+        
+        if (envProductInfo == null) {
+        	return null;
+        }
 
         element.setaResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
         element.setC3Result(MultiplyWithQuanitities(envProductInfo.getC3(),element));
