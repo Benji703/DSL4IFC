@@ -156,7 +156,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		lcaResult.elements.forEach(e | {
 			var map = e.resultMap;
-			consoleOut.println("{ Name: " + e.getName() + " With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
+			consoleOut.println("{ Name: " + e.getEpdId() + " With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
 			consoleOut.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
 			
 			map.forEach(k,v | {
