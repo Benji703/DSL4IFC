@@ -4,8 +4,10 @@
 package org.sdu.dsl4ifc.generator
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
+import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashSet
@@ -13,6 +15,7 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.function.Function
+import lca.LCA.LCAResult
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -31,29 +34,22 @@ import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SelectBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
+import org.sdu.dsl4ifc.sustainLang.Calculation
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SelectCommand
+import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
-import org.sdu.dsl4ifc.sustainLang.FilterCommand
-import org.sdu.dsl4ifc.generator.conditional.impls.TrueValue
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaBlock
-import lca.LCA.LCAResult
-import java.util.Map
-import org.sdu.dsl4ifc.sustainLang.LcaCalculation
-import org.sdu.dsl4ifc.sustainLang.Calculation
 import org.sdu.dsl4ifc.sustainLang.impl.LcaCalculationImpl
-import org.sdu.dsl4ifc.sustainLang.SourceCommand
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
-import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -96,7 +92,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	    for (Calculation cal : calcs) {
 	    	consoleOut.println(cal.class.toString())
 			if (cal instanceof LcaCalculationImpl) {
-				val lcaBlock = new LcaBlock("LcaBlock",cal.sourceVar.toString(),cal.quantPath);
+				val lcaBlock = new LcaBlock("LcaBlock",cal.sourceVar.toString(), cal.summaryReference.name, cal.lcaEntitiesReference.name);
 				lcaBlock.AddInput(filterBlock);
 				val lcaResult = lcaBlock.Calculate();
 				if (lcaResult !== null) {
@@ -227,7 +223,7 @@ class SustainLangGenerator extends AbstractGenerator {
 			}
 		}
 	}
-	
+	 
 	def List<AttributeReference<Object, String>> toAttributeReferences(SelectCommand command) {
 		command.selects.map[attribute | {
 			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
