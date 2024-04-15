@@ -29,11 +29,13 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String path;
 	private int area;
 	private Map<String,String> matDefs;
+	private String referenceName;
 	private LCA lca = new LCA();
 	
-	public LcaCalcBlock(String name, String sourceVarName, int area, Map<String,String> matDefs) {
+	public LcaCalcBlock(String name, String sourceVarName, String referenceName, int area, Map<String,String> matDefs) {
 		super(name);
 		this.sourceVarName = sourceVarName;
+		this.referenceName = referenceName;
 		this.area = area;
 		this.matDefs = matDefs;
 	}
@@ -147,6 +149,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	@Override
 	public String getReferenceName() {
-		return sourceVarName;
+		return referenceName;
 	}
 }
