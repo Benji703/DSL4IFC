@@ -4,16 +4,11 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSet;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialSelect;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
@@ -23,18 +18,17 @@ import com.apstex.step.core.SET;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lca.LCA.*;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
 	private String path;
-	private int area;
+	private double area;
 	private Map<String,String> matDefs;
 	private String referenceName;
 	private LCA lca = new LCA();
 	
-	public LcaCalcBlock(String name, String sourceVarName, String referenceName, int area, Map<String,String> matDefs) {
+	public LcaCalcBlock(String name, String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
 		super(name);
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
