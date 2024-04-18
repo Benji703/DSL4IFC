@@ -32,7 +32,8 @@ TranformationCommand:
     'GROUP' 'BY' attribute=Attribute;	// Add more
 
 IfcTypeRef returns Reference:
-    ifcType=IfcType name=ID?;
+	ifcType=IfcType name=ID?
+;
 
 Calculation returns Calculation:
 	LcaCalculation

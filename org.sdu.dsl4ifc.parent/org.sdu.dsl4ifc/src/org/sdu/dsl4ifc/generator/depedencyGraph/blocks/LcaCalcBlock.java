@@ -21,12 +21,10 @@ import com.apstex.step.core.SET;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lca.LCA.*;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
-	private String path;
 	private int area;
 	private Map<String,String> matDefs;
 	private String referenceName;
@@ -139,7 +137,10 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	public String generateCacheKey() {
 		StringBuilder keyBuilder = new StringBuilder(Name);
 		
-		keyBuilder.append(sourceVarName+",");
+		keyBuilder.append("source:"+sourceVarName+",");
+		keyBuilder.append("reference:"+referenceName+",");
+		keyBuilder.append("area:"+area+",");
+		keyBuilder.append("matdefs:"+matDefsToString()+",");
 		
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");
@@ -150,5 +151,15 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	@Override
 	public String getReferenceName() {
 		return referenceName;
+	}
+	
+	private String matDefsToString() {
+		var builder = new StringBuilder();
+		
+		for (var entry : matDefs.entrySet()) {
+			builder.append(entry.getKey()+ " -> " + entry.getValue()+ ",");
+		}
+		
+		return builder.toString();
 	}
 }
