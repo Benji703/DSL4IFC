@@ -77,10 +77,12 @@ public class ParameterValueExtractor<T, U> {
 		
 		if (item instanceof LCAIFCElement asLcaElement) {
 			switch (parameterName) {
-			case "epdId":
+			case "ifcname":
+				return (U) asLcaElement.getIfcName();
+			case "epdid":
 				return (U) asLcaElement.getEpdId();
 			case "a":
-				return (U) (asLcaElement.getaResult() + " kg. CO₂ ævk. / m² / år");
+				return (U) (asLcaElement.getAResult() + " kg. CO₂ ævk. / m² / år");
 			case "c3":
 				return (U) (asLcaElement.getC3Result() + " kg. CO₂ ævk. / m² / år");
 			case "c4":

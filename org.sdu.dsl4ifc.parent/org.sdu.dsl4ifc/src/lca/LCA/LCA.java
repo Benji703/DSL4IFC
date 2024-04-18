@@ -37,11 +37,11 @@ public class LCA {
         
         element.setEpdName(envProductInfo.getName());
 
-        element.setaResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
+        element.setAResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
         element.setC3Result(MultiplyWithQuanitities(envProductInfo.getC3(),element));
         element.setC4Result(MultiplyWithQuanitities(envProductInfo.getC4(),element));
 
-        double aRes = TranslateNullToZero(element.getaResult());
+        double aRes = TranslateNullToZero(element.getAResult());
         double c3Res = TranslateNullToZero(element.getC3Result());
         double c4Res = TranslateNullToZero(element.getC4Result());
 
