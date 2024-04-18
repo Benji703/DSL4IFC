@@ -102,7 +102,6 @@ class SustainLangGenerator extends AbstractGenerator {
 	def Block<?> searchAndReplaceNodes(Block<?> block) {
 		
 		if (catalog.blockExists(block)) {
-			consoleOut.println("Reusing old block: " + block.generateCacheKey)
 			var oldBlock = catalog.getBlock(block)
 			catalog.registerBlock(oldBlock)
 			
