@@ -3,9 +3,11 @@
  */
 package org.sdu.dsl4ifc.generator
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcSlab
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
 import java.util.ArrayList
@@ -52,8 +54,6 @@ import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcSlab
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -160,7 +160,9 @@ class SustainLangGenerator extends AbstractGenerator {
 			return
 		}
 		
-		val lcaCalcsForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | attribute.reference.name === lca.lcaEntitiesReference.name]
+		val lcaCalcsForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | 
+				lca.lcaEntitiesReference === null ? false : attribute.reference.name === lca.lcaEntitiesReference.name
+			]
 		if (!lcaCalcsForAttribute.isEmpty) { // References a lca calculation
 			val calc = lcaCalcsForAttribute.head
 			val calcBlock = calc.createLcaCalculationBlock(statement, resource)
@@ -229,7 +231,8 @@ class SustainLangGenerator extends AbstractGenerator {
 			matDefMap.put(matDef.ifcMat,matDef.epdMatId);
 		}
 		
-		val lcaCalcBlock = new LcaCalcBlock('''LCA Calculation (source: «lcaPar.sourceVar.name»)''', lcaPar.sourceVar.name, cal.lcaEntitiesReference.name, lcaPar.area, matDefMap);
+		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
+		val lcaCalcBlock = new LcaCalcBlock('''LCA Calculation (source: «lcaPar.sourceVar.name»)''', lcaPar.sourceVar.name, referenceName, lcaPar.area, matDefMap);
 		
 		// Create necesarry inputs
 		// Can be types or filters
