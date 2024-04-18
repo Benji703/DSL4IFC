@@ -2,16 +2,13 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSet;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialSelect;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
@@ -25,12 +22,12 @@ import lca.LCA.*;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
-	private int area;
+	private double area;
 	private Map<String,String> matDefs;
 	private String referenceName;
 	private LCA lca = new LCA();
 	
-	public LcaCalcBlock(String name, String sourceVarName, String referenceName, int area, Map<String,String> matDefs) {
+	public LcaCalcBlock(String name, String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
 		super(name);
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
@@ -58,16 +55,20 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
 	    var sourceVar = (VariableReferenceBlock<?>)references.get(0);
 	    
-	    List<IfcWall> ifcElements = (List<IfcWall>) sourceVar.getOutput();
+	    List<IfcBuildingElement> ifcElements = (List<IfcBuildingElement>) sourceVar.getOutput();
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
-	    for (IfcWall iWall : ifcElements) {
-	    	var invSet = iWall.getIsDefinedBy_Inverse();
+	    for (IfcBuildingElement element : ifcElements) {
+	    	var invSet = element.getIsDefinedBy_Inverse();
 	    	double volume = 0;
 	    	
 	    	volume = getIfcVolume(invSet);
 	    	
-	    	String ifcMatName = getIfcMatId(iWall.getHasAssociations_Inverse());
+	    	SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
+	    	if (associations == null)
+	    		continue;
+	    	
+			String ifcMatName = getIfcMatId(associations);
 	    	
 	    	elements.add(new LCAIFCElement(matDefs.get(ifcMatName),ifcMatName,volume));
 	    }

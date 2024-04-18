@@ -1,4 +1,5 @@
 grammar org.sdu.dsl4ifc.SustainLang with org.eclipse.xtext.common.Terminals
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 generate sustainLang "http://www.sdu.org/dsl4ifc/SustainLang"
 
@@ -19,7 +20,7 @@ FromCommand:
     'FROM' types+=IfcTypeRef (',' types+=IfcTypeRef)*;
     
 enum IfcType:
-	ifcWall='IfcWall' | ifcDoor='IfcDoor' | ifcRoot='IfcRoot' | ifcMaterial='IfcMaterial'
+	ifcWall='IfcWall' | ifcDoor='IfcDoor' | ifcRoot='IfcRoot' | ifcMaterial='IfcMaterial' | ifcBuildingElement='IfcBuildingElement' | ifcSlab='IfcSlab'
 ;
 
 FilterCommand:
@@ -52,9 +53,12 @@ MatDef:
 ;
 
 LcaParams:
-	'SOURCE' sourceVar=[Reference] & 'AREA' area=INT & 'AREAHEAT' areaHeat=INT & 'B6' b6=INT
+	'SOURCE' sourceVar=[Reference] & 'AREA' area=Double & 'AREAHEAT' areaHeat=Double & 'B6' b6=Double
 ;
 
+Double returns ecore::EDouble:
+    '-'? INT ('.' INT)?;
+	
 LcaSummaryReference returns Reference:
     {LcaSummaryReference} name=ID;
     

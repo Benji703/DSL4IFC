@@ -82,7 +82,7 @@ public class LCA {
 
     public LCAResult CalculateLCAWhole(List<LCAIFCElement> ifcElements, double areaHeated, double b6) {
 
-        double baseResult = ifcElements.stream().filter(t -> t != null).mapToDouble(LCAIFCElement::getLcaVal).sum();
+        double baseResult = ifcElements.stream().filter(t -> t.getLcaVal() != null).mapToDouble(LCAIFCElement::getLcaVal).sum();
         double opResult = lcaCalc.CalculateLCAOperational(b6, areaHeated);
         double result = baseResult + opResult;
 
