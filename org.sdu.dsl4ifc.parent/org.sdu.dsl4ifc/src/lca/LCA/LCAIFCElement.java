@@ -16,17 +16,17 @@ public class LCAIFCElement {
     private Double lcaVal;
 
 
-    public LCAIFCElement(String id, String ifcName, double quantity) {
-        this.epdId = id;
+    public LCAIFCElement(String epdId, String ifcName, double quantity) {
+        this.epdId = epdId;
         this.ifcName = ifcName;
         this.quantity = quantity;
     }
 
-    public Double getaResult() {
+    public Double getAResult() {
         return aResult;
     }
 
-    public void setaResult(Double aResult) {
+    public void setAResult(Double aResult) {
         this.aResult = aResult;
     }
 

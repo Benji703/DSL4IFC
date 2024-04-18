@@ -68,9 +68,12 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	if (associations == null)
 	    		continue;
 	    	
-			String ifcMatName = getIfcMatId(associations);
+			String ifcMatName = getIfcMatName(associations);
+	    	String epdId = matDefs.get(ifcMatName);
 	    	
-	    	elements.add(new LCAIFCElement(matDefs.get(ifcMatName),ifcMatName,volume));
+	    	String elementName = element.getName().getDecodedValue();
+	    	
+			elements.add(new LCAIFCElement(epdId, elementName, volume));
 	    }
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
@@ -78,7 +81,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		return lcaElements;
 	}
 
-	private String getIfcMatId(SET<IfcRelAssociates> matSet) {
+	private String getIfcMatName(SET<IfcRelAssociates> matSet) {
 		
 		for (IfcRelAssociates relAss : matSet) {
 			if (!(relAss instanceof IfcRelAssociatesMaterial)) {
