@@ -10,7 +10,7 @@ Statement:
     {Statement} source=SourceCommand select=SelectCommand from=FromCommand? filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? ';'?;
 
 SourceCommand:
-    'SOURCE' 'MODEL' name=ID path=STRING;
+    'SOURCE' 'MODEL' path=STRING;
 
 SelectCommand:
 	{SelectCommand} 'SELECT' selects+=Attribute? (',' selects+=Attribute)*
