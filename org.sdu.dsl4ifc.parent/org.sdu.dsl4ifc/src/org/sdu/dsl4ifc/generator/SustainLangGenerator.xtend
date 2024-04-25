@@ -18,7 +18,6 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.function.Function
-import lca.LCA.LCAResult
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -54,16 +53,22 @@ import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.eclipse.jface.resource.ImageDescriptor
+import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel
+import java.io.File
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcApplication
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcProperty
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelationship
 
 class SustainLangGenerator extends AbstractGenerator {
 	
-	public static MessageConsoleStream consoleOut = null;
+	public static ConsoleProxy consoleOut = null;
 	FilterBlockCatalog catalog = new FilterBlockCatalog;
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
 		val myConsole = findConsole("SusLang");
-		consoleOut = myConsole.newMessageStream();
+		consoleOut = new EclipseConsole(myConsole.newMessageStream());
 		consoleOut.println("SusLang Console");
 		
 		val statements = resource.allContents.filter(Statement);
@@ -90,7 +95,7 @@ class SustainLangGenerator extends AbstractGenerator {
 			}]
 	}
 		
-	def Block<?> constructGraph(Statement statement, Resource resource) {
+	private def Block<?> constructGraph(Statement statement, Resource resource) {
 		
 		val select = statement.select
 		val selectBlock = select.createBlock(statement, resource)
@@ -99,7 +104,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return checkedBlock
 	}
 	
-	def Block<?> searchAndReplaceNodes(Block<?> block) {
+	private def Block<?> searchAndReplaceNodes(Block<?> block) {
 		
 		if (catalog.blockExists(block)) {
 			var oldBlock = catalog.getBlock(block)
@@ -113,24 +118,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return block
 	}
 	
-	def printLcaResult(LCAResult lcaResult) {
-		consoleOut.println("LCA.LCA for building = " + lcaResult.getLcaResult() + " kg CO2-equivalents/m2/year");
-		
-		lcaResult.elements.forEach(e | {
-			var map = e.resultMap;
-			consoleOut.println("{ EPD Name: " + e.getEpdName() + ", EPD ID: " + e.getEpdId + ", IFC Material: " + e.getIfcName + ", With Quantity: " + e.getQuantity() + " and lifetime: " + e.getLifeTime());
-			consoleOut.println("    LCA for A1-A3 + C3 & C4: " + e.getLcaVal());
-			
-			map.forEach(k,v | {
-				if (v === null) {
-					consoleOut.println("   " + k + " equals null");
-				}
-			})
-			consoleOut.println("}");
-		})
-	}
-	
-	def dispatch Block<?> createBlock(SelectCommand select, Statement statement, Resource resource) {
+	private def dispatch Block<?> createBlock(SelectCommand select, Statement statement, Resource resource) {
 		val selectBlock = new SelectBlock("Select", select.toAttributeReferences)
 		
 		// Create necesarry inputs		
@@ -141,7 +129,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return catalog.ensureExistingIsUsed(selectBlock)
 	}
 	
-	protected def void addInputsToSelect(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
+	private def void addInputsToSelect(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
 		
 		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.reference.name]
 		if (!filtersForAttribute.isEmpty) { // References a filter
@@ -177,7 +165,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	
-	def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
+	private def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
 		val filterBlock = new FilterBlock('''Filter: «filter.reference.name»''', filter.reference.name, filter.toExpression)
 		
 		// Create necesarry inputs
@@ -195,7 +183,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return catalog.ensureExistingIsUsed(filterBlock)
 	}
 	
-	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
+	private def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
 		val typeBlock = new TypeBlock('''Type: "«reference.name»" «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
 		
 		// Create necesarry inputs
@@ -205,7 +193,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return catalog.ensureExistingIsUsed(typeBlock)
 	}
 	
-	def Block<?> createLcaSummaryBlock(LcaCalculation cal, Statement statement, Resource resource) {
+	private def Block<?> createLcaSummaryBlock(LcaCalculation cal, Statement statement, Resource resource) {
 		
 		val lcaPar = cal.lcaParams;
 		
@@ -219,7 +207,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return catalog.ensureExistingIsUsed(lcaSummaryBlock)
 	}
 	
-	def Block<?> createLcaCalculationBlock(LcaCalculation cal, Statement statement, Resource resource) {
+	private def Block<?> createLcaCalculationBlock(LcaCalculation cal, Statement statement, Resource resource) {
 		
 		val lcaPar = cal.lcaParams;
 		val matDefs = cal.matDefs
@@ -241,7 +229,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return catalog.ensureExistingIsUsed(lcaCalcBlock)
 	}
 	
-	def Block<?> createInputFromReference(Statement statement, Resource resource, Reference reference) {
+	private def Block<?> createInputFromReference(Statement statement, Resource resource, Reference reference) {
 		val filtersForAttribute = statement.filters.filter[filter | reference.name === filter.reference.name]
 		if (!filtersForAttribute.isEmpty) { // References a 'filter'
 			val filter = filtersForAttribute.head
@@ -255,13 +243,13 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	
-	def dispatch Block<?> createBlock(SourceCommand source, Statement statement, Resource resource) {
+	private def dispatch Block<?> createBlock(SourceCommand source, Statement statement, Resource resource) {
 		val parserBlock = new Ifc2x3ParserBlock("IFC Parser 2x3", source.path, resource)
 		
 		return catalog.ensureExistingIsUsed(parserBlock)
 	}
 	
-	def void addAllVariableReferences(org.sdu.dsl4ifc.sustainLang.Expression expression, Collection<Reference> references) {
+	private def void addAllVariableReferences(org.sdu.dsl4ifc.sustainLang.Expression expression, Collection<Reference> references) {
 		
 		switch (expression) {
 			BooleanExpression: {
@@ -278,13 +266,13 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	 
-	def List<AttributeReference<Object, String>> toAttributeReferences(SelectCommand command) {
+	private def List<AttributeReference<Object, String>> toAttributeReferences(SelectCommand command) {
 		command.selects.map[attribute | {
 			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
 		}]
 	}
 	
-	protected def void addSelectBlockInputs(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
+	private def void addSelectBlockInputs(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
 		
 		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.reference.name]
 		if (!filtersForAttribute.isEmpty) { // References a filter
@@ -302,16 +290,16 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 		
-	def Expression<InternalAccessClass> toExpression(FilterCommand command) {
+	private def Expression<InternalAccessClass> toExpression(FilterCommand command) {
 		val expression = command.condition.toBlockExpression(command.reference);
 		return expression
 	}
 		
-	def dispatch Expression<InternalAccessClass> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
+	private def dispatch Expression<InternalAccessClass> toBlockExpression(org.sdu.dsl4ifc.sustainLang.Expression expression, Reference variableReference) {
 		throw new Exception("Cannot convert this expression to block expression: " + expression.class.name)
 	}
 
-	def dispatch Expression<InternalAccessClass> toBlockExpression(BooleanExpression expression, Reference variableReference) {
+	private def dispatch Expression<InternalAccessClass> toBlockExpression(BooleanExpression expression, Reference variableReference) {
 		
 		switch (expression.operator) {
 			case AND:
@@ -323,9 +311,9 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	// Could be an "exists" as well
-	val defaultValue = new TrueValue<InternalAccessClass>()
+	private val defaultValue = new TrueValue<InternalAccessClass>()
 	
-	def dispatch Expression<InternalAccessClass> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
+	private def dispatch Expression<InternalAccessClass> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
 		var left = expression.left
 		var right = expression.right
 		
@@ -383,11 +371,11 @@ class SustainLangGenerator extends AbstractGenerator {
 	
 	
 		
-	def ParameterValueExtractor<?, ?> toExtractor(Attribute attribute) {
+	private def ParameterValueExtractor<?, ?> toExtractor(Attribute attribute) {
 		return new ParameterValueExtractor(attribute.attribute)
 	}
 	
-	def toIfcType(IfcType type) {
+	private def toIfcType(IfcType type) {
 		switch (type) {
 			case IFC_WALL: {
 				return IfcWall
@@ -413,7 +401,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	
-	def MessageConsole findConsole(String name) {
+	private def MessageConsole findConsole(String name) {
 	    val plugin = ConsolePlugin.getDefault()
 	    val conMan = plugin.getConsoleManager()
 	    val existing = conMan.getConsoles()
@@ -429,7 +417,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	    return myConsole;
 	}
 	
-	def static <T, K> List<T> distinctBy(List<T> list, Function<T, K> keyExtractor) {
+	private def static <T, K> List<T> distinctBy(List<T> list, Function<T, K> keyExtractor) {
         val Map<K, T> map = new LinkedHashMap();
         for (T element : list) {
             map.putIfAbsent(keyExtractor.apply(element), element);
@@ -437,4 +425,115 @@ class SustainLangGenerator extends AbstractGenerator {
         return new ArrayList(map.values());
     }
 	
+	def runTest(Resource resource) {
+		
+		consoleOut = new TestConsole()
+		
+		val statements = resource.allContents.filter(Statement).toList;
+		
+		if (statements.size > 1) {
+			throw new Exception("The test does not support multiple queries in a file");
+		}
+		
+		catalog.setupNewRun
+		
+		statements.forEach[statement | {
+			try {
+				val timeStart = System.currentTimeMillis()
+				val graph = constructGraph(statement, resource)
+				val output = graph.output
+				val timeMsg = '''Done [«System.currentTimeMillis-timeStart» ms]'''
+			} catch (Exception e) {
+				throw e;
+			}
+		}];
+		
+		
+			
+	}
+	
+	def IfcFileInformation getIfcFileInformation(String ifcPath) {
+		val ifcFile = new File(ifcPath)
+		var ifcModel = new IfcModel();
+
+        ifcModel.readStepFile(ifcFile);
+		
+		val info = new IfcFileInformation(ifcModel, ifcFile)
+		return info
+	}
+	
+	def clearCache() {
+		catalog.clear
+	}
+	
+}
+
+interface ConsoleProxy {
+	def void println(String message)
+	
+	def void println()
+}
+
+class EclipseConsole implements ConsoleProxy {
+	
+	MessageConsoleStream stream
+	
+	new(MessageConsoleStream stream) {
+		this.stream = stream
+	}
+	
+	override println(String message) {
+		stream.println(message)
+	}
+	
+	override println() {
+		stream.println
+	}
+	
+}
+
+class TestConsole implements ConsoleProxy {
+	
+	override println(String message) {
+		//System.out.println(message)
+	}
+	
+	override println() {
+		//System.out.println
+	}
+	
+}
+
+class IfcFileInformation {
+    new(IfcModel ifcModel, File inputFile) {
+        this.fileName = inputFile.getName();
+        this.fileSize = inputFile.length();
+        this.entitiesCount = getEntitiesCount(ifcModel);
+        this.relationsCount = getRelationsCount(ifcModel);
+        this.propertiesCount = getPropertiesCount(ifcModel);
+        this.sourceProgram = getSourceProgram(ifcModel);
+    }
+
+    public String fileName;
+    public long fileSize;
+    public long entitiesCount;
+    public long relationsCount;
+    public long propertiesCount;
+    public String sourceProgram;
+
+    def String getSourceProgram(IfcModel ifcModel) {
+        return ifcModel.getCollection(IfcApplication).stream().toList().head.getApplicationFullName().getDecodedValue();
+    }
+
+    def long getPropertiesCount(IfcModel ifcModel) {
+        return ifcModel.getCollection(IfcProperty).size();
+    }
+
+    def long getRelationsCount(IfcModel ifcModel) {
+        return ifcModel.getCollection(IfcRelationship).size();
+    }
+
+    def long getEntitiesCount(IfcModel ifcModel) {
+        return ifcModel.getNumberOfElements();
+    }
 }

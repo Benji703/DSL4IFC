@@ -39,11 +39,7 @@ public class BR18Connector implements IEPDConnector {
         try {
         	Bundle bundle = FrameworkUtil.getBundle(BR18Connector.class);
             
-        	URL fileURL = bundle.getEntry("/src/lca/ExcelData/BR18v2_201222_clean.xlsx"); // Replace "/path/to/your/file.xlsx" with the path to your file within the plugin
-
-            // Resolve the file URL to a filesystem path
-            URL resolvedFileURL = FileLocator.toFileURL(fileURL);
-            String filePath = resolvedFileURL.getPath();
+        	String filePath = getFilePath(bundle);
             
             // Create a File object from the resolved path
             File file = new File(filePath);
@@ -57,6 +53,20 @@ public class BR18Connector implements IEPDConnector {
 
         return getProdDecById(id);
     }
+
+	private String getFilePath(Bundle bundle) throws IOException {
+		
+		if (bundle == null) {
+			return "/Users/andreasedalpedersen/SDU-local/Speciale/dsl4ifc/DSL4IFC/org.sdu.dsl4ifc.parent/org.sdu.dsl4ifc/src/lca/ExcelData/BR18v2_201222_clean.xlsx";
+		}
+		
+		URL fileURL = bundle.getEntry("/src/lca/ExcelData/BR18v2_201222_clean.xlsx"); // Replace "/path/to/your/file.xlsx" with the path to your file within the plugin
+
+		// Resolve the file URL to a filesystem path
+		URL resolvedFileURL = FileLocator.toFileURL(fileURL);
+		String filePath = resolvedFileURL.getPath();
+		return filePath;
+	}
     
     private BR18ProductDeclaration getProdDecById(String id) {
     	return productList.stream()

@@ -41,7 +41,7 @@ class FilterBlockCatalog {
 			return currentBlocks.get(key)
 		}
 		
-		System.out.println('''First encounter of block "«key»"''')
+		//System.out.println('''First encounter of block "«key»"''')
 		currentBlocks.put(key, block)
 		
 		return block
@@ -50,4 +50,9 @@ class FilterBlockCatalog {
 	def void registerBlock(Block<?> block) {
 		currentBlocks.put(block.generateCacheKey, block)
 	}
+		
+	def clear() {
+		currentBlocks.clear
+	}
+		
 }

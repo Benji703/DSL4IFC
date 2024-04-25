@@ -4,12 +4,14 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
+import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
 
@@ -51,11 +53,16 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			//Be Sad
 			return null;
 		}
-		System.out.println("LCA Babeh");
 		
 	    var sourceVar = (VariableReferenceBlock<?>)references.get(0);
 	    
-	    List<IfcBuildingElement> ifcElements = (List<IfcBuildingElement>) sourceVar.getOutput();
+	    List<InternalAccessClass> ifcEntities = (List<InternalAccessClass>) sourceVar.getOutput();
+	    
+	    List<IfcBuildingElement> ifcElements = ifcEntities.stream()
+	    		.filter(sc -> sc instanceof IfcBuildingElement)
+	    		.map(sc -> (IfcBuildingElement) sc)
+	    		.toList();
+	    
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcBuildingElement element : ifcElements) {
@@ -71,7 +78,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			String ifcMatName = getIfcMatName(associations);
 	    	String epdId = matDefs.get(ifcMatName);
 	    	
-	    	String elementName = element.getName().getDecodedValue();
+	    	IfcLabel nameElement = element.getName();
+			String elementName = nameElement != null ? nameElement.getDecodedValue() : "null";
 	    	
 			elements.add(new LCAIFCElement(epdId, elementName, volume));
 	    }
@@ -105,7 +113,12 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	}
 
 	private double getIfcVolume(SET<IfcRelDefines> invSet) {
+		
 		double volume = 0;
+		
+		if (invSet == null) {
+			return volume;	
+		}
 		
 		for (IfcRelDefines iRel : invSet) {
 			
