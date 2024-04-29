@@ -37,9 +37,7 @@ public class LCA {
         
         element.setEpdName(envProductInfo.getName());
 
-        element.setAResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
-        element.setC3Result(MultiplyWithQuanitities(envProductInfo.getC3(),element));
-        element.setC4Result(MultiplyWithQuanitities(envProductInfo.getC4(),element));
+        CalculateLcaByQuantity(envProductInfo, element);
 
         double aRes = TranslateNullToZero(element.getAResult());
         double c3Res = TranslateNullToZero(element.getC3Result());
@@ -56,7 +54,7 @@ public class LCA {
         return d;
     }
     
-    private Double CalculateLcaByQuantity(IEnvProductInfo envInfo, LCAIFCElement element) {
+    private void CalculateLcaByQuantity(IEnvProductInfo envInfo, LCAIFCElement element) {
     	double quantity = 0;
     	
     	switch (envInfo.getDeclaredUnit()) {
@@ -70,7 +68,11 @@ public class LCA {
 			break;
 		}
     	
-		element.setAResult(MultiplyWithQuantities(envInfo.getA(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),element.getQuantity().getGrossVolume(),element.getLifeTime()));
+		element.setAResult(MultiplyWithQuantities(envInfo.getA(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+		element.setC3Result(MultiplyWithQuantities(envInfo.getC3(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+		element.setC4Result(MultiplyWithQuantities(envInfo.getC4(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+
+
     }
     
     private Double MultiplyWithQuantities2(Double envInfo, LCAIFCElement element) {
