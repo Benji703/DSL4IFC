@@ -52,7 +52,7 @@ Calculation returns Calculation:
 ;
 
 LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '('lcaParams=LcaParams 'MATDEF' '(' matDefs+=MatDef* ')' ')' summaryReference=LcaSummaryReference (',' lcaEntitiesReference=LcaEntitiesReference)?;
+    {LcaCalculation} 'LCA' '('lcaParams=LcaParams 'MATERIAL' 'MAPPING' '(' matDefs+=MatDef* ')' ')' summaryReference=LcaSummaryReference (',' lcaEntitiesReference=LcaEntitiesReference)?;
 
 
 MatDef:
@@ -60,7 +60,7 @@ MatDef:
 ;
 
 LcaParams:
-	'SOURCE' sourceVar=[Reference] & 'AREA' area=Double & 'AREAHEAT' areaHeat=Double & 'B6' b6=Double
+	'SOURCE' sourceVar=[Reference] & 'AREA' area=Double & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double
 ;
 
 Double returns ecore::EDouble:
