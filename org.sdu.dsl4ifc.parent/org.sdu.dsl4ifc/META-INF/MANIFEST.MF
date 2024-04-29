@@ -41,6 +41,7 @@ Export-Package: org.sdu.dsl4ifc,
  org.sdu.dsl4ifc.sustainLang,
  org.sdu.dsl4ifc.sustainLang.impl,
  org.sdu.dsl4ifc.sustainLang.util,
- org.sdu.dsl4ifc.validation
+ org.sdu.dsl4ifc.validation,
+ org.sdu.dsl4ifc.parser.antlr.lexer
 Import-Package: org.apache.log4j,
  org.osgi.framework;version="1.10.0"

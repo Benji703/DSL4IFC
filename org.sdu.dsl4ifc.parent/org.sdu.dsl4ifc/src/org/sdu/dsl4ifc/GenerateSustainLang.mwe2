@@ -35,8 +35,7 @@ Workflow {
 		}
 		language = StandardLanguage {
 			name = "org.sdu.dsl4ifc.SustainLang"
-			fileExtensions = "slang"
-
+			fileExtensions = "slang"	
 			serializer = {
 				generateStub = false
 			}
@@ -48,6 +47,7 @@ Workflow {
 			}
 			scopeProvider = {
 				generateXtendStub = true
+				ignoreCase = true
 			}
 			generator = {
 				generateXtendStub = true
@@ -60,6 +60,11 @@ Workflow {
 				generateHtmlExample = true
 				framework = "Ace"
 			}
+    		parserGenerator = {
+    			options = {
+    				ignoreCase = true
+    			}
+    		}
 		}
 	}
 }
