@@ -7,7 +7,7 @@ public class LCAIFCElement {
 	private String ifcName;
 	private String epdName;
     private String epdId;
-    private Double quantity;
+    private LcaIfcQuantity quantity;
     private int lifeTime;
     private Double aResult;
     private Double c3Result;
@@ -16,7 +16,7 @@ public class LCAIFCElement {
     private Double lcaVal;
 
 
-    public LCAIFCElement(String epdId, String ifcName, double quantity) {
+    public LCAIFCElement(String epdId, String ifcName, LcaIfcQuantity quantity) {
         this.epdId = epdId;
         this.ifcName = ifcName;
         this.quantity = quantity;
@@ -58,7 +58,7 @@ public class LCAIFCElement {
         return epdId;
     }
 
-    public Double getQuantity() {
+    public LcaIfcQuantity getQuantity() {
         return quantity;
     }
 

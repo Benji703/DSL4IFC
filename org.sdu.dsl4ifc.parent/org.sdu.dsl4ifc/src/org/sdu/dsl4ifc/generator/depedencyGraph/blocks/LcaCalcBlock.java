@@ -62,9 +62,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    
 	    for (IfcBuildingElement element : ifcElements) {
 	    	var invSet = element.getIsDefinedBy_Inverse();
-	    	double volume = 0;
 	    	
-	    	volume = getIfcQuantity(invSet).getGrossVolume();
+	    	LcaIfcQuantity quantity = getIfcQuantity(invSet);
 	    	
 	    	SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
 	    	if (associations == null)
@@ -75,7 +74,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	
 	    	String elementName = element.getName().getDecodedValue();
 	    	
-			elements.add(new LCAIFCElement(epdId, elementName, volume));
+			elements.add(new LCAIFCElement(epdId, elementName, quantity));
 	    }
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
