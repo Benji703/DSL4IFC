@@ -7,7 +7,7 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand select=SelectCommand from=FromCommand? filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? ';'?;
+    {Statement} source=SourceCommand from=FromCommand? filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? select=SelectCommand ';'?;
 
 SourceCommand:
     'SOURCE' path=STRING;
