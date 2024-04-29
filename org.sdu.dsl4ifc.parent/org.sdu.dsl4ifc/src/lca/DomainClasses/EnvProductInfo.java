@@ -7,6 +7,9 @@ public class EnvProductInfo implements IEnvProductInfo {
     private double a;
     private double c3;
     private double c4;
+    private String declaredUnit;
+    private Double declaredFactor;
+    private Double massFactor;
 
     public EnvProductInfo(String name, double a, double c3, double c4) {
         this.name = name;
@@ -31,4 +34,22 @@ public class EnvProductInfo implements IEnvProductInfo {
     public String getName() {
         return name;
     }
+
+
+	@Override
+	public String getDeclaredUnit() {
+		return declaredUnit;
+	}
+
+
+	@Override
+	public Double getDeclaredFactor() {
+		return declaredFactor;
+	}
+
+
+	@Override
+	public Double getMassFactor() {
+		return massFactor;
+	}
 }

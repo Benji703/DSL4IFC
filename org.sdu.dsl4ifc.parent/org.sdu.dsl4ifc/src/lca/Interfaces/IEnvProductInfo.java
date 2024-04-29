@@ -8,4 +8,10 @@ public interface IEnvProductInfo {
     public Double getA();
 
     public String getName();
+    
+    public String getDeclaredUnit();
+    
+    public Double getDeclaredFactor();
+    
+    public Double getMassFactor();
 }
