@@ -4,10 +4,12 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityArea;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
@@ -106,6 +108,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	private double getIfcVolume(SET<IfcRelDefines> invSet) {
 		double volume = 0;
+		double area = 0; 
 		
 		for (IfcRelDefines iRel : invSet) {
 			
@@ -131,6 +134,17 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
 			if (q instanceof IfcQuantityVolume) {
 				return ((IfcQuantityVolume)q).getVolumeValue().getValue();
+			}
+		}
+		
+		return 0.0;
+	}
+	
+	private double GetQuanityArea(IfcElementQuantity elementQuant) {
+		
+		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
+			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossSideArea")) {
+				return ((IfcQuantityArea)q).getAreaValue().getValue();
 			}
 		}
 		
