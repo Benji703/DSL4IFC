@@ -1,5 +1,7 @@
 package lca.Interfaces;
 
+import lca.DomainClasses.Enums.DeclaredUnitEnum;
+
 public interface IEnvProductInfo {
     public Double getC4();
 
@@ -9,7 +11,7 @@ public interface IEnvProductInfo {
 
     public String getName();
     
-    public String getDeclaredUnit();
+    public DeclaredUnitEnum getDeclaredUnit();
     
     public Double getDeclaredFactor();
     

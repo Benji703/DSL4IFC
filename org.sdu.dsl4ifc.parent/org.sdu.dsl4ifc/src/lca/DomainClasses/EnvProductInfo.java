@@ -1,5 +1,6 @@
 package lca.DomainClasses;
 
+import lca.DomainClasses.Enums.DeclaredUnitEnum;
 import lca.Interfaces.IEnvProductInfo;
 
 public class EnvProductInfo implements IEnvProductInfo {
@@ -7,7 +8,7 @@ public class EnvProductInfo implements IEnvProductInfo {
     private double a;
     private double c3;
     private double c4;
-    private String declaredUnit;
+    private DeclaredUnitEnum declaredUnit;
     private Double declaredFactor;
     private Double massFactor;
 
@@ -37,7 +38,7 @@ public class EnvProductInfo implements IEnvProductInfo {
 
 
 	@Override
-	public String getDeclaredUnit() {
+	public DeclaredUnitEnum getDeclaredUnit() {
 		return declaredUnit;
 	}
 
