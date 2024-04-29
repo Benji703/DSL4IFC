@@ -132,7 +132,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private double GetQuanityVolume(IfcElementQuantity elementQuant) {
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityVolume) {
+			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
 				return ((IfcQuantityVolume)q).getVolumeValue().getValue();
 			}
 		}
