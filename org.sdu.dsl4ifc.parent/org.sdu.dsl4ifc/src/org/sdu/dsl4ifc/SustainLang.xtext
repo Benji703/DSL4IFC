@@ -7,13 +7,17 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? select=SelectCommand ';'?;
+    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? outputs+=OutputCommand+ ';'?;
 
 SourceCommand:
     'SOURCE' path=STRING;
 
-SelectCommand:
-	{SelectCommand} 'SELECT' selects+=Attribute? (',' selects+=Attribute)*
+OutputCommand:
+	'OUTPUT' TableOutput
+;
+
+TableOutput returns OutputCommand:
+	'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=ID? (',' columns+=ID)* ']'
 ;
 
 /*

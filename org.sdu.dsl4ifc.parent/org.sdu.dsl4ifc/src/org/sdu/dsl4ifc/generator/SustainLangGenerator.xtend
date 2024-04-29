@@ -39,7 +39,6 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.SelectBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
@@ -50,10 +49,11 @@ import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
 import org.sdu.dsl4ifc.sustainLang.MatDef
 import org.sdu.dsl4ifc.sustainLang.Reference
-import org.sdu.dsl4ifc.sustainLang.SelectCommand
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.OutputCommand
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -75,10 +75,10 @@ class SustainLangGenerator extends AbstractGenerator {
 				try {
 					val timeStart = System.currentTimeMillis()
 					System.out.println("[CREATING GRAPH]")
-					val graph = constructGraph(statement, resource)
+					val graphs = constructGraph(statement, resource)
 					System.out.println("[EXECUTING]")
-					val output = graph.output
-					consoleOut.println(output.toString)
+					val outputs = graphs.map[graph | graph.output]
+					outputs.forEach[output | consoleOut.println(output.toString)]
 					val timeMsg = '''Done [«System.currentTimeMillis-timeStart» ms]'''
 					consoleOut.println(timeMsg)
 					System.out.println(timeMsg)
@@ -90,13 +90,15 @@ class SustainLangGenerator extends AbstractGenerator {
 			}]
 	}
 		
-	def Block<?> constructGraph(Statement statement, Resource resource) {
+	def List<Block<?>> constructGraph(Statement statement, Resource resource) {
 		
-		val select = statement.select
-		val selectBlock = select.createBlock(statement, resource)
-		val checkedBlock = searchAndReplaceNodes(selectBlock)
+		val outputs = statement.outputs
 		
-		return checkedBlock
+		return outputs.map[output | {
+			val tableOutputBlock = output.createBlock(statement, resource)
+			val checkedBlock = searchAndReplaceNodes(tableOutputBlock)
+			return checkedBlock
+		}]
 	}
 	
 	def Block<?> searchAndReplaceNodes(Block<?> block) {
@@ -130,50 +132,48 @@ class SustainLangGenerator extends AbstractGenerator {
 		})
 	}
 	
-	def dispatch Block<?> createBlock(SelectCommand select, Statement statement, Resource resource) {
-		val selectBlock = new SelectBlock("Select", select.toAttributeReferences)
+	def dispatch Block<?> createBlock(OutputCommand output, Statement statement, Resource resource) {
+		val tableOutputBlock = new TableOutputBlock("Output Table", output.toAttributeReferences, output.reference)
 		
 		// Create necesarry inputs		
-		for (attribute : select.selects.distinctBy[s | s.reference.name]) {
-			addInputsToSelect(statement, attribute, resource, selectBlock)
-		}
+		addInputsToTableOutput(statement, output.reference, resource, tableOutputBlock)
 		
-		return catalog.ensureExistingIsUsed(selectBlock)
+		return catalog.ensureExistingIsUsed(tableOutputBlock)
 	}
 	
-	protected def void addInputsToSelect(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
+	protected def void addInputsToTableOutput(Statement statement, Reference reference, Resource resource, TableOutputBlock tableOutputBlock) {
 		
-		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.type.name]
+		val filtersForAttribute = statement.filters.filter[filter | reference.name === filter.type.name]
 		if (!filtersForAttribute.isEmpty) { // References a filter
 		
 			val filter = filtersForAttribute.head
 			if (filter.condition === null) {
 				val type = filtersForAttribute.head.type
 				val typeBlock = catalog.ensureExistingIsUsed(type.createBlock(statement, resource))
-				selectBlock.AddInput(typeBlock)
+				tableOutputBlock.AddInput(typeBlock)
 				return
 			}
 			
 			val filterBlock = catalog.ensureExistingIsUsed(filter.createBlock(statement, resource))
-			selectBlock.AddInput(filterBlock)
+			tableOutputBlock.AddInput(filterBlock)
 			return
 		}
 		
 		
 		val lcaCalcsForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | 
-				lca.lcaEntitiesReference === null ? false : attribute.reference.name === lca.lcaEntitiesReference.name
+				lca.lcaEntitiesReference === null ? false : reference.name === lca.lcaEntitiesReference.name
 			]
 		if (!lcaCalcsForAttribute.isEmpty) { // References a lca calculation
 			val calc = lcaCalcsForAttribute.head
 			val calcBlock = calc.createLcaCalculationBlock(statement, resource)
-			selectBlock.AddInput(catalog.ensureExistingIsUsed(calcBlock))
+			tableOutputBlock.AddInput(catalog.ensureExistingIsUsed(calcBlock))
 			return
 		}
-		val lcaSummariesForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | attribute.reference.name === lca.summaryReference.name]
+		val lcaSummariesForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | reference.name === lca.summaryReference.name]
 		if (!lcaSummariesForAttribute.isEmpty) { // References a lca calculation
 			val calc = lcaSummariesForAttribute.head
 			val calcBlock = calc.createLcaSummaryBlock(statement, resource)
-			selectBlock.AddInput(catalog.ensureExistingIsUsed(calcBlock))
+			tableOutputBlock.AddInput(catalog.ensureExistingIsUsed(calcBlock))
 			return
 		}
 	}
@@ -280,9 +280,9 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	 
-	def List<AttributeReference<Object, String>> toAttributeReferences(SelectCommand command) {
-		command.selects.map[attribute | {
-			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
+	def List<AttributeReference<Object, String>> toAttributeReferences(OutputCommand command) {
+		command.columns.map[fieldName | {
+			new AttributeReference(command.reference.name, fieldName, new ParameterValueExtractor(fieldName))
 		}]
 	}
 		

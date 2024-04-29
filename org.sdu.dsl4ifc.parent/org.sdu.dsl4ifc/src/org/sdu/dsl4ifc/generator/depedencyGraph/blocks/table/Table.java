@@ -8,6 +8,11 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference;
 public class Table {
 	private List<Row> rows = new ArrayList<>();
 	private List<ColumnHeader> headers = new ArrayList<>();
+	private String title;
+	
+	public Table(String title) {
+		this.title = title;
+	}
 	
 	public void addRow(List<String> values) {
 		if (values.size() != headers.size()) {
@@ -33,7 +38,11 @@ public class Table {
 	@Override
 	public String toString() {
 	    StringBuilder sb = new StringBuilder();
-
+	    sb.append("\n");
+	    sb.append("Table: ");
+	    sb.append(title);
+	    sb.append("\n");
+	    
 	    // Calculate column widths
 	    int[] columnWidths = new int[headers.size()];
 	    for (int i = 0; i < columnWidths.length; i++) {

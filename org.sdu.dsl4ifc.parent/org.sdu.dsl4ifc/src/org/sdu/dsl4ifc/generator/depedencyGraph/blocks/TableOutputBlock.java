@@ -7,14 +7,17 @@ import java.util.stream.Stream;
 
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
+import org.sdu.dsl4ifc.sustainLang.Reference;
 
-public class SelectBlock extends Block<Table> {
+public class TableOutputBlock extends Block<Table> {
 
 	private List<AttributeReference<Object, String>> attributeReferences;
+	private Reference reference;
 
-	public SelectBlock(String name, List<AttributeReference<Object,String>> attributeReferences) {
+	public TableOutputBlock(String name, List<AttributeReference<Object,String>> attributeReferences, Reference reference) {
 		super(name);
 		this.attributeReferences = attributeReferences;
+		this.reference = reference;
 	}
 
 	@Override
@@ -44,9 +47,9 @@ public class SelectBlock extends Block<Table> {
 		}
 		
 		
-		var table = new Table();
+		var table = new Table(reference.getName());
 		this.attributeReferences.forEach(reference -> 
-				table.addColumn(reference.getReferenceName() + "." + reference.getAttributeName(), reference)
+				table.addColumn(reference.getAttributeName(), reference)
 			);
 
 		// Get correct inputs
