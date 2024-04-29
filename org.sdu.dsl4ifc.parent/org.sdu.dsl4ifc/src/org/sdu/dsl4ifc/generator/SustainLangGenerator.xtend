@@ -143,21 +143,22 @@ class SustainLangGenerator extends AbstractGenerator {
 	
 	protected def void addInputsToSelect(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
 		
-		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.reference.name]
+		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.type.name]
 		if (!filtersForAttribute.isEmpty) { // References a filter
+		
 			val filter = filtersForAttribute.head
-			val filterBlock = filter.createBlock(statement, resource)
-			selectBlock.AddInput(catalog.ensureExistingIsUsed(filterBlock))
+			if (filter.condition === null) {
+				val type = filtersForAttribute.head.type
+				val typeBlock = catalog.ensureExistingIsUsed(type.createBlock(statement, resource))
+				selectBlock.AddInput(typeBlock)
+				return
+			}
+			
+			val filterBlock = catalog.ensureExistingIsUsed(filter.createBlock(statement, resource))
+			selectBlock.AddInput(filterBlock)
 			return
 		}
 		
-		val typesForAttribute = statement.from.types.filter[type | attribute.reference.name === type.name]
-		if (!typesForAttribute.isEmpty) { // References a from
-			val type = typesForAttribute.head
-			val typeBlock = type.createBlock(statement, resource)
-			selectBlock.AddInput(catalog.ensureExistingIsUsed(typeBlock))
-			return
-		}
 		
 		val lcaCalcsForAttribute = statement.^do.calculation.filter(LcaCalculation).filter[lca | 
 				lca.lcaEntitiesReference === null ? false : attribute.reference.name === lca.lcaEntitiesReference.name
@@ -178,16 +179,16 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
-		val filterBlock = new FilterBlock('''Filter: «filter.reference.name»''', filter.reference.name, filter.toExpression)
+		val filterBlock = new FilterBlock('''Filter: «filter.type.name»''', filter.type.name, filter.toExpression)
 		
 		// Create necesarry inputs
-		val typeBlock = filter.reference.createBlock(statement, resource)
+		val typeBlock = filter.type.createBlock(statement, resource)
 		filterBlock.AddInput(typeBlock)
 		
 		val references = new HashSet()
 		filter.condition.addAllVariableReferences(references)
 		
-		references.filter[ref | ref.name !== filter.reference.name].forEach[reference | {
+		references.filter[ref | ref.name !== filter.type.name].forEach[reference | {
 			val block = reference.createBlock(statement, resource)
 			filterBlock.AddInput(block)
 		}]
@@ -242,16 +243,17 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def Block<?> createInputFromReference(Statement statement, Resource resource, Reference reference) {
-		val filtersForAttribute = statement.filters.filter[filter | reference.name === filter.reference.name]
+		val filtersForAttribute = statement.filters.filter[filter | reference.name === filter.type.name]
 		if (!filtersForAttribute.isEmpty) { // References a 'filter'
 			val filter = filtersForAttribute.head
-			return filter.createBlock(statement, resource)
-		}
 		
-		val typesForAttribute = statement.from.types.filter[type | reference.name === type.name]
-		if (!typesForAttribute.isEmpty) { // References a 'from'
-			val type = typesForAttribute.head
-			return type.createBlock(statement, resource)
+			if (filter.condition === null) {
+				val type = filtersForAttribute.head.type
+				return catalog.ensureExistingIsUsed(type.createBlock(statement, resource))
+				
+			}
+			
+			return catalog.ensureExistingIsUsed(filter.createBlock(statement, resource))
 		}
 	}
 	
@@ -283,27 +285,9 @@ class SustainLangGenerator extends AbstractGenerator {
 			new AttributeReference(attribute.reference.name, attribute.attribute, new ParameterValueExtractor(attribute.attribute))
 		}]
 	}
-	
-	protected def void addSelectBlockInputs(Statement statement, Attribute attribute, Resource resource, SelectBlock selectBlock) {
-		
-		val filtersForAttribute = statement.filters.filter[filter | attribute.reference.name === filter.reference.name]
-		if (!filtersForAttribute.isEmpty) { // References a filter
-			val filter = filtersForAttribute.head
-			val filterBlock = filter.createBlock(statement, resource)
-			selectBlock.AddInput(filterBlock)
-			return
-		}
-		
-		val typesForAttribute = statement.from.types.filter[type | attribute.reference.name === type.name]
-		if (!typesForAttribute.isEmpty) { // References a from
-			val type = typesForAttribute.head
-			val typeBlock = type.createBlock(statement, resource)
-			selectBlock.AddInput(typeBlock)
-		}
-	}
 		
 	def Expression<InternalAccessClass> toExpression(FilterCommand command) {
-		val expression = command.condition.toBlockExpression(command.reference);
+		val expression = command.condition.toBlockExpression(command.type);
 		return expression
 	}
 		

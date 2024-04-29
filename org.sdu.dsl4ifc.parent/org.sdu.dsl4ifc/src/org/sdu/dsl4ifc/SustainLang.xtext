@@ -7,7 +7,7 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand from=FromCommand? filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? select=SelectCommand ';'?;
+    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? select=SelectCommand ';'?;
 
 SourceCommand:
     'SOURCE' path=STRING;
@@ -16,15 +16,22 @@ SelectCommand:
 	{SelectCommand} 'SELECT' selects+=Attribute? (',' selects+=Attribute)*
 ;
 
+/*
 FromCommand:
     'FROM' types+=IfcTypeRef (',' types+=IfcTypeRef)*;
+    */
     
 enum IfcType:
-	ifcWall='IfcWall' | ifcDoor='IfcDoor' | ifcRoot='IfcRoot' | ifcMaterial='IfcMaterial' | ifcBuildingElement='IfcBuildingElement' | ifcSlab='IfcSlab'
+	ifcWall='IfcWall' 						| 
+	ifcDoor='IfcDoor' 						| 
+	ifcRoot='IfcRoot' 						| 
+	ifcMaterial='IfcMaterial' 				| 
+	ifcBuildingElement='IfcBuildingElement' | 
+	ifcSlab='IfcSlab'
 ;
 
 FilterCommand:
-    'FILTER' reference=[Reference] 'WHERE' condition=BooleanExpression;
+    'GET' type=IfcTypeRef ('WHERE' condition=BooleanExpression)?;
 
 DoCommand:
     {DoCommand} 'DO' calculation+=Calculation*;
@@ -39,14 +46,10 @@ IfcTypeRef returns Reference:
 Calculation returns Calculation:
 	LcaCalculation
 ;
-/* 
-LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
-*/
+
 LcaCalculation returns Calculation:
     {LcaCalculation} 'LCA' '('lcaParams=LcaParams 'MATDEF' '(' matDefs+=MatDef* ')' ')' summaryReference=LcaSummaryReference (',' lcaEntitiesReference=LcaEntitiesReference)?;
 
-//sourceVar=[Reference]',' quantPath=ID
 
 MatDef:
 	ifcMat=STRING '->' epdMatId=STRING
