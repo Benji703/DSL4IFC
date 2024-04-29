@@ -5,6 +5,9 @@ public class LcaIfcQuantity {
 	private Double grossSideArea;
 	private Double grossVolume;
 	
+	public LcaIfcQuantity() {
+	}
+	
 	public LcaIfcQuantity(Double grossSideArea, Double grossVolume) {
 		this.grossSideArea = grossSideArea;
 		this.grossVolume = grossVolume;

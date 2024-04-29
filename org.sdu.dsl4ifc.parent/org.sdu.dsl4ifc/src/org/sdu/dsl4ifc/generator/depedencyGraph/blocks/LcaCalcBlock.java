@@ -64,7 +64,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	var invSet = element.getIsDefinedBy_Inverse();
 	    	double volume = 0;
 	    	
-	    	volume = getIfcVolume(invSet);
+	    	volume = getIfcQuantity(invSet).getGrossVolume();
 	    	
 	    	SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
 	    	if (associations == null)
@@ -106,9 +106,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		return null;
 	}
 
-	private double getIfcVolume(SET<IfcRelDefines> invSet) {
-		double volume = 0;
-		double area = 0; 
+	private LcaIfcQuantity getIfcQuantity(SET<IfcRelDefines> invSet) {
+		LcaIfcQuantity quantity = new LcaIfcQuantity();
 		
 		for (IfcRelDefines iRel : invSet) {
 			
@@ -124,32 +123,27 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			
 			IfcElementQuantity elementQuant = (IfcElementQuantity)iRelProp.getRelatingPropertyDefinition();
 			
-			volume = GetQuanityVolume(elementQuant);
+			quantity = GetQuantity(elementQuant);
 		}
-		return volume;
+		return quantity;
 	}
 
-	private double GetQuanityVolume(IfcElementQuantity elementQuant) {
+	private LcaIfcQuantity GetQuantity(IfcElementQuantity elementQuant) {
+		double grossVolume = 0;
+		double grossSideArea = 0;
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
 			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
-				return ((IfcQuantityVolume)q).getVolumeValue().getValue();
+				grossVolume = ((IfcQuantityVolume)q).getVolumeValue().getValue();
 			}
-		}
-		
-		return 0.0;
-	}
-	
-	private double GetQuanityArea(IfcElementQuantity elementQuant) {
-		
-		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
 			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossSideArea")) {
-				return ((IfcQuantityArea)q).getAreaValue().getValue();
+				grossSideArea = ((IfcQuantityArea)q).getAreaValue().getValue();
 			}
 		}
 		
-		return 0.0;
+		return new LcaIfcQuantity(grossSideArea, grossVolume);
 	}
+
 
 	@Override
 	public String generateCacheKey() {
