@@ -24,15 +24,17 @@ import lca.LCA.*;
 public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	private String sourceVarName;
 	private double heatedArea;
+	private double area;
 	private double b6;
 	private String referenceName;
 	
-	public LcaSummaryBlock(String name, String sourceVarName, String referenceName, double heatedArea, double b6) {
+	public LcaSummaryBlock(String name, String sourceVarName, String referenceName, double heatedArea, double b6, double area) {
 		super(name);
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.heatedArea = heatedArea;
 		this.b6 = b6;
+		this.area = area;
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	    
 		LCA lca = new LCA();
 
-        LCAResult lcaResult = lca.CalculateLCAWhole(lcaElements, heatedArea, b6);
+        LCAResult lcaResult = lca.CalculateLCAWhole(lcaElements, heatedArea, b6, area);
 		
 		return List.of(lcaResult);
 	}
