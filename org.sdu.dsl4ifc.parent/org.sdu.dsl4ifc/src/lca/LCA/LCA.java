@@ -76,21 +76,6 @@ public class LCA {
 		element.setC3Result(MultiplyWithQuantities(envInfo.getC3(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
 		element.setC4Result(MultiplyWithQuantities(envInfo.getC4(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
     }
-    
-    private Double MultiplyWithQuantities2(Double envInfo, LCAIFCElement element) {
-        if (envInfo == null) {
-            return null;
-        }
-
-        int yearFactor = 1;
-        if (element.getLifeTime() >= 1) {
-            yearFactor = (int) Math.ceil((50.0 / element.getLifeTime()));
-        }
-        
-        
-
-        return envInfo * element.getQuantity().getGrossVolume() * yearFactor;
-    }
 
     private Double MultiplyWithQuantities(Double envInfo, Double declaredFactor, Double massFactor, Double quant, int lifeTime) {
         if (envInfo == null) {
@@ -102,7 +87,7 @@ public class LCA {
             yearFactor = (int) Math.ceil((50.0 / lifeTime));
         }
         
-        return envInfo * declaredFactor * massFactor * quant * yearFactor;
+        return (envInfo/declaredFactor) * massFactor * quant * yearFactor;
     }
     
     public List<LCAIFCElement> calculateLCAByElement(List<LCAIFCElement> ifcElements, double area) {
