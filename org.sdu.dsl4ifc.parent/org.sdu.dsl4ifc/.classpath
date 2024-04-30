@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="bin/stax2-api-4.2.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="bin/aalto-xml-1.3.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="bin/commons-io-2.16.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="bin/commons-compress-1.26.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="bin/fastexcel-reader-0.17.0.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-gen"/>
+	<classpathentry kind="src" path="xtend-gen"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="bin/stax2-api-4.2.2.jar"/>
+	<classpathentry kind="lib" path="bin/aalto-xml-1.3.2.jar"/>
+	<classpathentry kind="lib" path="bin/commons-io-2.16.0.jar"/>
+	<classpathentry kind="lib" path="bin/commons-compress-1.26.1.jar"/>
+	<classpathentry kind="lib" path="bin/fastexcel-reader-0.17.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src/"/>
-	<classpathentry kind="src" path="src-gen/"/>
-	<classpathentry kind="src" path="xtend-gen/"/>
-	<classpathentry exported="true" kind="lib" path="bin/com.apstex.ifc2x3toolbox_4.5.1_20200406.jar"/>
-	<classpathentry exported="true" kind="lib" path="bin/com.apstex.stepparser_4.5.1_20200406.jar"/>
+	<classpathentry kind="lib" path="bin/com.apstex.ifc2x3toolbox_4.5.1_20200406.jar"/>
+	<classpathentry kind="lib" path="bin/com.apstex.stepparser_4.5.1_20200406.jar"/>
+	<classpathentry kind="lib" path="bin/gson-2.10.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
