@@ -4,9 +4,9 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference;
 
 public class ColumnHeader {
 	String headerText;
-	AttributeReference<?,String> attributeReference;
+	AttributeReference<?> attributeReference;
 	
-	public ColumnHeader(String headerText, AttributeReference<?,String> reference) {
+	public ColumnHeader(String headerText, AttributeReference<?> reference) {
 		this.headerText = headerText;
 		this.attributeReference = reference;
 	}

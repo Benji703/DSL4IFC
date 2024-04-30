@@ -11,7 +11,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel;
 
-public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceBlock<InternalAccessClass> implements IVariableReference  {
+public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceBlock<InternalAccessClass> {
 
 	private Class<T> clazz;
 	

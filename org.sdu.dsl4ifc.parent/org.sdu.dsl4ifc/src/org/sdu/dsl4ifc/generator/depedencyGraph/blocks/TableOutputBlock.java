@@ -3,18 +3,18 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
 
+import org.sdu.dsl4ifc.generator.IExtractor;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.sustainLang.Reference;
 
 public class TableOutputBlock extends Block<Table> {
 
-	private List<AttributeReference<Object, String>> attributeReferences;
+	private List<AttributeReference<?>> attributeReferences;
 	private Reference reference;
 
-	public TableOutputBlock(String name, List<AttributeReference<Object,String>> attributeReferences, Reference reference) {
+	public TableOutputBlock(String name, List<AttributeReference<?>> attributeReferences, Reference reference) {
 		super(name);
 		this.attributeReferences = attributeReferences;
 		this.reference = reference;
@@ -55,7 +55,7 @@ public class TableOutputBlock extends Block<Table> {
 		// Get correct inputs
 		// Compute variables
 		var outputMap = new HashMap<String, List<?>>();
-		for (AttributeReference<?, String> attributeReference : attributeReferences) {
+		for (AttributeReference<?> attributeReference : attributeReferences) {
 			var referenceName = attributeReference.getReferenceName();
 			
 			var block = referenceNameToInputBlock.get(referenceName);
@@ -78,7 +78,7 @@ public class TableOutputBlock extends Block<Table> {
 						continue;
 					}
 					
-					var extractor = columnSource.getExtractor();
+					IExtractor<Object, String> extractor = (IExtractor<Object, String>) columnSource.getExtractor();
 					String parameterValue = extractor.getParameterValue(entity);
 					values.add(parameterValue == null ? "null" : parameterValue);
 				}
@@ -94,8 +94,8 @@ public class TableOutputBlock extends Block<Table> {
 	@Override
 	public String generateCacheKey() {
 		StringBuilder keyBuilder = new StringBuilder(Name);
-		for (AttributeReference<?,?> ref : attributeReferences) {
-            keyBuilder.append(ref.getReferenceName()+"."+ref.getAttributeName()+",");
+		for (AttributeReference<?> ref : attributeReferences) {
+            keyBuilder.append(ref.toString()+",");
         }
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");

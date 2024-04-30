@@ -10,7 +10,7 @@ import lca.LCA.LCAIFCElement;
 import lca.LCA.LCAResult;
 
 // Make one for each ifcType
-public class ParameterValueExtractor<T, U> {
+public class ParameterValueExtractor<T, U> implements IExtractor<T, U> { 
 
 	private String parameterName;
 	public String getParameterName() {
@@ -24,6 +24,7 @@ public class ParameterValueExtractor<T, U> {
 		
 	}
 	
+	@Override
 	public U getParameterValue(T item) {
 		
 		if (item instanceof IfcWall asIfcWall) {
@@ -38,6 +39,8 @@ public class ParameterValueExtractor<T, U> {
 			switch (parameterName) {
 			case "stepnumber":
 				return (U) (""+asClassInterface.getStepLineNumber());
+			case "ifctype":
+				return (U) (asClassInterface.getClass().getSimpleName());
 			default:
 				break;
 			}
@@ -103,5 +106,10 @@ public class ParameterValueExtractor<T, U> {
 		
 		return null;
 		
+	}
+	
+	@Override
+	public String toString() {
+		return parameterName;
 	}
 }

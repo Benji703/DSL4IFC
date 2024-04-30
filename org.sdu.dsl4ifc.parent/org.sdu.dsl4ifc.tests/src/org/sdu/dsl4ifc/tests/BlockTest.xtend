@@ -3,20 +3,10 @@
  */
 package org.sdu.dsl4ifc.tests
 
-import java.util.Collection
-import java.util.List
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
-import org.sdu.dsl4ifc.generator.conditional.impls.CompareParameterValueToParameterValueOperation
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
-import org.sdu.dsl4ifc.sustainLang.ComparisonOperator
-
-import static org.junit.Assert.assertArrayEquals
-import static org.junit.jupiter.api.Assertions.*
-import java.util.stream.Stream
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)

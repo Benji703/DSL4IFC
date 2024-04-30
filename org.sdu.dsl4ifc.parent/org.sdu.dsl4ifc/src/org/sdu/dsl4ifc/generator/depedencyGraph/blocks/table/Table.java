@@ -27,7 +27,7 @@ public class Table {
 		rows.add(newRow);
 	}
 	
-	public void addColumn(String headerText, AttributeReference<?,String> reference) {
+	public void addColumn(String headerText, AttributeReference<?> reference) {
 		headers.add(new ColumnHeader(headerText, reference));
 	}
 	

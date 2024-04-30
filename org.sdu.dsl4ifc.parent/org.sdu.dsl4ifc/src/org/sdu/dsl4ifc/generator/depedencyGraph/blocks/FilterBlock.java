@@ -10,7 +10,7 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 
-public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> implements IVariableReference  {
+public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> {
 
 	private Expression<InternalAccessClass> expression;
 	private VariableStore variables = new VariableStore();
