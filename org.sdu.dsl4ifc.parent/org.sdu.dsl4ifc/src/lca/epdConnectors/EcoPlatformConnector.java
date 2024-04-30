@@ -2,6 +2,8 @@ package lca.epdConnectors;
 
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
+import lca.epdConnectors.JsonWrappers.EpdListJsonObject;
+import lca.epdConnectors.JsonWrappers.EpdMetaDataJsonObject;
 
 import com.google.gson.*;
 
@@ -25,12 +27,27 @@ public class EcoPlatformConnector implements IEPDConnector {
 	}
 	
 	private String  GetEpdDatabaseUri(String name) {
+		
+		try {
+            URL urlObject = new URL("https://data.eco-platform.org/resource/processes?search=true&format=JSON&distributed=true&virtual=true&metaDataOnly=false&lang=en&name=" + name);
+            HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Authorization", "Bearer " + bearerToken);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+            	
+            }
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		return "";
 		
 	}
 
-	private JsonObject FetchEDPData(String url) {
-        JsonObject epdDataJson = new JsonObject();
+	private EpdMetaDataJsonObject FetchEDPData(String url) {
+        EpdMetaDataJsonObject epdDataJson = null;
 
         try {
             URL urlObject = new URL(url);
@@ -40,18 +57,11 @@ public class EcoPlatformConnector implements IEPDConnector {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
+                String sJson = getJsonStringFromStream(connection);
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                Object obj = gson.fromJson(response.toString(), Object.class);
-
-                epdDataJson = (JsonObject) obj;
+                EpdListJsonObject epdList = gson.fromJson(sJson, EpdListJsonObject.class);
+                
+                epdDataJson = epdList.getEpdList();
 
                 //System.out.println(response.toString());
 
@@ -65,5 +75,17 @@ public class EcoPlatformConnector implements IEPDConnector {
         }
         return epdDataJson;
     }
+
+	private String getJsonStringFromStream(HttpURLConnection connection) throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+		    response.append(inputLine);
+		}
+		in.close();
+		return response.toString();
+	}
 
 }

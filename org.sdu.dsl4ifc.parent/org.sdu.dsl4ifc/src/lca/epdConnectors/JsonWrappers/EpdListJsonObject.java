@@ -1,12 +1,13 @@
 package lca.epdConnectors.JsonWrappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EpdListJsonObject {
 	private int totalCount;
-	private List<EpdMetaDataJsonObject> epdList;
+	private ArrayList<EpdMetaDataJsonObject> epdList;
 	
-	public EpdListJsonObject(int totalCount, List<EpdMetaDataJsonObject> epdList) {
+	public EpdListJsonObject(int totalCount, ArrayList<EpdMetaDataJsonObject> epdList) {
 		this.setTotalCount(totalCount);
 		this.setEpdList(epdList);
 	}
@@ -19,11 +20,11 @@ public class EpdListJsonObject {
 		this.totalCount = totalCount;
 	}
 
-	public List<EpdMetaDataJsonObject> getEpdList() {
+	public ArrayList<EpdMetaDataJsonObject> getEpdList() {
 		return epdList;
 	}
 
-	public void setEpdList(List<EpdMetaDataJsonObject> epdList) {
+	public void setEpdList(ArrayList<EpdMetaDataJsonObject> epdList) {
 		this.epdList = epdList;
 	}
 	
