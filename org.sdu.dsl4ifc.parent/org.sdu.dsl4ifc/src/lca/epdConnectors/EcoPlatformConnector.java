@@ -22,11 +22,12 @@ public class EcoPlatformConnector implements IEPDConnector {
 		// TODO Auto-generated method stub
 		
 		
-		String epdUri = GetEpdDatabaseUri(name);
+		EpdMetaDataJsonObject epdObject = getEpdDatabaseObject(name);
 		return null;
 	}
 	
-	private String  GetEpdDatabaseUri(String name) {
+	private EpdMetaDataJsonObject getEpdDatabaseObject(String name) {
+        EpdMetaDataJsonObject epdDataJson = null;
 		
 		try {
             URL urlObject = new URL("https://data.eco-platform.org/resource/processes?search=true&format=JSON&distributed=true&virtual=true&metaDataOnly=false&lang=en&name=" + name);
@@ -36,17 +37,24 @@ public class EcoPlatformConnector implements IEPDConnector {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
+                String sJson = getJsonStringFromStream(connection);
+
+                EpdListJsonObject epdList = gson.fromJson(sJson, EpdListJsonObject.class);
+                
+                if (epdList.getEpdList().size() > 0) {
+                    epdDataJson = epdList.getEpdList().get(0);
+                }
             	
             }
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		
-		return "";
+		return epdDataJson;
 		
 	}
 
-	private EpdMetaDataJsonObject FetchEDPData(String url) {
+	private EpdMetaDataJsonObject fetchEDPData(String url) {
         EpdMetaDataJsonObject epdDataJson = null;
 
         try {
@@ -61,18 +69,21 @@ public class EcoPlatformConnector implements IEPDConnector {
 
                 EpdListJsonObject epdList = gson.fromJson(sJson, EpdListJsonObject.class);
                 
-                epdDataJson = epdList.getEpdList();
+                if (epdList.getEpdList().size() > 0) {
+                    epdDataJson = epdList.getEpdList().get(0);
+                }
 
                 //System.out.println(response.toString());
 
             } else {
                 System.out.println("Failed to fetch data. Response Code: " + responseCode);
             }
-        } catch (IOException e) {
+        } catch (IOException  e) {
             e.printStackTrace();
         } catch (JsonParseException e) {
             e.printStackTrace();
         }
+        
         return epdDataJson;
     }
 
