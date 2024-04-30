@@ -25,7 +25,7 @@ public class EcoPlatformConnector implements IEPDConnector {
 	}
 	
 	private String  GetEpdDatabaseUri(String name) {
-		
+		return "";
 		
 	}
 
