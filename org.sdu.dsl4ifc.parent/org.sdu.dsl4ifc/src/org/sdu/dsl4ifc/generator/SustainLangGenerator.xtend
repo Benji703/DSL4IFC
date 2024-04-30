@@ -56,6 +56,7 @@ import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.OutputArgument
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -208,12 +209,6 @@ class SustainLangGenerator extends AbstractGenerator {
 		return transformBlock;
 	}
 	
-	def List<AttributeReference<?>> toAttributeReferences(TransformationCommand command) {
-		command.attributes.map[fieldName |
-			new AttributeReference(command.reference.name, fieldName, new ParameterValueExtractor(fieldName))
-		]
-	}
-	
 	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
 		val typeBlock = new TypeBlock('''Type: "«reference.name»" «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
 		
@@ -302,14 +297,32 @@ class SustainLangGenerator extends AbstractGenerator {
 		command.columns.map[outputParameter | {
 			switch (outputParameter) {
 				Field:
-					new AttributeReference(command.reference.name, outputParameter.name, new ParameterValueExtractor(outputParameter.name))
+					new AttributeReference(command.reference.name, outputParameter.name, new ParameterValueExtractor(outputParameter.name), outputParameter.toDisplayName)
 				Function: {
 					val aggregateValueExtractor = new AggregateValueExtractor<Object>(outputParameter.field.name, outputParameter.functionType)
-					return new AttributeReference(command.reference.name, outputParameter.field.name, aggregateValueExtractor)
+					return new AttributeReference(command.reference.name, outputParameter.field.name, aggregateValueExtractor, outputParameter.toDisplayName)
 				}
 			}
 			
 		}]
+	}
+	
+	def List<AttributeReference<?>> toAttributeReferences(TransformationCommand command) {
+		command.attributes.map[field |
+			new AttributeReference(command.reference.name, field.name, new ParameterValueExtractor(field.name), field.toDisplayName)
+		]
+	}
+	
+	def String toDisplayName(OutputArgument outputArgument) {
+		switch (outputArgument) {
+			Field:
+				'''«outputArgument.name»'''
+			Function: {
+				'''«outputArgument.functionType»(«outputArgument.field.name»)'''
+			}
+			default:
+				throw new Exception("Output argument not set")
+		}
 	}
 		
 	def Expression<InternalAccessClass> toExpression(FilterCommand command) {

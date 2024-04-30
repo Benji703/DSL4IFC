@@ -8,11 +8,13 @@ public class AttributeReference<T> {
 	private final String referenceName;
 	private final IExtractor<T, String> extractor;
 	private String attributeName;
+	private String displayName;
 
-	public AttributeReference(String referenceName, String attributeName, IExtractor<T, String> extractor) {
+	public AttributeReference(String referenceName, String attributeName, IExtractor<T, String> extractor, String displayName) {
 		this.referenceName = referenceName;
 		this.attributeName = attributeName;
 		this.extractor = extractor;
+		this.displayName = displayName;
 	}
 
 	public String getReferenceName() {
@@ -29,6 +31,10 @@ public class AttributeReference<T> {
 	
 	@Override
 	public String toString() {
-		return referenceName + ": " + extractor.toString();
+		return referenceName + "," + displayName + ": " + extractor.toString();
+	}
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 }

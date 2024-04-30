@@ -52,7 +52,7 @@ DoCommand:
     {DoCommand} 'CALCULATE' calculation+=Calculation*;
 
 TransformationCommand:
-    'GROUP' reference=[Reference] 'BY' attributes+=ID (',' attributes+=ID)*;
+    'GROUP' reference=[Reference] 'BY' attributes+=Field (',' attributes+=Field)*;
 
 IfcTypeRef returns Reference:
 	ifcType=IfcType name=ID?

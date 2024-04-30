@@ -1,5 +1,7 @@
 package org.sdu.dsl4ifc.generator;
 
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.GroupedRows;
+
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
@@ -102,6 +104,16 @@ public class ParameterValueExtractor<T, U> implements IExtractor<T, U> {
 			default:
 				break;
 			}
+		}
+		
+		if (item instanceof GroupedRows<?> asGroupedRow) {
+			
+			if (!asGroupedRow.groupedFields.contains(parameterName)) {
+				return null;
+			}
+			
+			Object firstObject = asGroupedRow.elements.get(0);
+			return getParameterValue((T) firstObject);
 		}
 		
 		return null;

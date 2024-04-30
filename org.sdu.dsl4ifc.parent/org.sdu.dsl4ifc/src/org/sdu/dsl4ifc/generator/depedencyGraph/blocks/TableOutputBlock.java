@@ -49,7 +49,7 @@ public class TableOutputBlock extends Block<Table> {
 		
 		var table = new Table(reference.getName());
 		this.attributeReferences.forEach(reference -> 
-				table.addColumn(reference.getAttributeName(), reference)
+				table.addColumn(reference.getDisplayName(), reference)
 			);
 
 		// Get correct inputs

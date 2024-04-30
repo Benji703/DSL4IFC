@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.sdu.dsl4ifc.generator.ParameterValueExtractor;
@@ -49,15 +50,27 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 		
 		List<InputType> elements = reference.getOutput();
 		
-		var map = elements.stream().collect(Collectors.groupingBy(p -> {
-			List<String> values = attributeReferences.stream().map(t -> t.getExtractor().getParameterValue(p)).toList();
-			return String.join(",", values);
-		}));
+		var map = elements.stream().collect(Collectors.toMap(
+				p -> {
+					List<String> values = attributeReferences.stream().map(t -> t.getExtractor().getParameterValue(p)).toList();
+					return String.join(",", values);
+				}, 
+				t -> { 
+					List<String> groupedFieldNames = attributeReferences.stream().map(b -> b.getAttributeName()).toList();
+					return new Group<InputType>(groupedFieldNames).add(t); 
+				}, 
+				(l, u) -> l.merge(u.getElements())
+			));
+		
+//		var map = elements.stream().collect(Collectors.groupingBy(p -> {
+//			List<String> values = attributeReferences.stream().map(t -> t.getExtractor().getParameterValue(p)).toList();
+//			return String.join(",", values);
+//		}));
 		
 		var groupedRows = new ArrayList<GroupedRows<InputType>>();
-		for (Entry<String, List<InputType>> entry : map.entrySet()) {
-			List<InputType> val = entry.getValue();
-			groupedRows.add(new GroupedRows<>(val));
+		for (Entry<String, Group<InputType>> entry : map.entrySet()) {
+			Group<InputType> val = entry.getValue();
+			groupedRows.add(new GroupedRows<InputType>(val.getElements(), val.getGroupedFieldNames()));
 		}
 		
 		return groupedRows;
@@ -81,4 +94,32 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 		return reference.getName();
 	}
 
+}
+
+class Group<T> {
+	
+	private List<T> elements = new ArrayList<>();
+	private List<String> groupedFieldNames;
+	
+	public Group(List<String> groupedFieldNames) {
+		this.groupedFieldNames = groupedFieldNames;
+	}
+	
+	public Group<T> merge(List<T> elements) {
+		this.elements.addAll(elements);
+		return this;
+	}
+	
+	public Group<T> add(T element) {
+		elements.add(element);
+		return this;
+	}
+
+	public List<String> getGroupedFieldNames() {
+		return groupedFieldNames;
+	}
+
+	public List<T> getElements() {
+		return elements;
+	}
 }
