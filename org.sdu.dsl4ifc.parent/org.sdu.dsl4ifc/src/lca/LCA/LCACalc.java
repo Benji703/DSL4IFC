@@ -4,7 +4,7 @@ public class LCACalc {
 
 
     public double CalculateLCABasic(double a123, double c3, double c4, double aRef) {
-        return (a123 + c3 + c4) / (aRef*50);
+        return (a123 + c3 + c4);
     }
 
     public double CalculateLCAOperational(double b6, double aHeat) {
@@ -17,5 +17,9 @@ public class LCACalc {
 
     public double CalculateLCAModuleDOperational(double dOp, double aHeat) {
         return (dOp /(aHeat * 50));
+    }
+    
+    public double CalculateBuildingLca(double lca, double aRef) {
+    	return lca / (aRef*50);
     }
 }

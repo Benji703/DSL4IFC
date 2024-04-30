@@ -3,6 +3,8 @@ package lca.LCA;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sdu.dsl4ifc.generator.SustainLangGenerator;
+
 import lca.epdConnectors.BR18Connector;
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
@@ -37,9 +39,7 @@ public class LCA {
         
         element.setEpdName(envProductInfo.getName());
 
-        element.setAResult(MultiplyWithQuanitities(envProductInfo.getA(),element));
-        element.setC3Result(MultiplyWithQuanitities(envProductInfo.getC3(),element));
-        element.setC4Result(MultiplyWithQuanitities(envProductInfo.getC4(),element));
+        CalculateLcaByQuantity(envProductInfo, element);
 
         double aRes = TranslateNullToZero(element.getAResult());
         double c3Res = TranslateNullToZero(element.getC3Result());
@@ -55,8 +55,29 @@ public class LCA {
 
         return d;
     }
-
-    private Double MultiplyWithQuanitities(Double envInfo, LCAIFCElement element) {
+    
+    private void CalculateLcaByQuantity(IEnvProductInfo envInfo, LCAIFCElement element) {
+    	double quantity = 0;
+    	
+    	switch (envInfo.getDeclaredUnit()) {
+		case M3:
+			quantity = element.getQuantity().getGrossVolume();
+			break;
+		case M2:
+			quantity = element.getQuantity().getGrossSideArea();
+			break;
+		default:
+			//Skriv warning: SustainLangGenerator.consoleOut
+			SustainLangGenerator.consoleOut.println("Unit: " + envInfo.getDeclaredUnit() + " from material with ID: " + element.getEpdId() + " not supported");
+			break;
+		}
+    	
+		element.setAResult(MultiplyWithQuantities(envInfo.getA(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+		element.setC3Result(MultiplyWithQuantities(envInfo.getC3(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+		element.setC4Result(MultiplyWithQuantities(envInfo.getC4(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+    }
+    
+    private Double MultiplyWithQuantities2(Double envInfo, LCAIFCElement element) {
         if (envInfo == null) {
             return null;
         }
@@ -65,8 +86,23 @@ public class LCA {
         if (element.getLifeTime() >= 1) {
             yearFactor = (int) Math.ceil((50.0 / element.getLifeTime()));
         }
+        
+        
 
-        return envInfo * element.getQuantity() * yearFactor;
+        return envInfo * element.getQuantity().getGrossVolume() * yearFactor;
+    }
+
+    private Double MultiplyWithQuantities(Double envInfo, Double declaredFactor, Double massFactor, Double quant, int lifeTime) {
+        if (envInfo == null) {
+            return null;
+        }
+
+        int yearFactor = 1;
+        if (lifeTime >= 1) {
+            yearFactor = (int) Math.ceil((50.0 / lifeTime));
+        }
+        
+        return envInfo * declaredFactor * massFactor * quant * yearFactor;
     }
     
     public List<LCAIFCElement> calculateLCAByElement(List<LCAIFCElement> ifcElements, double area) {
@@ -80,11 +116,12 @@ public class LCA {
         return ifcElementResults;
     }
 
-    public LCAResult CalculateLCAWhole(List<LCAIFCElement> ifcElements, double areaHeated, double b6) {
+    public LCAResult CalculateLCAWhole(List<LCAIFCElement> ifcElements, double areaHeated, double b6, double area) {
 
         double baseResult = ifcElements.stream().filter(t -> t.getLcaVal() != null).mapToDouble(LCAIFCElement::getLcaVal).sum();
+        double baseWithArea = lcaCalc.CalculateBuildingLca(baseResult, area);
         double opResult = lcaCalc.CalculateLCAOperational(b6, areaHeated);
-        double result = baseResult + opResult;
+        double result = baseWithArea + opResult;
 
         return new LCAResult(result,ifcElements);
     }

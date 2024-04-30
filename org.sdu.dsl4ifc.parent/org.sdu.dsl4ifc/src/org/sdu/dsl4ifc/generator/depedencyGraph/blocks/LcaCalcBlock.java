@@ -4,10 +4,12 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityArea;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
@@ -60,9 +62,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    
 	    for (IfcBuildingElement element : ifcElements) {
 	    	var invSet = element.getIsDefinedBy_Inverse();
-	    	double volume = 0;
 	    	
-	    	volume = getIfcVolume(invSet);
+	    	LcaIfcQuantity quantity = getIfcQuantity(invSet);
 	    	
 	    	SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
 	    	if (associations == null)
@@ -73,7 +74,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	
 	    	String elementName = element.getName().getDecodedValue();
 	    	
-			elements.add(new LCAIFCElement(epdId, elementName, volume));
+			elements.add(new LCAIFCElement(epdId, elementName, quantity));
 	    }
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
@@ -104,8 +105,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		return null;
 	}
 
-	private double getIfcVolume(SET<IfcRelDefines> invSet) {
-		double volume = 0;
+	private LcaIfcQuantity getIfcQuantity(SET<IfcRelDefines> invSet) {
+		LcaIfcQuantity quantity = new LcaIfcQuantity();
 		
 		for (IfcRelDefines iRel : invSet) {
 			
@@ -121,21 +122,27 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			
 			IfcElementQuantity elementQuant = (IfcElementQuantity)iRelProp.getRelatingPropertyDefinition();
 			
-			volume = GetQuanityVolume(elementQuant);
+			quantity = GetQuantity(elementQuant);
 		}
-		return volume;
+		return quantity;
 	}
 
-	private double GetQuanityVolume(IfcElementQuantity elementQuant) {
+	private LcaIfcQuantity GetQuantity(IfcElementQuantity elementQuant) {
+		double grossVolume = 0;
+		double grossSideArea = 0;
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityVolume) {
-				return ((IfcQuantityVolume)q).getVolumeValue().getValue();
+			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
+				grossVolume = ((IfcQuantityVolume)q).getVolumeValue().getValue();
+			}
+			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossSideArea")) {
+				grossSideArea = ((IfcQuantityArea)q).getAreaValue().getValue();
 			}
 		}
 		
-		return 0.0;
+		return new LcaIfcQuantity(grossSideArea, grossVolume);
 	}
+
 
 	@Override
 	public String generateCacheKey() {
