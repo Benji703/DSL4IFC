@@ -210,7 +210,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val lcaPar = cal.lcaParams;
 		
-		val lcaSummaryBlock = new LcaSummaryBlock('''LCA Summary (source: «lcaPar.sourceVar.name»)''', lcaPar.sourceVar.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6);
+		val lcaSummaryBlock = new LcaSummaryBlock('''LCA Summary (source: «cal.source.name»)''', cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6);
 		
 		// Create necesarry inputs
 		val lcaCalcBlock = cal.createLcaCalculationBlock(statement, resource)
@@ -232,11 +232,11 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 		
 		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
-		val lcaCalcBlock = new LcaCalcBlock('''LCA Calculation (source: «lcaPar.sourceVar.name»)''', lcaPar.sourceVar.name, referenceName, lcaPar.area, matDefMap);
+		val lcaCalcBlock = new LcaCalcBlock('''LCA Calculation (source: «cal.source.name»)''', cal.source.name, referenceName, lcaPar.area, matDefMap);
 		
 		// Create necesarry inputs
 		// Can be types or filters
-		val inputBlock = createInputFromReference(statement, resource, lcaPar.sourceVar)
+		val inputBlock = createInputFromReference(statement, resource, cal.source)
 		lcaCalcBlock.AddInput(catalog.ensureExistingIsUsed(inputBlock))
 		
 		return catalog.ensureExistingIsUsed(lcaCalcBlock)

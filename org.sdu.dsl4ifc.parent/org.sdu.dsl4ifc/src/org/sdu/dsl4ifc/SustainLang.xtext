@@ -38,7 +38,7 @@ FilterCommand:
     'GET' type=IfcTypeRef ('WHERE' condition=BooleanExpression)?;
 
 DoCommand:
-    {DoCommand} 'DO' calculation+=Calculation*;
+    {DoCommand} 'CALCULATE' calculation+=Calculation*;
 
 TranformationCommand:
     'GROUP' 'BY' attribute=Attribute;	// Add more
@@ -52,7 +52,11 @@ Calculation returns Calculation:
 ;
 
 LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '('lcaParams=LcaParams 'MATERIAL' 'MAPPING' '(' matDefs+=MatDef* ')' ')' summaryReference=LcaSummaryReference (',' lcaEntitiesReference=LcaEntitiesReference)?;
+    {LcaCalculation} 'LCA' 
+    '(' summaryReference=LcaSummaryReference '<-' 'SUMMARY' 
+    ( ','lcaEntitiesReference=LcaEntitiesReference '<-' 'ELEMENTS' )? ')'
+    'FOR' source=[Reference] 
+    '('lcaParams=LcaParams 'MATERIAL' 'MAPPING' '(' matDefs+=MatDef* ')' ')';
 
 
 MatDef:
@@ -60,7 +64,7 @@ MatDef:
 ;
 
 LcaParams:
-	'SOURCE' sourceVar=[Reference] & 'AREA' area=Double & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double
+	'AREA' area=Double & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double
 ;
 
 Double returns ecore::EDouble:
