@@ -82,15 +82,15 @@ public class ParameterValueExtractor<T, U> {
 			case "epdid":
 				return (U) asLcaElement.getEpdId();
 			case "a":
-				return (U) (asLcaElement.getAResult() + " kg. CO₂ ævk. / m² / år");
+				return (U) (asLcaElement.getAResult() + " kg. CO₂ ævk.");
 			case "c3":
-				return (U) (asLcaElement.getC3Result() + " kg. CO₂ ævk. / m² / år");
+				return (U) (asLcaElement.getC3Result() + " kg. CO₂ ævk.");
 			case "c4":
-				return (U) (asLcaElement.getC4Result() + " kg. CO₂ ævk. / m² / år");
+				return (U) (asLcaElement.getC4Result() + " kg. CO₂ ævk.");
 			case "d":
-				return (U) (asLcaElement.getdResult() + " kg. CO₂ ævk. / m² / år");
+				return (U) (asLcaElement.getdResult() + " kg. CO₂ ævk.");
 			case "result":
-				return (U) (asLcaElement.getLcaVal() + " kg. CO₂ ævk. / m² / år");
+				return (U) (asLcaElement.getLcaVal() + " kg. CO₂ ævk.");
 			case "quantity":
 				return (U) (asLcaElement.getQuantity() + " m³");
 			case "lifetime":
