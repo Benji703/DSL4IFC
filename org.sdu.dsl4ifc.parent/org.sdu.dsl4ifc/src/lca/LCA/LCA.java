@@ -3,6 +3,8 @@ package lca.LCA;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sdu.dsl4ifc.generator.SustainLangGenerator;
+
 import lca.epdConnectors.BR18Connector;
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
@@ -65,14 +67,14 @@ public class LCA {
 			quantity = element.getQuantity().getGrossSideArea();
 			break;
 		default:
+			//Skriv warning: SustainLangGenerator.consoleOut
+			SustainLangGenerator.consoleOut.println("Unit: " + envInfo.getDeclaredUnit() + " from material with ID: " + element.getEpdId() + " not supported");
 			break;
 		}
     	
 		element.setAResult(MultiplyWithQuantities(envInfo.getA(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
 		element.setC3Result(MultiplyWithQuantities(envInfo.getC3(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
 		element.setC4Result(MultiplyWithQuantities(envInfo.getC4(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
-
-
     }
     
     private Double MultiplyWithQuantities2(Double envInfo, LCAIFCElement element) {
