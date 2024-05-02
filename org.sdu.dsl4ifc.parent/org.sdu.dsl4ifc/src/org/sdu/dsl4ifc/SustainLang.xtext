@@ -13,11 +13,15 @@ SourceCommand:
     'SOURCE' path=STRING;
 
 OutputCommand:
-	'OUTPUT' TableOutput
+	'OUTPUT' (TableOutput | TraceOutput)
 ;
 
 TableOutput returns OutputCommand:
-	'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=OutputArgument? (',' columns+=OutputArgument)* ']'
+	{TableOutput} 'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=OutputArgument? (',' columns+=OutputArgument)* ']'
+;
+
+TraceOutput returns OutputCommand:
+	{TraceOutput} 'TRACE' 'REPORT' outputPath=STRING
 ;
 
 OutputArgument:
