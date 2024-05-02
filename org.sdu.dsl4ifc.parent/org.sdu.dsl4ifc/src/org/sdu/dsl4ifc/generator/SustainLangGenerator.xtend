@@ -297,10 +297,10 @@ class SustainLangGenerator extends AbstractGenerator {
 		command.columns.map[outputParameter | {
 			switch (outputParameter) {
 				Field:
-					new AttributeReference(command.reference.name, outputParameter.name, new ParameterValueExtractor(outputParameter.name), outputParameter.toDisplayName)
+					new AttributeReference(command.reference.name, outputParameter.fieldName, new ParameterValueExtractor(outputParameter.fieldName), outputParameter.toDisplayName)
 				Function: {
-					val aggregateValueExtractor = new AggregateValueExtractor<Object>(outputParameter.field.name, outputParameter.functionType)
-					return new AttributeReference(command.reference.name, outputParameter.field.name, aggregateValueExtractor, outputParameter.toDisplayName)
+					val aggregateValueExtractor = new AggregateValueExtractor<Object>(outputParameter.field.fieldName, outputParameter.functionType)
+					return new AttributeReference(command.reference.name, outputParameter.field.fieldName, aggregateValueExtractor, outputParameter.toDisplayName)
 				}
 			}
 			
@@ -309,16 +309,16 @@ class SustainLangGenerator extends AbstractGenerator {
 	
 	def List<AttributeReference<?>> toAttributeReferences(TransformationCommand command) {
 		command.attributes.map[field |
-			new AttributeReference(command.reference.name, field.name, new ParameterValueExtractor(field.name), field.toDisplayName)
+			new AttributeReference(command.reference.name, field.fieldName, new ParameterValueExtractor(field.fieldName), field.toDisplayName)
 		]
 	}
 	
 	def String toDisplayName(OutputArgument outputArgument) {
 		switch (outputArgument) {
 			Field:
-				'''«outputArgument.name»'''
+				'''«outputArgument.fieldName»'''
 			Function: {
-				'''«outputArgument.functionType»(«outputArgument.field.name»)'''
+				'''«outputArgument.functionType»(«outputArgument.field.fieldName»)'''
 			}
 			default:
 				throw new Exception("Output argument not set")
@@ -403,11 +403,9 @@ class SustainLangGenerator extends AbstractGenerator {
 			return new CompareParameterValueToParameterValueOperation(rightVariableName, leftAttribute.toExtractor, rightAttribute.toExtractor, expression.operator)
 		}
 	}
-	
-	
 		
 	def ParameterValueExtractor<?, ?> toExtractor(Attribute attribute) {
-		return new ParameterValueExtractor(attribute.field.name)
+		return new ParameterValueExtractor(attribute.field.fieldName)
 	}
 	
 	def toIfcType(IfcType type) {

@@ -3,16 +3,6 @@
  */
 package org.sdu.dsl4ifc.scoping
 
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
-import org.sdu.dsl4ifc.sustainLang.Reference
-import org.eclipse.xtext.scoping.IScope
-import org.sdu.dsl4ifc.sustainLang.LcaSummaryReference
-import org.eclipse.xtext.scoping.Scopes
-import org.sdu.dsl4ifc.sustainLang.Statement
-import org.sdu.dsl4ifc.sustainLang.Model
-import org.sdu.dsl4ifc.sustainLang.LcaEntitiesReference
-
 /**
  * This class contains custom scoping description.
  * 
@@ -20,42 +10,10 @@ import org.sdu.dsl4ifc.sustainLang.LcaEntitiesReference
  * on how and when to use it.
  */
 class SustainLangScopeProvider extends AbstractSustainLangScopeProvider {
-	/*
-	override getScope(EObject context, EReference reference) {
-		return context.scopeForEObject(reference)
-	}
-	
-	def dispatch scopeForEObject(EObject context, EReference reference) {
-		return super.getScope(context, reference)
-	}
-	
-	def dispatch scopeForEObject(Reference varUse, EReference reference) {
-		varUse.scopeForVarUse
-	}
-	
-	def IScope scopeForVarUse(EObject context) {
-		val container = context.eContainer
-		switch container {
-			LcaSummaryReference: {
-				if(container.name == context)
-					container.scopeForVarUse
-				else
-					Scopes.scopeFor(#[container], container.scopeForVarUse)
-			}
-			IfcTypeRef: {
-				if(container.name == context)
-					container.scopeForVarUse
-				else
-					Scopes.scopeFor(#[container], container.scopeForVarUse)
-			}
-			LcaEntitiesReference: {
-				if(container.name == context)
-					container.scopeForVarUse
-				else
-					Scopes.scopeFor(#[container], container.scopeForVarUse)
-			}
-			Model: Scopes.scopeFor(container.statements.filter[it != context])
-			default: container.scopeForVarUse
-		}
-	} */
+
+//    override IScope getScope(EObject context, EReference reference) {
+//
+//        // Default behavior for other references
+//        return super.getScope(context, reference);
+//    }
 }

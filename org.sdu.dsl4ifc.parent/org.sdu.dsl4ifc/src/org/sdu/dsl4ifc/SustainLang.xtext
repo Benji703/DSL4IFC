@@ -28,6 +28,10 @@ Function:
 	functionType=AggregateFunction'(' field=Field ')'
 ;
 
+Field:
+	fieldName=ID
+;
+
 enum AggregateFunction:
 	sum='SUM'  |
 	average='AVG' |
@@ -89,10 +93,6 @@ LcaEntitiesReference returns Reference:
 
 Attribute:
     reference=[Reference]'.'field=Field
-;
-
-Field:
-	name=ID
 ;
 
 enum BooleanOperator:
