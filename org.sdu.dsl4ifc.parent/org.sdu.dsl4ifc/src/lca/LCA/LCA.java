@@ -20,17 +20,7 @@ public class LCA {
         edpConnetcor = new EcoPlatformConnector();
     }
 
-
-    public double CalculateLCAForWall(double quantity, double aRef) {
-
-        double a = 53.1 * quantity;
-        double c3 = 0.965 * quantity;
-        double c4 = 0.7 * quantity;
-
-        return lcaCalc.CalculateLCABasic(a,c3,c4,aRef);
-    }
-
-    public Double CalculateLCAForElement(LCAIFCElement element, double area) {
+    public Double CalculateLCAForElement(LCAIFCElement element) {
 
         IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType("ANLÆGSBETON (C35/45 Slump Concrete in Aggressive Environmental Exposure Class)");
         
@@ -46,7 +36,7 @@ public class LCA {
         double c3Res = TranslateNullToZero(element.getC3Result());
         double c4Res = TranslateNullToZero(element.getC4Result());
 
-        return lcaCalc.CalculateLCABasic(aRes, c3Res, c4Res, area);
+        return lcaCalc.CalculateLCABasic(aRes, c3Res, c4Res);
     }
 
     private double TranslateNullToZero(Double d) {
@@ -95,7 +85,7 @@ public class LCA {
     	ArrayList<LCAIFCElement> ifcElementResults = new ArrayList<LCAIFCElement>(); 
     	
         for (LCAIFCElement element : ifcElements) {
-            element.setLcaVal(CalculateLCAForElement(element, area));
+            element.setLcaVal(CalculateLCAForElement(element));
             ifcElementResults.add(element);
         }
         

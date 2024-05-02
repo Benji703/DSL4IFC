@@ -187,9 +187,12 @@ public class EcoPlatformConnector implements IEPDConnector {
 
 	private EpdSpecificProductJson fetchEpdData(String url) {
 		EpdSpecificProductJson epdSpecific = null;
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("format", "json");
+        parameters.put("view", "extended");
 
         try {
-            URL urlObject = new URL(url);
+            URL urlObject = new URL(url + ParameterStringBuilder.getParamsString(parameters));
             HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", "Bearer " + bearerToken);
@@ -197,14 +200,6 @@ public class EcoPlatformConnector implements IEPDConnector {
             con.setInstanceFollowRedirects(true);
 
             int responseCode = con.getResponseCode();
-            
-            if (responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
-    		    String location = con.getHeaderField("Location");
-    		    URL newUrl = new URL(location);
-    		    con = (HttpURLConnection) newUrl.openConnection();
-    		}
-            
-            responseCode = con.getResponseCode();
             
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String sJson = getJsonStringFromStream(con);

@@ -3,7 +3,7 @@ package lca.LCA;
 public class LCACalc {
 
 
-    public double CalculateLCABasic(double a123, double c3, double c4, double aRef) {
+    public double CalculateLCABasic(double a123, double c3, double c4) {
         return (a123 + c3 + c4);
     }
 
