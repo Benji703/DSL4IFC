@@ -87,7 +87,7 @@ public class LCA {
             yearFactor = (int) Math.ceil((50.0 / lifeTime));
         }
         
-        return (envInfo/declaredFactor) * massFactor * quant * yearFactor;
+        return (envInfo/declaredFactor) * quant * yearFactor;
     }
     
     public List<LCAIFCElement> calculateLCAByElement(List<LCAIFCElement> ifcElements, double area) {

@@ -1,11 +1,11 @@
 package lca.epdConnectors.JsonWrappers;
 
-public class LciaMethRefJsonObject {
+public class LciaMethRefJson {
     private String type;
     private String refObjectId;
     private String version;
     
-    public LciaMethRefJsonObject(String type, String refObjectId, String version) {
+    public LciaMethRefJson(String type, String refObjectId, String version) {
     	this.type = type;
     	this.refObjectId = refObjectId;
     	this.version = version;
