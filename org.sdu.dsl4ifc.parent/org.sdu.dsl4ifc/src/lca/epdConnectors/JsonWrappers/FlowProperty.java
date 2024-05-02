@@ -3,6 +3,13 @@ package lca.epdConnectors.JsonWrappers;
 public class FlowProperty {
 	private double meanValue;
     private String referenceUnit;
+    private String uuid;
+    
+    public FlowProperty(double meanValue, String referenceUnit, String uuid) {
+		this.meanValue = meanValue;
+		this.referenceUnit = referenceUnit;
+		this.uuid = uuid;
+	}
 
     public double getMeanValue() {
         return meanValue;
@@ -19,4 +26,12 @@ public class FlowProperty {
     public void setReferenceUnit(String referenceUnit) {
         this.referenceUnit = referenceUnit;
     }
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 }

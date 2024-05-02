@@ -5,11 +5,11 @@ import java.util.List;
 public class Exchanges {
     private List<Exchange> exchange;
 
-    public List<Exchange> getLCIAResult() {
+    public List<Exchange> getExchange() {
         return exchange;
     }
 
-    public void setLCIAResult(List<Exchange> exchange) {
+    public void setExchange(List<Exchange> exchange) {
         this.exchange = exchange;
     }
 }
