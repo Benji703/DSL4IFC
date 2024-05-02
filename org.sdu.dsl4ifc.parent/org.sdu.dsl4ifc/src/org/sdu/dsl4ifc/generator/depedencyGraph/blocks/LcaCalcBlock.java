@@ -19,6 +19,7 @@ import com.apstex.step.core.SET;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lca.LCA.*;
@@ -40,7 +41,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	@Override
 	public boolean IsOutOfDate() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -177,7 +177,35 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	@Override
 	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
-		// TODO Auto-generated method stub
+		
+		int currentRow = startingRow;
+		var elements = getOutput();
+		
+		worksheet.value(currentRow, 0, "IFC Name");
+		worksheet.value(currentRow, 1, "A");
+		worksheet.value(currentRow, 2, "C3");
+		worksheet.value(currentRow, 3, "C4");
+		worksheet.value(currentRow, 4, "D");
+		worksheet.value(currentRow, 5, "Quantity");
+		worksheet.value(currentRow, 6, "EPD ID");
+		worksheet.value(currentRow, 7, "EDP Name");
+		worksheet.value(currentRow, 8, "Result");
+		
+		for (LCAIFCElement element : elements) {
+			currentRow++;
+			
+			// IfcName, A, C3, C4, D, Quantity, EPD ID, EPD Name, Result
+			worksheet.value(currentRow, 0, element.getIfcName());
+			worksheet.value(currentRow, 1, element.getAResult());
+			worksheet.value(currentRow, 2, element.getC3Result());
+			worksheet.value(currentRow, 3, element.getC4Result());
+			worksheet.value(currentRow, 4, element.getdResult());
+			worksheet.value(currentRow, 5, element.getQuantity().getGrossSideArea());	// TODO: Choose the quantity that is used in the calculation
+			worksheet.value(currentRow, 6, element.getEpdId());
+			worksheet.value(currentRow, 7, element.getEpdName());
+			worksheet.value(currentRow, 8, element.getLcaVal());
+			
+		}
 		
 	}
 }

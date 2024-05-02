@@ -45,7 +45,8 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	public String generateCacheKey() {
 		StringBuilder keyBuilder = new StringBuilder(Name);
 		
-		keyBuilder.append(sourceVarName+",");
+		keyBuilder.append("source:"+sourceVarName+",");
+		keyBuilder.append("reference:"+referenceName+",");
 		keyBuilder.append("heatedArea:"+heatedArea+",");
 		keyBuilder.append("b6:"+b6+",");
 		
