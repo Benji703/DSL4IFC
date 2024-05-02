@@ -18,4 +18,9 @@ public class OrOperation<T> extends BooleanOperation<T> {
     public String toString() {
     	return left.toString() + " OR " + right.toString();
     }
+
+	@Override
+	public String getFilledExpression(T item) {
+		return left.getFilledExpression(item) + " OR " + right.getFilledExpression(item);
+	}
 }

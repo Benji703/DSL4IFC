@@ -18,7 +18,7 @@ import org.sdu.dsl4ifc.sustainLang.ComparisonOperator;
  * @param <Y> The input entity/IFC class for the secondary variable
  * @param <T> The output type of the extractor and the input value for the left value.
  */
-public class CompareValueToParameterValueOperation<Y, T> extends ComparisonOperation<T, T> {
+public class CompareValueToParameterValueOperation<Y, T> extends ComparisonOperation<Y, T> {
     private String rightVariableName;
 	private ParameterValueExtractor<Y, T> rightValueExtractor;
 	private T leftValue;
@@ -34,7 +34,7 @@ public class CompareValueToParameterValueOperation<Y, T> extends ComparisonOpera
 
 
     @Override
-    public boolean Evaluate(T item, VariableStore variables) {
+    public boolean Evaluate(Y item, VariableStore variables) {
         // Get the field values somehow
         List<Y> secondaryItems = (List<Y>) variables.get(rightVariableName);
         
@@ -49,6 +49,12 @@ public class CompareValueToParameterValueOperation<Y, T> extends ComparisonOpera
     
     @Override
     public String toString() {
-    	return leftValue + " " + this.comparison +" " + rightValueExtractor.getParameterName();
+    	return leftValue + " " + this.comparison + " " + rightValueExtractor.getParameterName();
     }
+
+
+	@Override
+	public String getFilledExpression(Y item) {
+		return "\""+leftValue+"\"" + " " + this.comparison + " " + "\""+rightValueExtractor.getParameterValue(item)+"\""+"*";
+	}
 }
