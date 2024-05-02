@@ -32,7 +32,9 @@ public class EcoPlatformConnector implements IEPDConnector {
 		}
 		
 		String uri = epdObject.getUri();
-		LciaResult lciaResult = fetchEpdData(uri);
+		
+		EpdSpecificProductJson epdProduct = fetchEpdData(uri);
+		LciaResult lciaResult = getLciaResult(epdProduct.getLciaResults().getLCIAResult());
 		
 		if (lciaResult == null) {
 			return null;
@@ -116,8 +118,8 @@ public class EcoPlatformConnector implements IEPDConnector {
 		
 	}
 
-	private LciaResult fetchEpdData(String url) {
-		LciaResult lciaResult = null;
+	private EpdSpecificProductJson fetchEpdData(String url) {
+		EpdSpecificProductJson epdSpecific = null;
 
         try {
             URL urlObject = new URL(url);
@@ -129,14 +131,8 @@ public class EcoPlatformConnector implements IEPDConnector {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String sJson = getJsonStringFromStream(connection);
 
-                EpdSpecificProductJson epdSpecific = gson.fromJson(sJson, EpdSpecificProductJson.class);
-                List<LciaResult> lciaResultList = epdSpecific.getLciaResults().getLCIAResult();
-                
-                for (LciaResult lcR : lciaResultList) {
-                	if (lcR.getReferenceToLCIAMethodDataSet().getRefObjectId().equals(totalGwpMethId)) {
-                		lciaResult = lcR;
-                	}
-                }
+                epdSpecific = gson.fromJson(sJson, EpdSpecificProductJson.class);
+
 
             } else {
                 System.out.println("Failed to fetch data. Response Code: " + responseCode);
@@ -148,7 +144,7 @@ public class EcoPlatformConnector implements IEPDConnector {
         }
       
         
-        return lciaResult;
+        return epdSpecific;
     }
 
 	private String getJsonStringFromStream(HttpURLConnection connection) throws IOException {
@@ -161,6 +157,18 @@ public class EcoPlatformConnector implements IEPDConnector {
 		}
 		in.close();
 		return response.toString();
+	}
+	
+	private LciaResult getLciaResult(List<LciaResult> lciaResultList) {
+		LciaResult lciaResult = null; 
+        
+        for (LciaResult lcR : lciaResultList) {
+        	if (lcR.getReferenceToLCIAMethodDataSet().getRefObjectId().equals(totalGwpMethId)) {
+        		lciaResult = lcR;
+        	}
+        }
+        
+        return lciaResult;
 	}
 
 }
