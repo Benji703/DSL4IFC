@@ -63,7 +63,22 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 
 	@Override
 	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
-		// TODO Auto-generated method stub
+		int currentRow = startingRow;
 		
+		worksheet.value(currentRow, 0, "LCA Result");	worksheet.style(currentRow, 0).bold().set();
+		worksheet.value(currentRow, 1, "Area");			worksheet.style(currentRow, 1).bold().set();
+		worksheet.value(currentRow, 2, "Heated Area");	worksheet.style(currentRow, 2).bold().set();
+		worksheet.value(currentRow, 3, "B6");			worksheet.style(currentRow, 3).bold().set();
+		
+		var summary = getOutput();
+		
+		for (LCAResult lcaResult : summary) {
+			currentRow++;
+			
+			worksheet.value(currentRow, 0, lcaResult.getLcaResult());
+			worksheet.value(currentRow, 1, area);
+			worksheet.value(currentRow, 2, heatedArea);
+			worksheet.value(currentRow, 3, b6);
+		}
 	}
 }
