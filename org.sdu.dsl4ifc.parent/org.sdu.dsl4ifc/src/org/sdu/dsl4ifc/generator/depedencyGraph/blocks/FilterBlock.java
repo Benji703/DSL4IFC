@@ -100,7 +100,7 @@ public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> {
 		}).sorted((o1, o2) -> o1.stepNumber - o2.stepNumber).toList();
 		
 		worksheet.value(currentRow, 0, "StepNumber");	worksheet.style(currentRow, 0).bold().set();
-		worksheet.value(currentRow, 1, "Expression (* = primary variable)");	worksheet.style(currentRow, 1).bold().set();
+		worksheet.value(currentRow, 1, "Expression (* = primary variable)");	worksheet.style(currentRow, 1).bold().wrapText(false).set();
 		worksheet.value(currentRow, 2, "Inclusion");	worksheet.style(currentRow, 2).bold().set();
 		
 		for (var row : rows) {
