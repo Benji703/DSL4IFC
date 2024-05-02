@@ -2,23 +2,7 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
-import com.apstex.step.core.SET;
-
-
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import lca.LCA.*;
 
 public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {

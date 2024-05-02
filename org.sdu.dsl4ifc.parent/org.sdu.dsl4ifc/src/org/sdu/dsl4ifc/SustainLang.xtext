@@ -7,7 +7,7 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? outputs+=OutputCommand+ ';'?;
+    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? (transforms+=TransformationCommand)* outputs+=OutputCommand+ ';'?;
 
 SourceCommand:
     'SOURCE' path=STRING;
@@ -17,13 +17,28 @@ OutputCommand:
 ;
 
 TableOutput returns OutputCommand:
-	'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=ID? (',' columns+=ID)* ']'
+	'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=OutputArgument? (',' columns+=OutputArgument)* ']'
 ;
 
-/*
-FromCommand:
-    'FROM' types+=IfcTypeRef (',' types+=IfcTypeRef)*;
-    */
+OutputArgument:
+	Field | Function
+;
+
+Function:
+	functionType=AggregateFunction'(' field=Field ')'
+;
+
+Field:
+	fieldName=ID
+;
+
+enum AggregateFunction:
+	sum='SUM'  |
+	average='AVG' |
+	minimum='MIN' |
+	maximum='MAX' |
+	count='COUNT'
+;
     
 enum IfcType:
 	ifcWall='IfcWall' 						| 
@@ -40,8 +55,8 @@ FilterCommand:
 DoCommand:
     {DoCommand} 'CALCULATE' calculation+=Calculation*;
 
-TranformationCommand:
-    'GROUP' 'BY' attribute=Attribute;	// Add more
+TransformationCommand:
+    'GROUP' reference=[Reference] 'BY' attributes+=Field (',' attributes+=Field)*;
 
 IfcTypeRef returns Reference:
 	ifcType=IfcType name=ID?
@@ -77,7 +92,7 @@ LcaEntitiesReference returns Reference:
     {LcaEntitiesReference} name=ID;
 
 Attribute:
-    reference=[Reference]'.'attribute=ID
+    reference=[Reference]'.'field=Field
 ;
 
 enum BooleanOperator:
