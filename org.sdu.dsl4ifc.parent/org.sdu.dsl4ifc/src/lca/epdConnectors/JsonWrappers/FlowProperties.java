@@ -1,11 +1,11 @@
 package lca.epdConnectors.JsonWrappers;
 
-public class FlowProperty {
+public class FlowProperties {
 	private double meanValue;
     private String referenceUnit;
     private String uuid;
     
-    public FlowProperty(double meanValue, String referenceUnit, String uuid) {
+    public FlowProperties(double meanValue, String referenceUnit, String uuid) {
 		this.meanValue = meanValue;
 		this.referenceUnit = referenceUnit;
 		this.uuid = uuid;

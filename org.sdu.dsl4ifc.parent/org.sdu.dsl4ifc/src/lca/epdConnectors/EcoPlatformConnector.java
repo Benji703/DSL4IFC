@@ -10,7 +10,7 @@ import lca.epdConnectors.JsonWrappers.EpdListJsonObject;
 import lca.epdConnectors.JsonWrappers.EpdMetaDataJsonObject;
 import lca.epdConnectors.JsonWrappers.EpdSpecificProductJson;
 import lca.epdConnectors.JsonWrappers.Exchange;
-import lca.epdConnectors.JsonWrappers.FlowProperty;
+import lca.epdConnectors.JsonWrappers.FlowProperties;
 import lca.epdConnectors.JsonWrappers.LciaResult;
 
 import com.google.gson.*;
@@ -53,7 +53,7 @@ public class EcoPlatformConnector implements IEPDConnector {
 			return null;
 		}
 		
-		FlowProperty flowProp = getFlowPropertyWithUnit(epdProduct.getExchanges().getExchange());
+		FlowProperties flowProp = getFlowPropertyWithUnit(epdProduct.getExchanges().getExchange());
 		LciaResult lciaResult = getLciaResult(epdProduct.getLciaResults().getLCIAResult());
 		
 		if (flowProp == null || lciaResult == null) {
@@ -109,7 +109,7 @@ public class EcoPlatformConnector implements IEPDConnector {
         return declaredEnum;
     }
 	
-	private FlowProperty getFlowPropertyWithUnit(List<Exchange> exchange) {
+	private FlowProperties getFlowPropertyWithUnit(List<Exchange> exchange) {
 		Exchange unitExchange = null;
 		
 		for (Exchange e : exchange) {
@@ -122,9 +122,9 @@ public class EcoPlatformConnector implements IEPDConnector {
 			return null;
 		}
 		
-		FlowProperty flowProp = null;
+		FlowProperties flowProp = null;
 		
-		for (FlowProperty f : unitExchange.getFlowProperties()) {
+		for (FlowProperties f : unitExchange.getFlowproperties()) {
 			if (f.getUuid().equals(flowPropUnitId)) {
 				flowProp = f;
 			}
@@ -188,8 +188,8 @@ public class EcoPlatformConnector implements IEPDConnector {
 	private EpdSpecificProductJson fetchEpdData(String url) {
 		EpdSpecificProductJson epdSpecific = null;
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("format", "json");
         parameters.put("view", "extended");
+        parameters.put("format", "json");
 
         try {
             URL urlObject = new URL(url + ParameterStringBuilder.getParamsString(parameters));

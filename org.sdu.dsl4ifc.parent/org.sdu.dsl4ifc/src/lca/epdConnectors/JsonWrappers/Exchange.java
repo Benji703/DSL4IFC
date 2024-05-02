@@ -1,17 +1,23 @@
 package lca.epdConnectors.JsonWrappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Exchange {
-    private List<FlowProperty> flowProperties;
     private int dataSetInternalID;
+    private List<FlowProperties> flowproperties;
 
-    public List<FlowProperty> getFlowProperties() {
-        return flowProperties;
+    public Exchange(int dataSetInternalId, List<FlowProperties> flowProperties) {
+    	setDataSetInternalID(dataSetInternalId);
+    	setFlowproperties(flowProperties);
+	}
+
+    public List<FlowProperties> getFlowproperties() {
+        return flowproperties;
     }
 
-    public void setFlowProperties(List<FlowProperty> flowProperties) {
-        this.flowProperties = flowProperties;
+    public void setFlowproperties(List<FlowProperties> flowProperties) {
+        this.flowproperties = flowProperties;
     }
 
 	public int getDataSetInternalID() {
