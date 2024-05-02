@@ -1,5 +1,6 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import java.util.List;
@@ -57,5 +58,11 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	@Override
 	public String getReferenceName() {
 		return referenceName;
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		// TODO Auto-generated method stub
+		
 	}
 }

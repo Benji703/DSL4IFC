@@ -1,5 +1,6 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
@@ -172,5 +173,11 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		}
 		
 		return builder.toString();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		// TODO Auto-generated method stub
+		
 	}
 }

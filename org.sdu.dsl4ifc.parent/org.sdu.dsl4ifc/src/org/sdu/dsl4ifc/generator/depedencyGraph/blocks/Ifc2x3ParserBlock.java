@@ -2,6 +2,7 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.io.File;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -71,6 +72,12 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 		keyBuilder.append(absolutePath);
 		
         return keyBuilder.toString();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

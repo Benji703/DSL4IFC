@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.IExtractor;
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Cell;
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.ColumnHeader;
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Row;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.sustainLang.Reference;
@@ -101,6 +105,33 @@ public class TableOutputBlock extends Block<Table> {
             keyBuilder.append(block.generateCacheKey()+";");
         }
         return keyBuilder.toString();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		var table = getOutput();
+		
+		int currentRow = startingRow;
+		
+		var headers = table.getHeaders();
+		for (int columnIndex = 0; columnIndex < headers.size(); columnIndex++) {
+			ColumnHeader header = headers.get(columnIndex);
+			
+			worksheet.value(currentRow, columnIndex, header.headerText);
+			worksheet.style(currentRow, columnIndex).bold().set();
+		}
+		
+		var rows = table.getRows();
+		for (Row row : rows) {
+			currentRow++;
+			
+			var cells = row.cells;
+			for (int columnIndex = 0; columnIndex < cells.size(); columnIndex++) {
+				var cell = cells.get(columnIndex);
+				
+				worksheet.value(currentRow, columnIndex, cell.value);
+			}
+		}
 	}
 
 }

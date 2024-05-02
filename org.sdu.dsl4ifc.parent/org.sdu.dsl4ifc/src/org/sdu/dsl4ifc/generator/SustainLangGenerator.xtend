@@ -141,11 +141,13 @@ class SustainLangGenerator extends AbstractGenerator {
         ws.value(0, 0, block.Name);
 
         ws.value(2, 0, "Inputs:"); ws.style(2,0).bold();
-        ws.value(2, 1, block.Inputs.join(", "));
+        ws.value(2, 1, block.Inputs.map[input | input.Name].join(", "));
         ws.width(1, 10);
 
         ws.value(4, 0, "Output Trace:");
         ws.style(4, 0).fontSize(14).bold().set()
+        
+        block.fillTraceInWorksheet(ws, 5)
 	}
 		
 	def List<Block<?>> constructGraph(Statement statement, Resource resource) {

@@ -2,12 +2,10 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.util.List;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.conditional.core.Expression;
 import org.sdu.dsl4ifc.generator.conditional.core.VariableStore;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
-import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
-
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 
 public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> {
@@ -69,5 +67,11 @@ public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> {
             keyBuilder.append(block.generateCacheKey()+";");
         }
         return keyBuilder.toString();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		// TODO Auto-generated method stub
+		
 	}
 }

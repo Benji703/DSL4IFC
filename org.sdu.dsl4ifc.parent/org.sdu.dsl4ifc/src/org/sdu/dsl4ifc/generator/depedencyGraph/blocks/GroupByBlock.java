@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.ParameterValueExtractor;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;
@@ -92,6 +93,12 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 	@Override
 	public String getReferenceName() {
 		return reference.getName();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

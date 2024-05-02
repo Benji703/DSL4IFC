@@ -3,6 +3,7 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
@@ -59,6 +60,12 @@ public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceB
             keyBuilder.append(block.generateCacheKey()+";");
         }
         return keyBuilder.toString();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
