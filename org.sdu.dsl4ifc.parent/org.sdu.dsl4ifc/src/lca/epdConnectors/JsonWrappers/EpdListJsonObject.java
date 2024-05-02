@@ -5,7 +5,7 @@ import java.util.List;
 
 public class EpdListJsonObject {
 	private int totalCount;
-	private ArrayList<EpdMetaDataJsonObject> epdList;
+	private ArrayList<EpdMetaDataJsonObject> data;
 	
 	public EpdListJsonObject(int totalCount, ArrayList<EpdMetaDataJsonObject> epdList) {
 		this.setTotalCount(totalCount);
@@ -21,11 +21,11 @@ public class EpdListJsonObject {
 	}
 
 	public ArrayList<EpdMetaDataJsonObject> getEpdList() {
-		return epdList;
+		return data;
 	}
 
 	public void setEpdList(ArrayList<EpdMetaDataJsonObject> epdList) {
-		this.epdList = epdList;
+		this.data = epdList;
 	}
 	
 	

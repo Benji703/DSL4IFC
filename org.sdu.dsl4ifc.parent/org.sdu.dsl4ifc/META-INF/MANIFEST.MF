@@ -13,7 +13,8 @@ Bundle-ClassPath: .,
  bin/commons-compress-1.26.1.jar,
  bin/commons-io-2.16.0.jar,
  bin/aalto-xml-1.3.2.jar,
- bin/stax2-api-4.2.2.jar
+ bin/stax2-api-4.2.2.jar,
+ bin/gson-2.10.1.jar
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
  org.eclipse.equinox.common;bundle-version="3.16.0",

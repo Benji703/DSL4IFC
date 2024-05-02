@@ -6,6 +6,7 @@ import java.util.List;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 
 import lca.epdConnectors.BR18Connector;
+import lca.epdConnectors.EcoPlatformConnector;
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
 
@@ -16,7 +17,7 @@ public class LCA {
 
     public LCA(){
         lcaCalc = new LCACalc();
-        edpConnetcor = new BR18Connector();
+        edpConnetcor = new EcoPlatformConnector();
     }
 
 
@@ -31,7 +32,7 @@ public class LCA {
 
     public Double CalculateLCAForElement(LCAIFCElement element, double area) {
 
-        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getEpdId());
+        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType("ANLÆGSBETON (C35/45 Slump Concrete in Aggressive Environmental Exposure Class)");
         
         if (envProductInfo == null) {
         	return null;

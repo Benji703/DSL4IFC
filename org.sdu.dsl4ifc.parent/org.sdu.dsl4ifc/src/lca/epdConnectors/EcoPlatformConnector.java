@@ -4,6 +4,7 @@ import lca.DomainClasses.EnvProductInfo;
 import lca.DomainClasses.Enums.DeclaredUnitEnum;
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
+import lca.Utilities.ParameterStringBuilder;
 import lca.epdConnectors.JsonWrappers.AniesJsonObject;
 import lca.epdConnectors.JsonWrappers.EpdListJsonObject;
 import lca.epdConnectors.JsonWrappers.EpdMetaDataJsonObject;
@@ -19,14 +20,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.io.DataOutputStream;
 
 public class EcoPlatformConnector implements IEPDConnector {
-	private Gson gson = new Gson();
+	private Gson gson;
 	private final String totalGwpMethId = "6a37f984-a4b3-458a-a20a-64418c145fa2";
 	private final String flowPropUnitId = "93a60a56-a3c8-22da-a746-0800200c9a66";
 	private final int unitDataSetId = 1;
 	private String bearerToken = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJCZW5qaTcwMyIsImlzcyI6IkVDT1BPUlRBTCIsImF1ZCI6ImFueSIsInZlciI6IjcuOS40IiwicGVybWlzc2lvbnMiOlsic3RvY2s6cmVhZCxleHBvcnQ6MiIsInN0b2NrOnJlYWQsZXhwb3J0OjEiLCJ1c2VyOnJlYWQsd3JpdGU6NjcxIl0sInJvbGVzIjpbXSwiaWF0IjoxNzExMTAwMjE5LCJleHAiOjE3MTg5ODQyMTksImVtYWlsIjoiYmVhbmQxOUBzdHVkZW50LnNkdS5kayIsInRpdGxlIjoiIiwiZmlyc3ROYW1lIjoiQmVuamFtaW4iLCJsYXN0TmFtZSI6IkFuZGVyc2VuIiwiZ2VuZXJhdGVOZXdUb2tlbnMiOmZhbHNlLCJqb2JQb3NpdGlvbiI6IkthbmRpZGF0c3R1ZGVyZW5kZSIsImFkZHJlc3MiOnsiY2l0eSI6Ik9kZW5zZSIsInppcENvZGUiOiI1MjQwIiwiY291bnRyeSI6IkRLIiwic3RyZWV0IjoiIn0sIm9yZ2FuaXphdGlvbiI6e30sInVzZXJHcm91cHMiOlt7InVzZXJHcm91cE5hbWUiOiJyZWdpc3RlcmVkX3VzZXJzIiwidXNlckdyb3VwT3JnYW5pemF0aW9uTmFtZSI6IkRlZmF1bHQgT3JnYW5pemF0aW9uIn1dLCJhZG1pbmlzdHJhdGVkT3JnYW5pemF0aW9uc05hbWVzIjoiIiwicGhvbmUiOiIiLCJkc3B1cnBvc2UiOiJUaWwgZXQga2FuZGlkYXRwcm9qZWt0IHZlZHLDuHJlbmRlIGVuIElULXBsYXRmb3JtIHRpbCB1ZHJlZ25pbmcgYWYgYmxhLiBMQ0EiLCJzZWN0b3IiOiIiLCJpbnN0aXR1dGlvbiI6IlN5ZGRhbnNrIFVuaXZlcnNpdGV0In0.tidxKWZu6Nz9z4GgSAPRO85dHjaWpIvCxX9bM0lxGSPIDw4SSRgdbLeSGfvck6nG6YqChG_Flr32iQq-QMIGNkzchtxkkWg3uupmtyYhJAQINWwEo5Pjh1LkO5Gh3cMN5LhMoT_qXFZs2B7DsEA6V2RQpMPfKTflm8p47wl9BKU";
+	
+	public EcoPlatformConnector() {
+		gson = new Gson();
+	}
 	
 	@Override
 	public IEnvProductInfo GetEPDDataByType(String name) {	
@@ -139,16 +148,27 @@ public class EcoPlatformConnector implements IEPDConnector {
 
 	private EpdMetaDataJsonObject getEpdDatabaseObject(String name) {
         EpdMetaDataJsonObject epdDataJson = null;
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("search", "true");
+        parameters.put("format", "json");
+        parameters.put("distributed", "true");
+        parameters.put("virtual", "true");
+        parameters.put("metaDataOnly", "false");
+        parameters.put("lang", "en");
+        parameters.put("name", name);
 		
 		try {
-            URL urlObject = new URL("https://data.eco-platform.org/resource/processes?search=true&format=JSON&distributed=true&virtual=true&metaDataOnly=false&lang=en&name=" + name);
-            HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization", "Bearer " + bearerToken);
+			String baseUrl = "https://data.eco-platform.org/resource/processes?";
+			String reqUrl = baseUrl + ParameterStringBuilder.getParamsString(parameters);
+            URL urlObject = new URL(reqUrl);
+            HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + bearerToken);
 
-            int responseCode = connection.getResponseCode();
+            int responseCode = con.getResponseCode();
+            String s = con.getURL().toString();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                String sJson = getJsonStringFromStream(connection);
+                String sJson = getJsonStringFromStream(con);
 
                 EpdListJsonObject epdList = gson.fromJson(sJson, EpdListJsonObject.class);
                 
@@ -158,7 +178,7 @@ public class EcoPlatformConnector implements IEPDConnector {
             	
             }
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		return epdDataJson;
@@ -170,13 +190,24 @@ public class EcoPlatformConnector implements IEPDConnector {
 
         try {
             URL urlObject = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization", "Bearer " + bearerToken);
+            HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + bearerToken);
+            
+            con.setInstanceFollowRedirects(true);
 
-            int responseCode = connection.getResponseCode();
+            int responseCode = con.getResponseCode();
+            
+            if (responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+    		    String location = con.getHeaderField("Location");
+    		    URL newUrl = new URL(location);
+    		    con = (HttpURLConnection) newUrl.openConnection();
+    		}
+            
+            responseCode = con.getResponseCode();
+            
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                String sJson = getJsonStringFromStream(connection);
+                String sJson = getJsonStringFromStream(con);
 
                 epdSpecific = gson.fromJson(sJson, EpdSpecificProductJson.class);
 
