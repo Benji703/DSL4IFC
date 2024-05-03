@@ -1,5 +1,6 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
@@ -18,6 +19,7 @@ import com.apstex.step.core.SET;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lca.LCA.*;
@@ -29,8 +31,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String referenceName;
 	private LCA lca = new LCA();
 	
-	public LcaCalcBlock(String name, String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
-		super(name);
+	public LcaCalcBlock(String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
+		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.area = area;
@@ -39,7 +41,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	@Override
 	public boolean IsOutOfDate() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -74,7 +75,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	
 	    	String elementName = element.getName().getDecodedValue();
 	    	
-			elements.add(new LCAIFCElement(epdId, elementName, quantity));
+			elements.add(new LCAIFCElement(epdId, elementName, element.getStepLineNumber(), quantity));
 	    }
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
@@ -172,5 +173,41 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		}
 		
 		return builder.toString();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		
+		int currentRow = startingRow;
+		var elements = getOutput();
+		
+		worksheet.value(currentRow, 0, "IFC Name");
+		worksheet.value(currentRow, 1, "IFC Step Number");
+		worksheet.value(currentRow, 2, "A");
+		worksheet.value(currentRow, 3, "C3");
+		worksheet.value(currentRow, 4, "C4");
+		worksheet.value(currentRow, 5, "D");
+		worksheet.value(currentRow, 6, "Quantity");
+		worksheet.value(currentRow, 7, "EPD ID");
+		worksheet.value(currentRow, 8, "EDP Name");
+		worksheet.value(currentRow, 9, "Result");
+		
+		for (LCAIFCElement element : elements) {
+			currentRow++;
+			
+			// IfcName, Step number, A, C3, C4, D, Quantity, EPD ID, EPD Name, Result
+			worksheet.value(currentRow, 0, element.getIfcName());
+			worksheet.value(currentRow, 1, element.getIfcStepNumber());
+			worksheet.value(currentRow, 2, element.getAResult());
+			worksheet.value(currentRow, 3, element.getC3Result());
+			worksheet.value(currentRow, 4, element.getC4Result());
+			worksheet.value(currentRow, 5, element.getdResult());
+			worksheet.value(currentRow, 6, element.getQuantity().getGrossSideArea());	// TODO: Choose the quantity that is used in the calculation
+			worksheet.value(currentRow, 7, element.getEpdId());
+			worksheet.value(currentRow, 8, element.getEpdName());
+			worksheet.value(currentRow, 9, element.getLcaVal());
+			
+		}
+		
 	}
 }

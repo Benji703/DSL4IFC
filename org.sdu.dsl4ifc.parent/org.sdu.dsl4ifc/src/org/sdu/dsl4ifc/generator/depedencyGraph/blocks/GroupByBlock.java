@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.ParameterValueExtractor;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;
@@ -19,8 +20,8 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 	private Reference reference;
 	private List<AttributeReference<InputType>> attributeReferences;
 
-	public GroupByBlock(String name, Reference reference, List<AttributeReference<InputType>> attributeReferences)  {
-		super(name);
+	public GroupByBlock(Reference reference, List<AttributeReference<InputType>> attributeReferences)  {
+		super("Group (" + reference.getName() + ") By (" + String.join(", ", attributeReferences.stream().map(ref -> ref.getAttributeName()).toList())+")");
 		this.reference = reference;
 		this.attributeReferences = attributeReferences;
 	}
@@ -62,11 +63,6 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 				(l, u) -> l.merge(u.getElements())
 			));
 		
-//		var map = elements.stream().collect(Collectors.groupingBy(p -> {
-//			List<String> values = attributeReferences.stream().map(t -> t.getExtractor().getParameterValue(p)).toList();
-//			return String.join(",", values);
-//		}));
-		
 		var groupedRows = new ArrayList<GroupedRows<InputType>>();
 		for (Entry<String, Group<InputType>> entry : map.entrySet()) {
 			Group<InputType> val = entry.getValue();
@@ -92,6 +88,54 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 	@Override
 	public String getReferenceName() {
 		return reference.getName();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		int currentRow = startingRow;
+		
+		// De værdier man grupperer på
+		// ID (hvis internalclass -> step number, hvis lcaelement -> stepnumber, hvis lcaresult -> nothing)
+		
+		var stepNumberExtractor = new ParameterValueExtractor<Object, String>("stepnumber");
+		
+		worksheet.value(currentRow, 0, "StepNumber");	worksheet.style(currentRow, 0).bold().set();
+		for (int currentColumn = 0; currentColumn < attributeReferences.size(); currentColumn++) {
+			var ref = attributeReferences.get(currentColumn);
+			worksheet.value(currentRow, currentColumn+1, ref.getDisplayName());	worksheet.style(currentRow, currentColumn+1).bold().set();
+		}
+		currentRow++;
+
+		var groups = getOutput();
+		
+		for (var group : groups) {
+			
+			worksheet.value(currentRow, 0, "StepNumber");	worksheet.style(currentRow, 0).bold().italic().set();
+			for (int currentColumn = 0; currentColumn < attributeReferences.size(); currentColumn++) {
+				var ref = attributeReferences.get(currentColumn);
+				String groupValue = ref.getExtractor().getParameterValue(group.elements.get(0));
+				worksheet.value(currentRow, currentColumn+1, groupValue);	worksheet.style(currentRow, currentColumn+1).bold().italic().set();
+			}
+			
+			currentRow++;
+			
+			var rows = group.elements.stream().sorted((o1, o2) -> {
+				int stepNumber1 = Integer.parseInt((String)stepNumberExtractor.getParameterValue(o1));
+				int stepNumber2 = Integer.parseInt((String)stepNumberExtractor.getParameterValue(o2));
+				return stepNumber1 - stepNumber2;
+				
+			}).toList();
+			for (var row : rows) {
+				worksheet.value(currentRow, 0, Integer.parseInt(stepNumberExtractor.getParameterValue(row)));
+				
+				for (int currentColumn = 0; currentColumn < attributeReferences.size(); currentColumn++) {
+					var ref = attributeReferences.get(currentColumn);
+					worksheet.value(currentRow, currentColumn+1, ref.getExtractor().getParameterValue(row));
+				}
+				currentRow++;
+			}
+			
+		}
 	}
 
 }

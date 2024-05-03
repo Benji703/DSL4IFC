@@ -1,5 +1,6 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	private double b6;
 	private String referenceName;
 	
-	public LcaSummaryBlock(String name, String sourceVarName, String referenceName, double heatedArea, double b6, double area) {
-		super(name);
+	public LcaSummaryBlock(String sourceVarName, String referenceName, double heatedArea, double b6, double area) {
+		super("LCA Summary (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.heatedArea = heatedArea;
@@ -44,7 +45,8 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	public String generateCacheKey() {
 		StringBuilder keyBuilder = new StringBuilder(Name);
 		
-		keyBuilder.append(sourceVarName+",");
+		keyBuilder.append("source:"+sourceVarName+",");
+		keyBuilder.append("reference:"+referenceName+",");
 		keyBuilder.append("heatedArea:"+heatedArea+",");
 		keyBuilder.append("b6:"+b6+",");
 		
@@ -57,5 +59,26 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	@Override
 	public String getReferenceName() {
 		return referenceName;
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		int currentRow = startingRow;
+		
+		worksheet.value(currentRow, 0, "LCA Result");	worksheet.style(currentRow, 0).bold().set();
+		worksheet.value(currentRow, 1, "Area");			worksheet.style(currentRow, 1).bold().set();
+		worksheet.value(currentRow, 2, "Heated Area");	worksheet.style(currentRow, 2).bold().set();
+		worksheet.value(currentRow, 3, "B6");			worksheet.style(currentRow, 3).bold().set();
+		
+		var summary = getOutput();
+		
+		for (LCAResult lcaResult : summary) {
+			currentRow++;
+			
+			worksheet.value(currentRow, 0, lcaResult.getLcaResult());
+			worksheet.value(currentRow, 1, area);
+			worksheet.value(currentRow, 2, heatedArea);
+			worksheet.value(currentRow, 3, b6);
+		}
 	}
 }

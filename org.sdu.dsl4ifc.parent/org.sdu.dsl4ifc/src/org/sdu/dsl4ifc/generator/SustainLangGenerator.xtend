@@ -10,6 +10,9 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcSlab
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashMap
@@ -17,6 +20,7 @@ import java.util.HashSet
 import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
+import org.dhatim.fastexcel.Workbook
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -50,13 +54,18 @@ import org.sdu.dsl4ifc.sustainLang.Function
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
 import org.sdu.dsl4ifc.sustainLang.MatDef
+import org.sdu.dsl4ifc.sustainLang.OutputArgument
 import org.sdu.dsl4ifc.sustainLang.OutputCommand
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
+import org.sdu.dsl4ifc.sustainLang.TraceOutput
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
-import org.sdu.dsl4ifc.sustainLang.OutputArgument
+import org.sdu.dsl4ifc.sustainLang.TableOutput
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
+import java.util.Set
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -70,7 +79,6 @@ class SustainLangGenerator extends AbstractGenerator {
 		consoleOut.println("SusLang Console");
 		
 		val statements = resource.allContents.filter(Statement);
-		
 		catalog.setupNewRun
 		
 		statements.forEach[statement | {
@@ -82,6 +90,13 @@ class SustainLangGenerator extends AbstractGenerator {
 					System.out.println("[EXECUTING]")
 					val outputs = graphs.map[graph | graph.output]
 					outputs.forEach[output | consoleOut.println(output.toString)]
+					
+					System.out.println("[CREATING TRACE]")
+					val traces = statement.outputs.filter(TraceOutput)
+					if (!traces.empty) {
+						traces.head.outputTraceReport(graphs, resource)
+					}
+					
 					val timeMsg = '''Done [«System.currentTimeMillis-timeStart» ms]'''
 					consoleOut.println(timeMsg)
 					System.out.println(timeMsg)
@@ -92,10 +107,52 @@ class SustainLangGenerator extends AbstractGenerator {
 				
 			}]
 	}
+	
+	private def void outputTraceReport(TraceOutput output, List<Block<?>> graphs, Resource resource) {
+		
+		var uri = resource.getURI();
+		var file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uri.toPlatformString(true)));
+        var path = new Path(file.getLocation().toOSString());
+        var absolutePath = path.uptoSegment(path.segmentCount()-1).append(output.outputPath+".xlsx").toOSString();
+        consoleOut.println('''Outputting trace to path: «absolutePath»''')
+
+        val os = new FileOutputStream(absolutePath);
+        val wb = new Workbook(os, "MyApplication", "1.0");
+        
+        val blocks = graphs.flatMap[graph | graph.allBlocks].toSet
+        blocks.addAll(graphs);
+
+		blocks.forEach[createBlockSheet(wb)];
+		
+        wb.finish();
+        
+	}
+	
+	private def Set<Block<?>> getAllBlocks(Block<?> block) {
+		val allYoungerBlocks = block.Inputs.flatMap[b | b.allBlocks].toSet;
+		allYoungerBlocks.add(block)
+		return allYoungerBlocks
+	}
+	
+	private def void createBlockSheet(Block<?> block, Workbook wb) {
+		
+		val ws = wb.newWorksheet(block.Name);
+        ws.style(0, 0).fontSize(22).bold().set();
+        ws.value(0, 0, block.Name);
+
+        ws.value(2, 0, "Inputs:"); ws.style(2,0).bold();
+        ws.value(2, 1, block.Inputs.map[input | input.Name].join(", "));
+        ws.width(1, 10);
+
+        ws.value(4, 0, "Output Trace:");
+        ws.style(4, 0).fontSize(14).bold().set()
+        
+        block.fillTraceInWorksheet(ws, 5)
+	}
 		
 	def List<Block<?>> constructGraph(Statement statement, Resource resource) {
 		
-		val outputs = statement.outputs
+		val outputs = statement.outputs.filter[output | !(output instanceof TraceOutput)].toList
 		
 		return outputs.map[output | {
 			val tableOutputBlock = output.createBlock(statement, resource)
@@ -118,8 +175,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		return block
 	}
 	
-	def dispatch Block<?> createBlock(OutputCommand output, Statement statement, Resource resource) {
-		val tableOutputBlock = new TableOutputBlock("Output Table", output.toAttributeReferences, output.reference)
+	def dispatch Block<?> createBlock(TableOutput output, Statement statement, Resource resource) {
+		val tableOutputBlock = new TableOutputBlock(output.toAttributeReferences, output.reference)
 		
 		// Create necesarry inputs		
 		addInputsToTableOutput(statement, output.reference, resource, tableOutputBlock)
@@ -182,7 +239,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
-		val filterBlock = new FilterBlock('''Filter: «filter.type.name»''', filter.type.name, filter.toExpression)
+		val filterBlock = new FilterBlock(filter.type.name, filter.toExpression)
 		
 		// Create necesarry inputs
 		val typeBlock = filter.type.createBlock(statement, resource)
@@ -200,8 +257,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(TransformationCommand transformation, Statement statement, Resource resource) {
-		val name = '''Group «transformation.reference.name» By («FOR attribute : transformation.attributes SEPARATOR ', '»«attribute»«ENDFOR»)'''
-		val transformBlock = new GroupByBlock(name, transformation.reference, transformation.toAttributeReferences);
+		val transformBlock = new GroupByBlock(transformation.reference, transformation.toAttributeReferences);
 		
 		// Create necesarry inputs
 		addFilterOrTypeInput(statement, transformation.reference, resource, transformBlock)
@@ -210,7 +266,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
-		val typeBlock = new TypeBlock('''Type: "«reference.name»" «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
+		val typeBlock = new TypeBlock(reference.name, reference.ifcType.toIfcType)
 		
 		// Create necesarry inputs
 		val parserBlock = statement.source.createBlock(statement, resource)
@@ -223,7 +279,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val lcaPar = cal.lcaParams;
 		
-		val lcaSummaryBlock = new LcaSummaryBlock('''LCA Summary (source: «cal.source.name»)''', cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6, lcaPar.area);
+		val lcaSummaryBlock = new LcaSummaryBlock(cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6, lcaPar.area);
 		
 		// Create necesarry inputs
 		val lcaCalcBlock = cal.createLcaCalculationBlock(statement, resource)
@@ -245,7 +301,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 		
 		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
-		val lcaCalcBlock = new LcaCalcBlock('''LCA Calculation (source: «cal.source.name»)''', cal.source.name, referenceName, lcaPar.area, matDefMap);
+		val lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap);
 		
 		// Create necesarry inputs
 		// Can be types or filters
@@ -271,7 +327,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(SourceCommand source, Statement statement, Resource resource) {
-		val parserBlock = new Ifc2x3ParserBlock("IFC Parser 2x3", source.path, resource)
+		val parserBlock = new Ifc2x3ParserBlock(source.path, resource)
 		
 		return catalog.ensureExistingIsUsed(parserBlock)
 	}
@@ -293,7 +349,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	 
-	def List<AttributeReference<?>> toAttributeReferences(OutputCommand command) {
+	def List<AttributeReference<?>> toAttributeReferences(TableOutput command) {
 		command.columns.map[outputParameter | {
 			switch (outputParameter) {
 				Field:

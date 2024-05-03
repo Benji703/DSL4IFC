@@ -6,5 +6,5 @@ public class Cell {
 		this.value = value;
 	}
 	
-	String value;
+	public String value;
 }

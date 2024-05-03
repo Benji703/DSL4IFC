@@ -95,4 +95,12 @@ public class Table {
 	    return text.length() >= width ? text : text + " ".repeat(width - text.length()); 
 	}
 
+	public List<Row> getRows() {
+		return rows;
+	}
+
+	public List<ColumnHeader> getHeaders() {
+		return headers;
+	}
+
 }

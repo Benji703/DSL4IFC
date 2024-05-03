@@ -84,6 +84,8 @@ public class ParameterValueExtractor<T, U> implements IExtractor<T, U> {
 			switch (parameterName) {
 			case "ifcname":
 				return (U) asLcaElement.getIfcName();
+			case "stepnumber":
+				return (U) (asLcaElement.getIfcStepNumber()+"");
 			case "epdid":
 				return (U) asLcaElement.getEpdId();
 			case "a":

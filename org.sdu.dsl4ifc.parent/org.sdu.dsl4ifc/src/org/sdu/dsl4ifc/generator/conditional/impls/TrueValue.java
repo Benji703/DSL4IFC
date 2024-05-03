@@ -15,4 +15,9 @@ public class TrueValue<T> extends Expression<T> {
     	return "TRUE";
     }
 
+	@Override
+	public String getFilledExpression(T item) {
+		return toString();
+	}
+
 }
