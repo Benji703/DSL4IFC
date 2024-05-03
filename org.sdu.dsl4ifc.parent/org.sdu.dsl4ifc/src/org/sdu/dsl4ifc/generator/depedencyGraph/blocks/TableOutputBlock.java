@@ -18,10 +18,14 @@ public class TableOutputBlock extends Block<Table> {
 	private List<AttributeReference<?>> attributeReferences;
 	private Reference reference;
 
-	public TableOutputBlock(String name, List<AttributeReference<?>> attributeReferences, Reference reference) {
-		super(name);
+	public TableOutputBlock(List<AttributeReference<?>> attributeReferences, Reference reference) {
+		super("Output Table (" + getColumnNamesAsString(attributeReferences) + ")");
 		this.attributeReferences = attributeReferences;
 		this.reference = reference;
+	}
+
+	private static String getColumnNamesAsString(List<AttributeReference<?>> attributeReferences) {
+		return String.join(", ", attributeReferences.stream().map(ref -> ref.getDisplayName()).toList());
 	}
 
 	@Override

@@ -13,8 +13,8 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	private double b6;
 	private String referenceName;
 	
-	public LcaSummaryBlock(String name, String sourceVarName, String referenceName, double heatedArea, double b6, double area) {
-		super(name);
+	public LcaSummaryBlock(String sourceVarName, String referenceName, double heatedArea, double b6, double area) {
+		super("LCA Summary (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.heatedArea = heatedArea;

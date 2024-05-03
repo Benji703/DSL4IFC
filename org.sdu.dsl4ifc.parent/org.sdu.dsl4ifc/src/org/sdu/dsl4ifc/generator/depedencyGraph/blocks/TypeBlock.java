@@ -18,8 +18,8 @@ public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceB
 	
 	private String variableName;
 
-	public TypeBlock(String name, String variableName, Class<T> clazz) {
-		super(name);
+	public TypeBlock(String variableName, Class<T> clazz) {
+		super("Type ("+variableName+") " + clazz.getSimpleName());
 		
 		this.variableName = variableName;
 		this.clazz = clazz;

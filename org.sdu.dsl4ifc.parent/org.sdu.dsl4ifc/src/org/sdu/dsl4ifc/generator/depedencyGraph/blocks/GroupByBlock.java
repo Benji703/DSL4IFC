@@ -20,8 +20,8 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 	private Reference reference;
 	private List<AttributeReference<InputType>> attributeReferences;
 
-	public GroupByBlock(String name, Reference reference, List<AttributeReference<InputType>> attributeReferences)  {
-		super(name);
+	public GroupByBlock(Reference reference, List<AttributeReference<InputType>> attributeReferences)  {
+		super("Group (" + reference.getName() + ") By (" + String.join(", ", attributeReferences.stream().map(ref -> ref.getAttributeName()).toList())+")");
 		this.reference = reference;
 		this.attributeReferences = attributeReferences;
 	}
@@ -62,11 +62,6 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 				}, 
 				(l, u) -> l.merge(u.getElements())
 			));
-		
-//		var map = elements.stream().collect(Collectors.groupingBy(p -> {
-//			List<String> values = attributeReferences.stream().map(t -> t.getExtractor().getParameterValue(p)).toList();
-//			return String.join(",", values);
-//		}));
 		
 		var groupedRows = new ArrayList<GroupedRows<InputType>>();
 		for (Entry<String, Group<InputType>> entry : map.entrySet()) {

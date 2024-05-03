@@ -31,8 +31,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String referenceName;
 	private LCA lca = new LCA();
 	
-	public LcaCalcBlock(String name, String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
-		super(name);
+	public LcaCalcBlock(String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
+		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.area = area;

@@ -1,6 +1,5 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -18,8 +17,8 @@ public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> {
 	private String variableName;
 
 	// TODO: How do we represent the boolean condition with objects?
-	public FilterBlock(String name, String variableName, Expression<InternalAccessClass> expression) {
-		super(name);
+	public FilterBlock(String variableName, Expression<InternalAccessClass> expression) {
+		super("Filter (" + variableName + ")");
 		this.variableName = variableName;
 		this.expression = expression;
 	}

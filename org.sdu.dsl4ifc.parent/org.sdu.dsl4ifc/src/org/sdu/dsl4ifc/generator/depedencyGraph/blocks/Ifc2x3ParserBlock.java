@@ -17,10 +17,15 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 	private String path;
 	private Resource resource;
 
-	public Ifc2x3ParserBlock(String name, String path, Resource resource) {
-		super(name);
+	public Ifc2x3ParserBlock(String path, Resource resource) {
+		super("IFC2x3 Parser (" + getFileName(path) + ")");
 		this.path = path;
 		this.resource = resource;
+	}
+
+	private static String getFileName(String path) {
+		Path p = new Path(path);
+		return p.segments()[p.segmentCount()-1];
 	}
 
 	@Override

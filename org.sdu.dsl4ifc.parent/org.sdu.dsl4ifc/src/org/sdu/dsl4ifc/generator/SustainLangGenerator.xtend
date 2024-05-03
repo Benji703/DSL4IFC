@@ -176,7 +176,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(TableOutput output, Statement statement, Resource resource) {
-		val tableOutputBlock = new TableOutputBlock("Output Table", output.toAttributeReferences, output.reference)
+		val tableOutputBlock = new TableOutputBlock(output.toAttributeReferences, output.reference)
 		
 		// Create necesarry inputs		
 		addInputsToTableOutput(statement, output.reference, resource, tableOutputBlock)
@@ -239,7 +239,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
-		val filterBlock = new FilterBlock('''Filter: '«filter.type.name»''', filter.type.name, filter.toExpression)
+		val filterBlock = new FilterBlock(filter.type.name, filter.toExpression)
 		
 		// Create necesarry inputs
 		val typeBlock = filter.type.createBlock(statement, resource)
@@ -257,8 +257,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(TransformationCommand transformation, Statement statement, Resource resource) {
-		val name = '''Group '«transformation.reference.name»' By «FOR attribute : transformation.attributes SEPARATOR ', '»«attribute.fieldName»«ENDFOR»'''
-		val transformBlock = new GroupByBlock(name, transformation.reference, transformation.toAttributeReferences);
+		val transformBlock = new GroupByBlock(transformation.reference, transformation.toAttributeReferences);
 		
 		// Create necesarry inputs
 		addFilterOrTypeInput(statement, transformation.reference, resource, transformBlock)
@@ -267,7 +266,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
-		val typeBlock = new TypeBlock('''Type: '«reference.name»' «reference.ifcType»''', reference.name, reference.ifcType.toIfcType)
+		val typeBlock = new TypeBlock(reference.name, reference.ifcType.toIfcType)
 		
 		// Create necesarry inputs
 		val parserBlock = statement.source.createBlock(statement, resource)
@@ -280,7 +279,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val lcaPar = cal.lcaParams;
 		
-		val lcaSummaryBlock = new LcaSummaryBlock('''LCA Summary (source: «cal.source.name»)''', cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6, lcaPar.area);
+		val lcaSummaryBlock = new LcaSummaryBlock(cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6, lcaPar.area);
 		
 		// Create necesarry inputs
 		val lcaCalcBlock = cal.createLcaCalculationBlock(statement, resource)
@@ -302,7 +301,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 		
 		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
-		val lcaCalcBlock = new LcaCalcBlock('''LCA Calculation (source: «cal.source.name»)''', cal.source.name, referenceName, lcaPar.area, matDefMap);
+		val lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap);
 		
 		// Create necesarry inputs
 		// Can be types or filters
@@ -328,7 +327,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	def dispatch Block<?> createBlock(SourceCommand source, Statement statement, Resource resource) {
-		val parserBlock = new Ifc2x3ParserBlock("IFC Parser 2x3", source.path, resource)
+		val parserBlock = new Ifc2x3ParserBlock(source.path, resource)
 		
 		return catalog.ensureExistingIsUsed(parserBlock)
 	}
