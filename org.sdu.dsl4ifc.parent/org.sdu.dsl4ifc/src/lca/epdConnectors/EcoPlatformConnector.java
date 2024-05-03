@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.DataOutputStream;
@@ -33,15 +34,22 @@ public class EcoPlatformConnector implements IEPDConnector {
 	private final String flowPropUnitId = "93a60a56-a3c8-22da-a746-0800200c9a66";
 	private final int unitDataSetId = 1;
 	private String bearerToken = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJCZW5qaTcwMyIsImlzcyI6IkVDT1BPUlRBTCIsImF1ZCI6ImFueSIsInZlciI6IjcuOS40IiwicGVybWlzc2lvbnMiOlsic3RvY2s6cmVhZCxleHBvcnQ6MiIsInN0b2NrOnJlYWQsZXhwb3J0OjEiLCJ1c2VyOnJlYWQsd3JpdGU6NjcxIl0sInJvbGVzIjpbXSwiaWF0IjoxNzExMTAwMjE5LCJleHAiOjE3MTg5ODQyMTksImVtYWlsIjoiYmVhbmQxOUBzdHVkZW50LnNkdS5kayIsInRpdGxlIjoiIiwiZmlyc3ROYW1lIjoiQmVuamFtaW4iLCJsYXN0TmFtZSI6IkFuZGVyc2VuIiwiZ2VuZXJhdGVOZXdUb2tlbnMiOmZhbHNlLCJqb2JQb3NpdGlvbiI6IkthbmRpZGF0c3R1ZGVyZW5kZSIsImFkZHJlc3MiOnsiY2l0eSI6Ik9kZW5zZSIsInppcENvZGUiOiI1MjQwIiwiY291bnRyeSI6IkRLIiwic3RyZWV0IjoiIn0sIm9yZ2FuaXphdGlvbiI6e30sInVzZXJHcm91cHMiOlt7InVzZXJHcm91cE5hbWUiOiJyZWdpc3RlcmVkX3VzZXJzIiwidXNlckdyb3VwT3JnYW5pemF0aW9uTmFtZSI6IkRlZmF1bHQgT3JnYW5pemF0aW9uIn1dLCJhZG1pbmlzdHJhdGVkT3JnYW5pemF0aW9uc05hbWVzIjoiIiwicGhvbmUiOiIiLCJkc3B1cnBvc2UiOiJUaWwgZXQga2FuZGlkYXRwcm9qZWt0IHZlZHLDuHJlbmRlIGVuIElULXBsYXRmb3JtIHRpbCB1ZHJlZ25pbmcgYWYgYmxhLiBMQ0EiLCJzZWN0b3IiOiIiLCJpbnN0aXR1dGlvbiI6IlN5ZGRhbnNrIFVuaXZlcnNpdGV0In0.tidxKWZu6Nz9z4GgSAPRO85dHjaWpIvCxX9bM0lxGSPIDw4SSRgdbLeSGfvck6nG6YqChG_Flr32iQq-QMIGNkzchtxkkWg3uupmtyYhJAQINWwEo5Pjh1LkO5Gh3cMN5LhMoT_qXFZs2B7DsEA6V2RQpMPfKTflm8p47wl9BKU";
+	private Map<String, EnvProductInfo> envProdMap;
 	
 	public EcoPlatformConnector() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(AniesJsonObject.class, new CustomDeserializerAnies());
 		gson = gsonBuilder.create();
+		
+		envProdMap = new HashMap<String, EnvProductInfo>();
 	}
 	
 	@Override
 	public IEnvProductInfo GetEPDDataByType(String name) {	
+		
+		if (envProdMap.containsKey(name) ) {
+			return envProdMap.get(name);
+		}
 		
 		EpdMetaDataJsonObject epdObject = getEpdDatabaseObject(name);
 		
@@ -96,8 +104,11 @@ public class EcoPlatformConnector implements IEPDConnector {
 			}
 		}
 		
+		EnvProductInfo envProductInfo = new EnvProductInfo(name, a, c3, c4, decUnit, flowProp.getMeanValue());
 		
-		return new EnvProductInfo(name, a, c3, c4, decUnit, flowProp.getMeanValue());
+		envProdMap.put(name, envProductInfo);
+		
+		return envProductInfo;
 	}
 	
     private DeclaredUnitEnum ParseToEnum(String s) {
