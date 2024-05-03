@@ -92,8 +92,50 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 
 	@Override
 	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
-		// TODO Auto-generated method stub
+		int currentRow = startingRow;
 		
+		// De værdier man grupperer på
+		// ID (hvis internalclass -> step number, hvis lcaelement -> stepnumber, hvis lcaresult -> nothing)
+		
+		var stepNumberExtractor = new ParameterValueExtractor<Object, String>("stepnumber");
+		
+		worksheet.value(currentRow, 0, "StepNumber");	worksheet.style(currentRow, 0).bold().set();
+		for (int currentColumn = 0; currentColumn < attributeReferences.size(); currentColumn++) {
+			var ref = attributeReferences.get(currentColumn);
+			worksheet.value(currentRow, currentColumn+1, ref.getDisplayName());	worksheet.style(currentRow, currentColumn+1).bold().set();
+		}
+		currentRow++;
+
+		var groups = getOutput();
+		
+		for (var group : groups) {
+			
+			worksheet.value(currentRow, 0, "StepNumber");	worksheet.style(currentRow, 0).bold().italic().set();
+			for (int currentColumn = 0; currentColumn < attributeReferences.size(); currentColumn++) {
+				var ref = attributeReferences.get(currentColumn);
+				String groupValue = ref.getExtractor().getParameterValue(group.elements.get(0));
+				worksheet.value(currentRow, currentColumn+1, groupValue);	worksheet.style(currentRow, currentColumn+1).bold().italic().set();
+			}
+			
+			currentRow++;
+			
+			var rows = group.elements.stream().sorted((o1, o2) -> {
+				int stepNumber1 = Integer.parseInt((String)stepNumberExtractor.getParameterValue(o1));
+				int stepNumber2 = Integer.parseInt((String)stepNumberExtractor.getParameterValue(o2));
+				return stepNumber1 - stepNumber2;
+				
+			}).toList();
+			for (var row : rows) {
+				worksheet.value(currentRow, 0, Integer.parseInt(stepNumberExtractor.getParameterValue(row)));
+				
+				for (int currentColumn = 0; currentColumn < attributeReferences.size(); currentColumn++) {
+					var ref = attributeReferences.get(currentColumn);
+					worksheet.value(currentRow, currentColumn+1, ref.getExtractor().getParameterValue(row));
+				}
+				currentRow++;
+			}
+			
+		}
 	}
 
 }

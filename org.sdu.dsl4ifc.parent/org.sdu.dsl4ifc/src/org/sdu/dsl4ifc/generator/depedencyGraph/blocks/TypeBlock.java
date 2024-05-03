@@ -7,9 +7,6 @@ import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.ParameterValueExtractor;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
-import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
-
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel;
 
@@ -74,10 +71,10 @@ public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceB
 		var input = getOutput();
 		var rows = input.stream().sorted((o1, o2) -> {
 			
-			String parameterValue1 = (String) stepNumberExtractor.getParameterValue(o1);
-			String parameterValue2 = (String) stepNumberExtractor.getParameterValue(o2);
+			int parameterValue1 = Integer.parseInt((String) stepNumberExtractor.getParameterValue(o1));
+			int parameterValue2 = Integer.parseInt((String) stepNumberExtractor.getParameterValue(o2));
 			
-			return parameterValue1.compareTo(parameterValue2);
+			return parameterValue1 - parameterValue2;
 		}).toList();
 		
 		worksheet.value(currentRow, 0, "StepNumber");	worksheet.style(currentRow, 0).bold().set();

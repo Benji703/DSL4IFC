@@ -75,7 +75,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	
 	    	String elementName = element.getName().getDecodedValue();
 	    	
-			elements.add(new LCAIFCElement(epdId, elementName, quantity));
+			elements.add(new LCAIFCElement(epdId, elementName, element.getStepLineNumber(), quantity));
 	    }
 
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
@@ -182,28 +182,30 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		var elements = getOutput();
 		
 		worksheet.value(currentRow, 0, "IFC Name");
-		worksheet.value(currentRow, 1, "A");
-		worksheet.value(currentRow, 2, "C3");
-		worksheet.value(currentRow, 3, "C4");
-		worksheet.value(currentRow, 4, "D");
-		worksheet.value(currentRow, 5, "Quantity");
-		worksheet.value(currentRow, 6, "EPD ID");
-		worksheet.value(currentRow, 7, "EDP Name");
-		worksheet.value(currentRow, 8, "Result");
+		worksheet.value(currentRow, 1, "IFC Step Number");
+		worksheet.value(currentRow, 2, "A");
+		worksheet.value(currentRow, 3, "C3");
+		worksheet.value(currentRow, 4, "C4");
+		worksheet.value(currentRow, 5, "D");
+		worksheet.value(currentRow, 6, "Quantity");
+		worksheet.value(currentRow, 7, "EPD ID");
+		worksheet.value(currentRow, 8, "EDP Name");
+		worksheet.value(currentRow, 9, "Result");
 		
 		for (LCAIFCElement element : elements) {
 			currentRow++;
 			
-			// IfcName, A, C3, C4, D, Quantity, EPD ID, EPD Name, Result
+			// IfcName, Step number, A, C3, C4, D, Quantity, EPD ID, EPD Name, Result
 			worksheet.value(currentRow, 0, element.getIfcName());
-			worksheet.value(currentRow, 1, element.getAResult());
-			worksheet.value(currentRow, 2, element.getC3Result());
-			worksheet.value(currentRow, 3, element.getC4Result());
-			worksheet.value(currentRow, 4, element.getdResult());
-			worksheet.value(currentRow, 5, element.getQuantity().getGrossSideArea());	// TODO: Choose the quantity that is used in the calculation
-			worksheet.value(currentRow, 6, element.getEpdId());
-			worksheet.value(currentRow, 7, element.getEpdName());
-			worksheet.value(currentRow, 8, element.getLcaVal());
+			worksheet.value(currentRow, 1, element.getIfcStepNumber());
+			worksheet.value(currentRow, 2, element.getAResult());
+			worksheet.value(currentRow, 3, element.getC3Result());
+			worksheet.value(currentRow, 4, element.getC4Result());
+			worksheet.value(currentRow, 5, element.getdResult());
+			worksheet.value(currentRow, 6, element.getQuantity().getGrossSideArea());	// TODO: Choose the quantity that is used in the calculation
+			worksheet.value(currentRow, 7, element.getEpdId());
+			worksheet.value(currentRow, 8, element.getEpdName());
+			worksheet.value(currentRow, 9, element.getLcaVal());
 			
 		}
 		
