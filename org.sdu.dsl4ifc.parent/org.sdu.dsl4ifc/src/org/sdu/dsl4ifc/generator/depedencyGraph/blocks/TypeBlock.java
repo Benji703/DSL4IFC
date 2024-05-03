@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dhatim.fastexcel.Worksheet;
+import org.sdu.dsl4ifc.generator.ParameterValueExtractor;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
@@ -64,8 +65,32 @@ public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceB
 
 	@Override
 	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
-		// TODO Auto-generated method stub
+		int currentRow = startingRow;
 		
+		var stepNumberExtractor = new ParameterValueExtractor<>("stepnumber");
+		var nameExtractor = new ParameterValueExtractor<>("name");
+		var ifcTypeExtractor = new ParameterValueExtractor<>("ifctype");
+		
+		var input = getOutput();
+		var rows = input.stream().sorted((o1, o2) -> {
+			
+			String parameterValue1 = (String) stepNumberExtractor.getParameterValue(o1);
+			String parameterValue2 = (String) stepNumberExtractor.getParameterValue(o2);
+			
+			return parameterValue1.compareTo(parameterValue2);
+		}).toList();
+		
+		worksheet.value(currentRow, 0, "StepNumber");	worksheet.style(currentRow, 0).bold().set();
+		worksheet.value(currentRow, 1, "Name");	worksheet.style(currentRow, 1).bold().set();
+		worksheet.value(currentRow, 2, "IfcType");	worksheet.style(currentRow, 2).bold().set();
+		
+		for (var row : rows) {
+			currentRow++;
+			
+			worksheet.value(currentRow, 0, Integer.parseInt((String) stepNumberExtractor.getParameterValue(row)));
+			worksheet.value(currentRow, 1, (String) nameExtractor.getParameterValue(row));
+			worksheet.value(currentRow, 2, (String) ifcTypeExtractor.getParameterValue(row));
+		}
 	}
 
 }
