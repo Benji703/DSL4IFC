@@ -1,7 +1,7 @@
 package lca.epdConnectors.JsonWrappers;
 
 public class EpdSpecificProductJson {
-	private LciaResults lciaResults;
+	private LciaResults LCIAResults;
 	private Exchanges exchanges;
 	
 	public EpdSpecificProductJson(LciaResults lciaResults, Exchanges exchanges) {
@@ -10,11 +10,11 @@ public class EpdSpecificProductJson {
 	}
 
 	public LciaResults getLciaResults() {
-		return lciaResults;
+		return LCIAResults;
 	}
 
 	public void setLciaResults(LciaResults lciaResults) {
-		this.lciaResults = lciaResults;
+		this.LCIAResults = lciaResults;
 	}
 
 	public Exchanges getExchanges() {
