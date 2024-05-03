@@ -22,7 +22,7 @@ public class LCA {
 
     public Double CalculateLCAForElement(LCAIFCElement element) {
 
-        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType("ANLÆGSBETON (C35/45 Slump Concrete in Aggressive Environmental Exposure Class)");
+        IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getEpdId());
         
         if (envProductInfo == null) {
         	return null;
