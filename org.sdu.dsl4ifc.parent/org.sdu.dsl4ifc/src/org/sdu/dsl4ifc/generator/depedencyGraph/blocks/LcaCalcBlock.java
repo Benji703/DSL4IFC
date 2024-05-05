@@ -1,11 +1,15 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import org.dhatim.fastexcel.Worksheet;
+import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
+import org.sdu.dsl4ifc.sustainLang.AreaAuto;
+import org.sdu.dsl4ifc.sustainLang.AreaSource;
+import org.sdu.dsl4ifc.sustainLang.AreaValue;
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
@@ -19,19 +23,22 @@ import com.apstex.step.core.SET;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import lca.LCA.*;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
-	private double area;
+	private AreaSource area;
+	private Double areaValue = null;
 	private Map<String,String> matDefs;
 	private String referenceName;
 	private LCA lca = new LCA();
 	
-	public LcaCalcBlock(String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
+	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs) {
 		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
@@ -42,6 +49,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	@Override
 	public boolean IsOutOfDate() {
 		return false;
+		
 	}
 
 	@Override
@@ -54,7 +62,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			//Be Sad
 			return null;
 		}
-		System.out.println("LCA Babeh");
 		
 	    var sourceVar = (VariableReferenceBlock<?>)references.get(0);
 	    
@@ -78,9 +85,71 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			elements.add(new LCAIFCElement(epdId, elementName, element.getStepLineNumber(), quantity));
 	    }
 
+	    Double area = getArea();
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
 		
 		return lcaElements;
+	}
+	
+	public Double getArea() {
+		
+		if (areaValue != null) {
+			return areaValue;
+		}
+		
+		if (area instanceof AreaValue) {
+			areaValue = ((AreaValue) area).getArea();
+		}
+		if (area instanceof AreaAuto) {
+			var parserBlock = findFirstBlock(Ifc2x3ParserBlock.class);
+			var ifcModel = parserBlock.getOutput();
+			
+			var ifcBuldings = ifcModel.getCollection(IfcBuilding.class);
+			
+			areaValue = getSomeFloorAreaSum(ifcBuldings);
+			
+			if (areaValue == null) {
+				SustainLangGenerator.consoleOut.println("WARNING: Could not find an area value. The LCA results using the area will be null.");
+			}
+		}
+		
+		return areaValue;
+	}
+
+	private Double getSomeFloorAreaSum(Collection<IfcBuilding> ifcBuldings) {
+		Double area = ifcBuldings.stream().collect(Collectors.summingDouble(building -> {
+				SET<IfcRelDefines> isDefinedBy = building.getIsDefinedBy_Inverse();
+				
+				for (IfcRelDefines iRel : isDefinedBy) {
+					
+					if (!(iRel instanceof IfcRelDefinesByProperties)) {
+						continue;
+					}
+					
+					var iRelProp = (IfcRelDefinesByProperties) iRel;
+					
+					if (!(iRelProp.getRelatingPropertyDefinition() instanceof IfcElementQuantity)) {
+						continue;
+					}
+					
+					IfcElementQuantity elementQuant = (IfcElementQuantity) iRelProp.getRelatingPropertyDefinition();
+					
+					for (IfcPhysicalQuantity quantity : elementQuant.getQuantities()) {
+						if (quantity instanceof IfcQuantityArea && quantity.getName().getDecodedValue().equals("NetFloorArea")) {
+							return ((IfcQuantityArea) quantity).getAreaValue().getValue();
+						}
+						if (quantity instanceof IfcQuantityArea && quantity.getName().getDecodedValue().equals("GrossFloorArea")) {
+							SustainLangGenerator.consoleOut.println("WARNING: Using gross area as area value in LCA calculation!");
+							return ((IfcQuantityArea) quantity).getAreaValue().getValue();
+						}
+						
+					}
+				}
+				
+				return 0;
+			}));
+		
+		return area == 0 ? null : area;
 	}
 
 	private String getIfcMatName(SET<IfcRelAssociates> matSet) {
@@ -107,7 +176,12 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	}
 
 	private LcaIfcQuantity getIfcQuantity(SET<IfcRelDefines> invSet) {
+		
 		LcaIfcQuantity quantity = new LcaIfcQuantity();
+		if (invSet == null) {
+			return quantity;
+		}
+		
 		
 		for (IfcRelDefines iRel : invSet) {
 			
@@ -151,13 +225,23 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
 		keyBuilder.append("source:"+sourceVarName+",");
 		keyBuilder.append("reference:"+referenceName+",");
-		keyBuilder.append("area:"+area+",");
+		keyBuilder.append("area:"+getAreaCacheKey()+",");
 		keyBuilder.append("matdefs:"+matDefsToString()+",");
 		
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");
         }
         return keyBuilder.toString();
+	}
+	
+	private String getAreaCacheKey() {
+		if (area instanceof AreaValue) {
+			return ((AreaValue) area).getArea()+"";
+		}
+		if (area instanceof AreaAuto) {
+			return "AUTO";
+		}
+		return null;
 	}
 
 	@Override
@@ -210,4 +294,5 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		}
 		
 	}
+	
 }

@@ -3,6 +3,7 @@
  */
 package org.sdu.dsl4ifc.generator
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
@@ -11,8 +12,6 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcSlab
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
 import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashMap
@@ -20,7 +19,10 @@ import java.util.HashSet
 import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
+import java.util.Set
 import org.dhatim.fastexcel.Workbook
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.ConsolePlugin
 import org.eclipse.ui.console.MessageConsole
@@ -55,17 +57,13 @@ import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
 import org.sdu.dsl4ifc.sustainLang.MatDef
 import org.sdu.dsl4ifc.sustainLang.OutputArgument
-import org.sdu.dsl4ifc.sustainLang.OutputCommand
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
+import org.sdu.dsl4ifc.sustainLang.TableOutput
 import org.sdu.dsl4ifc.sustainLang.TraceOutput
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
-import org.sdu.dsl4ifc.sustainLang.TableOutput
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.Path
-import java.util.Set
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -91,9 +89,9 @@ class SustainLangGenerator extends AbstractGenerator {
 					val outputs = graphs.map[graph | graph.output]
 					outputs.forEach[output | consoleOut.println(output.toString)]
 					
-					System.out.println("[CREATING TRACE]")
 					val traces = statement.outputs.filter(TraceOutput)
 					if (!traces.empty) {
+						System.out.println("[CREATING TRACE]")
 						traces.head.outputTraceReport(graphs, resource)
 					}
 					
@@ -109,6 +107,8 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	private def void outputTraceReport(TraceOutput output, List<Block<?>> graphs, Resource resource) {
+		if (graphs.empty)
+			return;
 		
 		var uri = resource.getURI();
 		var file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uri.toPlatformString(true)));
@@ -283,8 +283,9 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		// Create necesarry inputs
 		val lcaCalcBlock = cal.createLcaCalculationBlock(statement, resource)
-		
 		lcaSummaryBlock.AddInput(lcaCalcBlock)
+		val parserBlock = statement.source.createBlock(statement, resource)
+		lcaSummaryBlock.AddInput(parserBlock)
 		
 		return catalog.ensureExistingIsUsed(lcaSummaryBlock)
 	}
@@ -307,6 +308,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		// Can be types or filters
 		val inputBlock = createInputFromReference(statement, resource, cal.source)
 		lcaCalcBlock.AddInput(catalog.ensureExistingIsUsed(inputBlock))
+		val parserBlock = statement.source.createBlock(statement, resource)
+		lcaCalcBlock.AddInput(parserBlock)
 		
 		return catalog.ensureExistingIsUsed(lcaCalcBlock)
 	}
@@ -483,6 +486,9 @@ class SustainLangGenerator extends AbstractGenerator {
 			}
 			case IFC_MATERIAL: {
 				return IfcMaterial
+			}
+			case IFC_BUILDING: {
+				return IfcBuilding
 			}
 			default: {
 				

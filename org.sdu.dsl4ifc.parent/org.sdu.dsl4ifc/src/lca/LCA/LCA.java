@@ -29,7 +29,10 @@ public class LCA {
         return lcaCalc.CalculateLCABasic(a,c3,c4,aRef);
     }
 
-    public Double CalculateLCAForElement(LCAIFCElement element, double area) {
+    public Double CalculateLCAForElement(LCAIFCElement element, Double area) {
+    	if (area == null) {
+			return null;
+		}
 
         IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getEpdId());
         
@@ -90,7 +93,7 @@ public class LCA {
         return (envInfo/declaredFactor) * massFactor * quant * yearFactor;
     }
     
-    public List<LCAIFCElement> calculateLCAByElement(List<LCAIFCElement> ifcElements, double area) {
+    public List<LCAIFCElement> calculateLCAByElement(List<LCAIFCElement> ifcElements, Double area) {
     	ArrayList<LCAIFCElement> ifcElementResults = new ArrayList<LCAIFCElement>(); 
     	
         for (LCAIFCElement element : ifcElements) {
@@ -101,13 +104,23 @@ public class LCA {
         return ifcElementResults;
     }
 
-    public LCAResult CalculateLCAWhole(List<LCAIFCElement> ifcElements, double areaHeated, double b6, double area) {
+    public LCAResult CalculateLCAWhole(List<LCAIFCElement> ifcElements, Double areaHeated, double b6, Double area) {
 
-        double baseResult = ifcElements.stream().filter(t -> t.getLcaVal() != null).mapToDouble(LCAIFCElement::getLcaVal).sum();
+        Double result = getResult(ifcElements, areaHeated, b6, area);
+
+        return new LCAResult(result,ifcElements, area, areaHeated);
+    }
+
+
+	private Double getResult(List<LCAIFCElement> ifcElements, Double areaHeated, double b6, Double area) {
+		if (area == null) {
+			return null;
+		}
+		
+		double baseResult = ifcElements.stream().filter(t -> t.getLcaVal() != null).mapToDouble(LCAIFCElement::getLcaVal).sum();
         double baseWithArea = lcaCalc.CalculateBuildingLca(baseResult, area);
         double opResult = lcaCalc.CalculateLCAOperational(b6, areaHeated);
         double result = baseWithArea + opResult;
-
-        return new LCAResult(result,ifcElements);
-    }
+		return result;
+	}
 }
