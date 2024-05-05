@@ -50,7 +50,8 @@ enum IfcType:
 	ifcRoot='IfcRoot' 						| 
 	ifcMaterial='IfcMaterial' 				| 
 	ifcBuildingElement='IfcBuildingElement' | 
-	ifcSlab='IfcSlab'
+	ifcSlab='IfcSlab'						|
+	ifcBuilding='IfcBuilding'
 ;
 
 FilterCommand:
@@ -83,7 +84,11 @@ MatDef:
 ;
 
 LcaParams:
-	'AREA' area=Double & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double
+	'AREA' area=AreaSource & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double
+;
+
+AreaSource returns AreaSource:
+	{AreaValue} area=Double | {AreaAuto} 'AUTO'
 ;
 
 Double returns ecore::EDouble:
