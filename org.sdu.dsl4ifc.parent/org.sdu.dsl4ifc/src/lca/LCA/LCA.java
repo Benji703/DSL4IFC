@@ -107,7 +107,7 @@ public class LCA {
     	ArrayList<LCAIFCElement> ifcElementResults = new ArrayList<LCAIFCElement>(); 
     	
         for (LCAIFCElement element : ifcElements) {
-            element.setLcaVal(CalculateLCAForElement(element));
+            element.setLcaVal(CalculateLCAForElement(element, area));
             ifcElementResults.add(element);
         }
         
