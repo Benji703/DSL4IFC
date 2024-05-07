@@ -64,6 +64,10 @@ import org.sdu.dsl4ifc.sustainLang.TableOutput
 import org.sdu.dsl4ifc.sustainLang.TraceOutput
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.OutputCommand
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
+import lca.DomainClasses.Enums.EpdType
+import org.sdu.dsl4ifc.sustainLang.EPD
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -302,7 +306,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 		
 		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
-		val lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap);
+
+		val lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap, lcaPar.epd);
 		
 		// Create necesarry inputs
 		// Can be types or filters

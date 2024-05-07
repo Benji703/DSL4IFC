@@ -1,5 +1,8 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import org.sdu.dsl4ifc.generator.SustainLangGenerator;
+import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
+import org.sdu.dsl4ifc.sustainLang.EPD;
 import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
@@ -26,8 +29,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import lca.DomainClasses.Enums.EpdType;
 import java.util.stream.Collectors;
-
 import lca.LCA.*;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
@@ -36,14 +39,29 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private Double areaValue = null;
 	private Map<String,String> matDefs;
 	private String referenceName;
-	private LCA lca = new LCA();
+	private EpdType epdType;
+	private LCA lca;
 	
-	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs) {
+	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs, EPD epdType) {
 		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.area = area;
 		this.matDefs = matDefs;
+		this.epdType = translateToJavaEnum(epdType);
+		
+		lca = new LCA(this.epdType);
+	}
+
+	private EpdType translateToJavaEnum(EPD xEpdType) {
+		if (xEpdType == EPD.ECO) {
+			return EpdType.EcoPlatform;
+		} else if (xEpdType == EPD.BR18) {
+			return EpdType.BR18;
+		}
+		
+		SustainLangGenerator.consoleOut.println("Could not recognize EPD type. Using BR18 as default instead.");
+		return EpdType.BR18;
 	}
 
 	@Override
@@ -227,6 +245,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		keyBuilder.append("reference:"+referenceName+",");
 		keyBuilder.append("area:"+getAreaCacheKey()+",");
 		keyBuilder.append("matdefs:"+matDefsToString()+",");
+		keyBuilder.append("epdType:"+epdType+",");
 		
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");

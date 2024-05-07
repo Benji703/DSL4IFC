@@ -84,7 +84,11 @@ MatDef:
 ;
 
 LcaParams:
-	'AREA' area=AreaSource & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double
+	'AREA' area=AreaSource & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double & 'EPD' epd=EPD
+;
+
+enum EPD:
+	br18='BR18' | eco='EcoPlatform'
 ;
 
 AreaSource returns AreaSource:
