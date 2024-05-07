@@ -3,7 +3,9 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Block<T> implements IOutOfDate, ICalculation<T>, ICacheKeyGenerator {
+import org.sdu.dsl4ifc.generator.conditional.core.ITrace;
+
+public abstract class Block<T> implements IOutOfDate, ICalculation<T>, ICacheKeyGenerator, ITrace {
 	
     public String Name;
     private T output;

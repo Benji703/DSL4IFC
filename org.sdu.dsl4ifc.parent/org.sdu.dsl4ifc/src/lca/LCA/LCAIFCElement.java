@@ -14,12 +14,14 @@ public class LCAIFCElement {
     private Double c4Result;
     private Double dResult;
     private Double lcaVal;
+    private int ifcStepNumber;
 
 
-    public LCAIFCElement(String epdId, String ifcName, LcaIfcQuantity quantity) {
+    public LCAIFCElement(String epdId, String ifcName, int ifcStepNumber, LcaIfcQuantity quantity) {
         this.epdId = epdId;
         this.ifcName = ifcName;
         this.quantity = quantity;
+        this.ifcStepNumber = ifcStepNumber;
     }
 
     public Double getAResult() {
@@ -115,4 +117,13 @@ public class LCAIFCElement {
 	public void setEpdName(String epdName) {
 		this.epdName = epdName;
 	}
+
+	public int getIfcStepNumber() {
+		return ifcStepNumber;
+	}
+
+	public void setIfcStepNumber(int ifcStepNumber) {
+		this.ifcStepNumber = ifcStepNumber;
+	}
+	
 }

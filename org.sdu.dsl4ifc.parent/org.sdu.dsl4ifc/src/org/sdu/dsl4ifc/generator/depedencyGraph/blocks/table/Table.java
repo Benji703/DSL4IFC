@@ -27,7 +27,7 @@ public class Table {
 		rows.add(newRow);
 	}
 	
-	public void addColumn(String headerText, AttributeReference<?,String> reference) {
+	public void addColumn(String headerText, AttributeReference<?> reference) {
 		headers.add(new ColumnHeader(headerText, reference));
 	}
 	
@@ -93,6 +93,14 @@ public class Table {
 
 	private String pad(String text, int width) {
 	    return text.length() >= width ? text : text + " ".repeat(width - text.length()); 
+	}
+
+	public List<Row> getRows() {
+		return rows;
+	}
+
+	public List<ColumnHeader> getHeaders() {
+		return headers;
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.sdu.dsl4ifc.generator;
 
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.GroupedRows;
+
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot;
@@ -10,7 +12,7 @@ import lca.LCA.LCAIFCElement;
 import lca.LCA.LCAResult;
 
 // Make one for each ifcType
-public class ParameterValueExtractor<T, U> {
+public class ParameterValueExtractor<T, U> implements IExtractor<T, U> { 
 
 	private String parameterName;
 	public String getParameterName() {
@@ -24,6 +26,7 @@ public class ParameterValueExtractor<T, U> {
 		
 	}
 	
+	@Override
 	public U getParameterValue(T item) {
 		
 		if (item instanceof IfcWall asIfcWall) {
@@ -38,6 +41,8 @@ public class ParameterValueExtractor<T, U> {
 			switch (parameterName) {
 			case "stepnumber":
 				return (U) (""+asClassInterface.getStepLineNumber());
+			case "ifctype":
+				return (U) (asClassInterface.getClass().getSimpleName());
 			default:
 				break;
 			}
@@ -79,6 +84,8 @@ public class ParameterValueExtractor<T, U> {
 			switch (parameterName) {
 			case "ifcname":
 				return (U) asLcaElement.getIfcName();
+			case "stepnumber":
+				return (U) (asLcaElement.getIfcStepNumber()+"");
 			case "epdid":
 				return (U) asLcaElement.getEpdId();
 			case "a":
@@ -101,7 +108,22 @@ public class ParameterValueExtractor<T, U> {
 			}
 		}
 		
+		if (item instanceof GroupedRows<?> asGroupedRow) {
+			
+			if (!asGroupedRow.groupedFields.contains(parameterName)) {
+				return null;
+			}
+			
+			Object firstObject = asGroupedRow.elements.get(0);
+			return getParameterValue((T) firstObject);
+		}
+		
 		return null;
 		
+	}
+	
+	@Override
+	public String toString() {
+		return parameterName;
 	}
 }

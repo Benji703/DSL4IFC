@@ -18,4 +18,9 @@ public class AndOperation<T> extends BooleanOperation<T> {
     public String toString() {
     	return left.toString() + " AND " + right.toString();
     }
+
+	@Override
+	public String getFilledExpression(T item) {
+		return left.getFilledExpression(item) + " AND " + right.getFilledExpression(item);
+	}
 }

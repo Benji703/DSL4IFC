@@ -37,7 +37,13 @@ public class CompareParameterValueToValueOperation<U, Y, T> extends ComparisonOp
 
     @Override
     public String toString() {
-    	return leftValueExtractor.getParameterName() + " " + this.comparison +" " + rightValue;
+    	return leftValueExtractor.getParameterName() + " " + this.comparison + " " + rightValue;
     }
+
+
+	@Override
+	public String getFilledExpression(U item) {
+		return "\""+leftValueExtractor.getParameterValue(item)+"\""+"*" + " " + this.comparison + " " + "\""+rightValue+"\"";
+	}
 	
 }

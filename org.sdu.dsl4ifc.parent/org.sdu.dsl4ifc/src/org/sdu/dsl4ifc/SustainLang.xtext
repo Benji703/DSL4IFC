@@ -7,23 +7,42 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? outputs+=OutputCommand+ ';'?;
+    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? (transforms+=TransformationCommand)* outputs+=OutputCommand+ ';'?;
 
 SourceCommand:
     'SOURCE' path=STRING;
 
 OutputCommand:
-	'OUTPUT' TableOutput
+	'OUTPUT' (TableOutput | TraceOutput)
 ;
 
 TableOutput returns OutputCommand:
-	'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=ID? (',' columns+=ID)* ']'
+	{TableOutput} 'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=OutputArgument? (',' columns+=OutputArgument)* ']'
 ;
 
-/*
-FromCommand:
-    'FROM' types+=IfcTypeRef (',' types+=IfcTypeRef)*;
-    */
+TraceOutput returns OutputCommand:
+	{TraceOutput} 'TRACE' 'REPORT' outputPath=STRING
+;
+
+OutputArgument:
+	Field | Function
+;
+
+Function:
+	functionType=AggregateFunction'(' field=Field ')'
+;
+
+Field:
+	fieldName=ID
+;
+
+enum AggregateFunction:
+	sum='SUM'  |
+	average='AVG' |
+	minimum='MIN' |
+	maximum='MAX' |
+	count='COUNT'
+;
     
 enum IfcType:
 	ifcWall='IfcWall' 						| 
@@ -31,7 +50,8 @@ enum IfcType:
 	ifcRoot='IfcRoot' 						| 
 	ifcMaterial='IfcMaterial' 				| 
 	ifcBuildingElement='IfcBuildingElement' | 
-	ifcSlab='IfcSlab'
+	ifcSlab='IfcSlab'						|
+	ifcBuilding='IfcBuilding'
 ;
 
 FilterCommand:
@@ -40,8 +60,8 @@ FilterCommand:
 DoCommand:
     {DoCommand} 'CALCULATE' calculation+=Calculation*;
 
-TranformationCommand:
-    'GROUP' 'BY' attribute=Attribute;	// Add more
+TransformationCommand:
+    'GROUP' reference=[Reference] 'BY' attributes+=Field (',' attributes+=Field)*;
 
 IfcTypeRef returns Reference:
 	ifcType=IfcType name=ID?
@@ -64,11 +84,15 @@ MatDef:
 ;
 
 LcaParams:
-	'AREA' area=Double & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double & 'EPD' epd=EPD
+	'AREA' area=AreaSource & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double & 'EPD' epd=EPD
 ;
 
 enum EPD:
 	br18='BR18' | eco='EcoPlatform'
+;
+
+AreaSource returns AreaSource:
+	{AreaValue} area=Double | {AreaAuto} 'AUTO'
 ;
 
 Double returns ecore::EDouble:
@@ -81,7 +105,7 @@ LcaEntitiesReference returns Reference:
     {LcaEntitiesReference} name=ID;
 
 Attribute:
-    reference=[Reference]'.'attribute=ID
+    reference=[Reference]'.'field=Field
 ;
 
 enum BooleanOperator:
