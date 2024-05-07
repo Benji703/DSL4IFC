@@ -135,25 +135,27 @@ public class EcoPlatformConnector implements IEPDConnector {
     }
 	
 	private FlowProperties getFlowPropertyWithUnit(List<Exchange> exchange) {
-		Exchange unitExchange = null;
+		FlowProperties flowProp = null;
 		
 		for (Exchange e : exchange) {
-			if (e.getDataSetInternalID() == unitDataSetId) {
-				unitExchange = e;
+			if (e.getFlowProperties() == null) {
+				continue;
+			}
+			
+			for (FlowProperties f : e.getFlowProperties()) {
+				if (f.getReferenceUnit() != null) {
+					flowProp = f;
+				}
 			}
 		}
 		
-		if (unitExchange == null) {
+		if (flowProp == null) {
 			return null;
 		}
 		
-		FlowProperties flowProp = null;
+
 		
-		for (FlowProperties f : unitExchange.getFlowProperties()) {
-			if (f.getReferenceUnit() != null) {
-				flowProp = f;
-			}
-		}
+
 		
 		return flowProp;
 	}
