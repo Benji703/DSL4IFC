@@ -1,6 +1,8 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
+import org.sdu.dsl4ifc.sustainLang.EPD;
 
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
@@ -20,6 +22,8 @@ import com.apstex.step.core.SET;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import lca.DomainClasses.Enums.EpdType;
 import lca.LCA.*;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
@@ -27,14 +31,29 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private double area;
 	private Map<String,String> matDefs;
 	private String referenceName;
-	private LCA lca = new LCA();
+	private EpdType epdType;
+	private LCA lca;
 	
-	public LcaCalcBlock(String name, String sourceVarName, String referenceName, double area, Map<String,String> matDefs) {
+	public LcaCalcBlock(String name, String sourceVarName, String referenceName, double area, Map<String,String> matDefs, EPD epdType) {
 		super(name);
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.area = area;
 		this.matDefs = matDefs;
+		this.epdType = translateToJavaEnum(epdType);
+		
+		lca = new LCA(this.epdType);
+	}
+
+	private EpdType translateToJavaEnum(EPD xEpdType) {
+		if (xEpdType == EPD.ECO) {
+			return EpdType.EcoPlatform;
+		} else if (xEpdType == EPD.BR18) {
+			return EpdType.BR18;
+		}
+		
+		SustainLangGenerator.consoleOut.println("Could not recognize EPD type. Using BR18 as default instead.");
+		return EpdType.BR18;
 	}
 
 	@Override
@@ -152,6 +171,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		keyBuilder.append("reference:"+referenceName+",");
 		keyBuilder.append("area:"+area+",");
 		keyBuilder.append("matdefs:"+matDefsToString()+",");
+		keyBuilder.append("epdType:"+epdType+",");
 		
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");
