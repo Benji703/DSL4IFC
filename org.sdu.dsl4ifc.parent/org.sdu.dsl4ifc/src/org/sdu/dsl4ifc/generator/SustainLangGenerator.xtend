@@ -76,6 +76,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val myConsole = findConsole("SusLang");
 		consoleOut = myConsole.newMessageStream();
+		consoleOut.getConsole().setHandleControlCharacters(true);
+		consoleOut.getConsole().setCarriageReturnAsControlCharacter(true);
 		consoleOut.println("SusLang Console");
 		
 		val statements = resource.allContents.filter(Statement);

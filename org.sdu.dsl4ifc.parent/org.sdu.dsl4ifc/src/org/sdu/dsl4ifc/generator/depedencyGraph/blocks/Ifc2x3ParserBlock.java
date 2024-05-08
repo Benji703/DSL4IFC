@@ -1,6 +1,7 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import org.dhatim.fastexcel.Worksheet;
@@ -43,6 +44,16 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 		File file = new File(absolutePath);
 		
 		var ifcModel = new IfcModel();
+		
+		ifcModel.addStepParserProgressListener(listener -> {
+			var state = listener.getCurrentState();
+			try {
+				printLoadingBar(state, 40, listener.getMessage());
+			} catch (IOException e) {
+				// Nothing
+			}
+		});
+		
         try {
         	SustainLangGenerator.consoleOut.println("Parsing file: " + file.getAbsolutePath() + "...");
 			ifcModel.readStepFile(file);
@@ -119,4 +130,48 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 		worksheet.width(1, 30);
 	}
 
+	public static void printLoadingBar(int percentage, int barLength, String message) throws IOException {
+		var console = SustainLangGenerator.consoleOut;
+		
+        // Ensure percentage is between 0 and 100
+        if (percentage < 0) {
+            percentage = 0;
+        } else if (percentage > 100) {
+            percentage = 100;
+        }
+
+        // Calculate the number of filled parts in the bar
+        
+        
+        boolean isDone = message.trim().equals("");
+		if (isDone) {
+        	percentage = 100;
+		}
+        
+        int filledLength = (int) (barLength * (percentage / 100.0));
+
+        // Create the loading bar string
+        StringBuilder bar = new StringBuilder();
+        bar.append('[');
+        for (int i = 0; i < barLength; i++) {
+            if (i < filledLength) {
+                bar.append('#'); // Filled part
+            } else {
+                bar.append('-'); // Empty part
+            }
+        }
+        bar.append(']');
+
+        // Clear the console line before printing (return carriage and flush)
+        console.print("\r"); // Return carriage
+        console.flush();
+
+        // Print the loading bar with percentage
+        console.print(bar.toString() + " " + String.format("%d%%", percentage) + " " + message);
+
+        // If we've reached 100%, print a newline to end the output properly
+        if (isDone) {
+        	console.println(); // Move to a new line
+        }
+    }
 }
