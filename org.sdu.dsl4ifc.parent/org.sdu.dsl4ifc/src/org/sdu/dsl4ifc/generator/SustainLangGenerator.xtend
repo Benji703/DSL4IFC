@@ -42,7 +42,6 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.GroupByBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
@@ -66,10 +65,7 @@ import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
-import org.sdu.dsl4ifc.sustainLang.OutputCommand
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
-import lca.DomainClasses.Enums.EpdType
-import org.sdu.dsl4ifc.sustainLang.EPD
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -319,10 +315,10 @@ class SustainLangGenerator extends AbstractGenerator {
 				matDefMap.put(matDef.ifcMat, matDef.epdMatId);
 			}
 			
-			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap, automapMaterials);
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap, automapMaterials, lcaPar.epd);
 		}
 		else if (automapMaterials) {
-			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, new HashMap, true);
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, new HashMap, true, lcaPar.epd);
 		}
 		
 		// Create necesarry inputs
