@@ -16,7 +16,7 @@ public class LCA {
 
     public LCA(){
         lcaCalc = new LCACalc();
-        edpConnetcor = new BR18Connector();
+        this.edpConnetcor = new BR18Connector();
     }
 
 
@@ -97,7 +97,8 @@ public class LCA {
     	ArrayList<LCAIFCElement> ifcElementResults = new ArrayList<LCAIFCElement>(); 
     	
         for (LCAIFCElement element : ifcElements) {
-            element.setLcaVal(CalculateLCAForElement(element, area));
+            Double lcaValue = CalculateLCAForElement(element, area);
+			element.setLcaVal(lcaValue);
             ifcElementResults.add(element);
         }
         
@@ -123,4 +124,10 @@ public class LCA {
         double result = baseWithArea + opResult;
 		return result;
 	}
+
+
+	public IEPDConnector getEdpConnetcor() {
+		return edpConnetcor;
+	}
+	
 }

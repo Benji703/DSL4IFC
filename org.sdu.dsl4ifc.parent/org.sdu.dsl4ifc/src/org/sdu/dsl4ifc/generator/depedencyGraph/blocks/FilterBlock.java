@@ -25,7 +25,12 @@ public class FilterBlock extends VariableReferenceBlock<InternalAccessClass> {
 
 	@Override
 	public boolean IsOutOfDate() {
-		// Check a checksum of the file? Or the change date and length?
+		boolean inputsAreNewer = Inputs.stream().anyMatch(input -> input.GetTimeOfCalculation() > GetTimeOfCalculation());
+		
+		if (inputsAreNewer) {
+			return true;
+		}
+		
 		return false;
 	}
 

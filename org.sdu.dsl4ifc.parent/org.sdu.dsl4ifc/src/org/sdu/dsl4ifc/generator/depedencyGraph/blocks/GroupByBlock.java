@@ -1,18 +1,13 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.ParameterValueExtractor;
-import org.sdu.dsl4ifc.generator.SustainLangGenerator;
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
-import org.sdu.dsl4ifc.generator.depedencyGraph.core.IVariableReference;
 import org.sdu.dsl4ifc.sustainLang.Reference;
 
 public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<GroupedRows<InputType>> {

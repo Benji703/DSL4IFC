@@ -55,7 +55,6 @@ import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.Function
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
-import org.sdu.dsl4ifc.sustainLang.MatDef
 import org.sdu.dsl4ifc.sustainLang.OutputArgument
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
@@ -64,6 +63,9 @@ import org.sdu.dsl4ifc.sustainLang.TableOutput
 import org.sdu.dsl4ifc.sustainLang.TraceOutput
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -292,17 +294,25 @@ class SustainLangGenerator extends AbstractGenerator {
 	
 	def Block<?> createLcaCalculationBlock(LcaCalculation cal, Statement statement, Resource resource) {
 		
-		val lcaPar = cal.lcaParams;
-		val matDefs = cal.matDefs
-		
-	 	var matDefMap = new HashMap<String,String>
-		
-		for (MatDef matDef : matDefs) {
-			matDefMap.put(matDef.ifcMat,matDef.epdMatId);
-		}
-		
 		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
-		val lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap);
+		
+		val lcaPar = cal.lcaParams;
+		val materialSource = cal.materialSource
+		
+		var LcaCalcBlock lcaCalcBlock;
+		
+		if (materialSource instanceof MaterialMappingAuto) {
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area);
+		}
+		else if (materialSource instanceof MaterialMappingManual) {
+			var matDefMap = new HashMap<String,String>
+		
+			for (MaterialDefinition matDef : materialSource.materialDefinitions) {
+				matDefMap.put(matDef.ifcMat, matDef.epdMatId);
+			}
+			
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap);
+		}
 		
 		// Create necesarry inputs
 		// Can be types or filters

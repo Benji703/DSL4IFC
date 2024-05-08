@@ -24,37 +24,59 @@ import com.apstex.step.core.SET;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import lca.LCA.*;
+import lca.LCA.materialMapping.WeightedCombinationMapper;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
 	private AreaSource area;
 	private Double areaValue = null;
-	private Map<String,String> matDefs;
 	private String referenceName;
 	private LCA lca = new LCA();
+	
+	private boolean autoMapMaterials;
+	private Map<String,String> matDefs;
+	private WeightedCombinationMapper materialMapper;
 	
 	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs) {
 		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.area = area;
+		
 		this.matDefs = matDefs;
+		this.autoMapMaterials = false;
+	}
+	
+	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area) {
+		super("LCA Calculation (source " + sourceVarName + ")");
+		this.sourceVarName = sourceVarName;
+		this.referenceName = referenceName;
+		this.area = area;
+		
+		this.materialMapper = new WeightedCombinationMapper(lca.getEdpConnetcor());
+		this.matDefs = new HashMap<String, String>();
+		this.autoMapMaterials = true;
 	}
 
 	@Override
 	public boolean IsOutOfDate() {
-		return false;
+		boolean inputsAreNewer = Inputs.stream().anyMatch(input -> input.GetTimeOfCalculation() > GetTimeOfCalculation());
 		
+		if (inputsAreNewer) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
 	public List<LCAIFCElement> Calculate() {
-		//sources.get(0).getOutput;
 		
 		List<VariableReferenceBlock> references = findAllBlocks(VariableReferenceBlock.class);
 		
@@ -78,7 +100,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    		continue;
 	    	
 			String ifcMatName = getIfcMatName(associations);
-	    	String epdId = matDefs.get(ifcMatName);
+	    	String epdId = getEpdId(ifcMatName);
 	    	
 	    	String elementName = element.getName().getDecodedValue();
 	    	
@@ -89,6 +111,26 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
 		
 		return lcaElements;
+	}
+
+	private String getEpdId(String ifcMatName) {
+		
+		if (ifcMatName == null) {
+			return null;
+		}
+		
+		if (autoMapMaterials) {
+			
+			if (matDefs.containsKey(ifcMatName)) {
+				return matDefs.get(ifcMatName);
+			}
+			
+			var epdId = materialMapper.getMostSimilarEpd(ifcMatName).getEpdId();
+			matDefs.put(ifcMatName, epdId);
+			return epdId;
+		}
+		
+		return matDefs.get(ifcMatName);
 	}
 	
 	public Double getArea() {
@@ -226,7 +268,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		keyBuilder.append("source:"+sourceVarName+",");
 		keyBuilder.append("reference:"+referenceName+",");
 		keyBuilder.append("area:"+getAreaCacheKey()+",");
-		keyBuilder.append("matdefs:"+matDefsToString()+",");
+		keyBuilder.append("materialMapping:"+materialMappingString()+",");
 		
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");
@@ -249,7 +291,12 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		return referenceName;
 	}
 	
-	private String matDefsToString() {
+	private String materialMappingString() {
+		
+		if (autoMapMaterials) {
+			return "auto";
+		}
+		
 		var builder = new StringBuilder();
 		
 		for (var entry : matDefs.entrySet()) {
