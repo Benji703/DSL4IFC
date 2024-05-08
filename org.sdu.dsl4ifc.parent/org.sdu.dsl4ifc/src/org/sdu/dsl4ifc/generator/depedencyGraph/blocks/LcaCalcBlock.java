@@ -43,25 +43,18 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private Map<String,String> matDefs;
 	private WeightedCombinationMapper materialMapper;
 	
-	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs) {
+	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs, boolean autoMapMaterials) {
 		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.area = area;
 		
 		this.matDefs = matDefs;
-		this.autoMapMaterials = false;
-	}
-	
-	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area) {
-		super("LCA Calculation (source " + sourceVarName + ")");
-		this.sourceVarName = sourceVarName;
-		this.referenceName = referenceName;
-		this.area = area;
+		this.autoMapMaterials = autoMapMaterials;
 		
-		this.materialMapper = new WeightedCombinationMapper(lca.getEdpConnetcor());
-		this.matDefs = new HashMap<String, String>();
-		this.autoMapMaterials = true;
+		if (autoMapMaterials) {
+			this.materialMapper = new WeightedCombinationMapper(lca.getEdpConnetcor());
+		}
 	}
 
 	@Override

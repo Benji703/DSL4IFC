@@ -297,21 +297,28 @@ class SustainLangGenerator extends AbstractGenerator {
 		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
 		
 		val lcaPar = cal.lcaParams;
-		val materialSource = cal.materialSource
+		val manualMaterialMappings = cal.materialSource.filter(MaterialMappingManual);
+		val automaticMaterialMappings = cal.materialSource.filter(MaterialMappingAuto);
+		
+		if (manualMaterialMappings.isEmpty && automaticMaterialMappings.isEmpty) {
+			throw new Exception("You must either specify the material mapping yourself set it to auto in the LCA calculation!");
+		}
+		
+		val automapMaterials = !automaticMaterialMappings.isEmpty;
 		
 		var LcaCalcBlock lcaCalcBlock;
 		
-		if (materialSource instanceof MaterialMappingAuto) {
-			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area);
-		}
-		else if (materialSource instanceof MaterialMappingManual) {
+		if (!manualMaterialMappings.isEmpty) {
 			var matDefMap = new HashMap<String,String>
 		
-			for (MaterialDefinition matDef : materialSource.materialDefinitions) {
+			for (MaterialDefinition matDef : manualMaterialMappings.head.materialDefinitions) {
 				matDefMap.put(matDef.ifcMat, matDef.epdMatId);
 			}
 			
-			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap);
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap, automapMaterials);
+		}
+		else if (automapMaterials) {
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, new HashMap, true);
 		}
 		
 		// Create necesarry inputs
