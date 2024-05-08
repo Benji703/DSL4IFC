@@ -20,6 +20,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityArea;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
 
@@ -30,8 +31,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import lca.DomainClasses.Enums.EpdType;
+import lca.Interfaces.IIfcQuantityCollector;
+
 import java.util.stream.Collectors;
 import lca.LCA.*;
+import lca.ifc.IfcWallQuantityCollector;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
@@ -72,7 +76,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	@Override
 	public List<LCAIFCElement> Calculate() {
-		//sources.get(0).getOutput;
+		IIfcQuantityCollector<IfcWall> wallQuantCollector;
 		
 		List<VariableReferenceBlock> references = findAllBlocks(VariableReferenceBlock.class);
 		
@@ -87,6 +91,10 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcBuildingElement element : ifcElements) {
+
+	    	
+	    	LcaIfcQuantity quantity = new LcaIfcQuantity();
+	    	
 	    	var invSet = element.getIsDefinedBy_Inverse();
 	    	
 	    	LcaIfcQuantity quantity = getIfcQuantity(invSet);
@@ -107,6 +115,15 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
 		
 		return lcaElements;
+	}
+	
+	private <T extends IfcBuildingElement> IIfcQuantityCollector<T> getQuantityCollector(IfcBuildingElement element) {
+		
+    	if (element instanceof IfcWall) {
+    		return (IIfcQuantityCollector<T>) new IfcWallQuantityCollector();
+    	}
+    	
+    	return null;
 	}
 	
 	public Double getArea() {
