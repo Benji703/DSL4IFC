@@ -11,7 +11,6 @@ import com.apstex.step.core.SET;
 
 import lca.DomainClasses.Enums.DeclaredUnitEnum;
 import lca.Interfaces.IIfcQuantityCollector;
-import lca.LCA.LcaIfcQuantity;
 
 public class IfcWallQuantityCollector implements IIfcQuantityCollector<IfcWall> {
 
