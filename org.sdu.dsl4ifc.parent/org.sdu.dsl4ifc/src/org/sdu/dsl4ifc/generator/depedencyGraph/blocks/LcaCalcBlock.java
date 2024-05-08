@@ -4,8 +4,6 @@ import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.sustainLang.EPD;
 import org.dhatim.fastexcel.Worksheet;
-import org.sdu.dsl4ifc.generator.SustainLangGenerator;
-import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.sustainLang.AreaAuto;
 import org.sdu.dsl4ifc.sustainLang.AreaSource;
 import org.sdu.dsl4ifc.sustainLang.AreaValue;
@@ -27,7 +25,6 @@ import com.apstex.step.core.SET;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lca.DomainClasses.Enums.EpdType;

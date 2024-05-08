@@ -216,7 +216,6 @@ public class EcoPlatformConnector implements IEPDConnector {
             con.setRequestProperty("Authorization", "Bearer " + bearerToken);
 
             int responseCode = con.getResponseCode();
-            String s = con.getURL().toString();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String sJson = getJsonStringFromStream(con);
 
@@ -255,7 +254,6 @@ public class EcoPlatformConnector implements IEPDConnector {
             con.setRequestProperty("Authorization", "Bearer " + bearerToken);
 
             int responseCode = con.getResponseCode();
-            String s = con.getURL().toString();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String sJson = getJsonStringFromStream(con);
 
@@ -309,8 +307,7 @@ public class EcoPlatformConnector implements IEPDConnector {
 
 	@Override
 	public List<EpdOverview> GetAllEpdNames() {
-		// TODO
-		return new ArrayList<>();
+		return epdMetaDataList.stream().map(data -> new EpdOverview(data.getName(), data.getName(), data.getName())).toList();
     }
     
 	private String getJsonStringFromStream(HttpURLConnection connection) throws IOException {

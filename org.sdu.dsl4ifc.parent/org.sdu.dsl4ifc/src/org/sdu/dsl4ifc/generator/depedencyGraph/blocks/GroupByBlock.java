@@ -36,7 +36,7 @@ public class GroupByBlock<InputType, FieldType> extends VariableReferenceBlock<G
 	@Override
 	public List<GroupedRows<InputType>> Calculate() {
 		
-		var references = findAllBlocks(VariableReferenceBlock.class);
+		var<VariableReferenceBlock> references = findAllBlocks(VariableReferenceBlock.class);
 		
 		if (references.size() > 1) {
 			System.out.println("Group by has more than one input...");
