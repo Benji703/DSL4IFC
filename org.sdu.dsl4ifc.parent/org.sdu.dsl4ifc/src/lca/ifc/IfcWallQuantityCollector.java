@@ -41,6 +41,17 @@ public class IfcWallQuantityCollector implements IIfcQuantityCollector<IfcWall> 
 		
 		return quantity;
 	}
+	
+	@Override
+	public boolean isUnitSupported(DeclaredUnitEnum unit) {
+		switch (unit) {
+		case M2:
+		case M3:
+			return true;
+		default:
+			return false;
+		}
+	}
 
 	private IfcElementQuantity getElementQuant(SET<IfcRelDefines> invSet) {
 		IfcElementQuantity elementQuant = null;
@@ -84,7 +95,4 @@ public class IfcWallQuantityCollector implements IIfcQuantityCollector<IfcWall> 
 		}
 		return grossArea;
 	}
-
-
-
 }

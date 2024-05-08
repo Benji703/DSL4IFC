@@ -8,4 +8,6 @@ import lca.LCA.LcaIfcQuantity;
 public interface IIfcQuantityCollector<IfcBuildingElement> {
 	
 	public Double getQuantity(IfcBuildingElement IfcBuildingElement, DeclaredUnitEnum unit);
+	
+	public boolean isUnitSupported(DeclaredUnitEnum unit);
 }
