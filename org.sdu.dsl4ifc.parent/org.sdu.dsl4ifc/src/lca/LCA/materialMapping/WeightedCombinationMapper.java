@@ -13,14 +13,16 @@ public class WeightedCombinationMapper {
 	
 	private List<EpdOverview> allEpds;
 
+	private IEPDConnector epdConnector;
+
 	public WeightedCombinationMapper(IEPDConnector epdConnector) {
-		this.allEpds = epdConnector.GetAllEpdNames()
-				.stream()
-				.filter(overview -> overview.getEpdName() != null)
-				.toList();
+		this.epdConnector = epdConnector;	
 	}
 	
 	public EpdSimilarityResult getMostSimilarEpd(String materialName) {
+		
+		ensureEpdsAreLoaded();
+		
 		var lowerCaseMaterialName = materialName.toLowerCase();
 		
 		var results = allEpds.stream().map(epd -> {
@@ -30,11 +32,24 @@ public class WeightedCombinationMapper {
 			return new EpdSimilarityResult(epd.getEpdName(), epd.getEpdId(), score);
 		}).toList();
 		
-		var sorted = results.stream().sorted((o1, o2) -> Math.round((o2.getSimilarityScore() - o1.getSimilarityScore())*1000)).toList();
+		var sorted = results.stream()
+				.sorted(
+						(o1, o2) -> Float.compare(o2.getSimilarityScore(), o1.getSimilarityScore())
+				)
+				.toList();
 		
 		EpdSimilarityResult bestResult = sorted.get(0);
 		System.out.println(materialName + " --> " + bestResult.getEpdName());
 		return bestResult;
+	}
+
+	private void ensureEpdsAreLoaded() {
+		if (allEpds == null || allEpds.isEmpty()) {
+			this.allEpds = epdConnector.GetAllEpdNames()
+					.stream()
+					.filter(overview -> overview.getEpdName() != null)
+					.toList();
+		}
 	}
 	
 	public static float combinedSimilarity(String str1, String str2) {

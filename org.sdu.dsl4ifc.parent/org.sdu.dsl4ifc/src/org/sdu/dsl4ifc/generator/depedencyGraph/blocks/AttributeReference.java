@@ -1,7 +1,6 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import org.sdu.dsl4ifc.generator.IExtractor;
-import org.sdu.dsl4ifc.generator.ParameterValueExtractor;
 
 public class AttributeReference<T> {
 	

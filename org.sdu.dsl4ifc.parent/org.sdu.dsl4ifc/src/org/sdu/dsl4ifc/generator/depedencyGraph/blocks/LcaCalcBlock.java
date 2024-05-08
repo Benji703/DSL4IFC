@@ -53,14 +53,13 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		this.matDefs = matDefs;
 		this.autoMapMaterials = autoMapMaterials;
 		
+		this.epdType = translateToJavaEnum(epdType);
+		lca = new LCA(this.epdType);
+		
 		if (autoMapMaterials) {
 			this.materialMapper = new WeightedCombinationMapper(lca.getEdpConnetcor());
 		}
 
-		this.epdType = translateToJavaEnum(epdType);
-		
-		lca = new LCA(this.epdType);
-		
 	}
 
 	private EpdType translateToJavaEnum(EPD xEpdType) {

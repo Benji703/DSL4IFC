@@ -307,6 +307,10 @@ public class EcoPlatformConnector implements IEPDConnector {
 
 	@Override
 	public List<EpdOverview> GetAllEpdNames() {
+		if (epdMetaDataList.isEmpty()) {
+			epdMetaDataList = getEpdDatabaseObjectList();
+		}
+		
 		return epdMetaDataList.stream().map(data -> new EpdOverview(data.getName(), data.getName(), data.getName())).toList();
     }
     
