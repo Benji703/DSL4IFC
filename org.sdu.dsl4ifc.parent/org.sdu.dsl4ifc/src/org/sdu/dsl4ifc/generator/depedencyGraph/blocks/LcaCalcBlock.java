@@ -303,11 +303,11 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	
 	private String materialMappingString() {
 		
-		if (autoMapMaterials) {
-			return "auto";
-		}
-		
 		var builder = new StringBuilder();
+		
+		if (autoMapMaterials) {
+			builder.append("auto,");
+		}
 		
 		for (var entry : matDefs.entrySet()) {
 			builder.append(entry.getKey()+ " -> " + entry.getValue()+ ",");
