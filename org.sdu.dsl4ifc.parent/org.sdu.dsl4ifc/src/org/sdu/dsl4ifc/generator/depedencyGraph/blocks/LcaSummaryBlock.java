@@ -28,7 +28,12 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 
 	@Override
 	public boolean IsOutOfDate() {
-		// TODO Auto-generated method stub
+		boolean inputsAreNewer = Inputs.stream().anyMatch(input -> input.GetTimeOfCalculation() > GetTimeOfCalculation());
+		
+		if (inputsAreNewer) {
+			return true;
+		}
+		
 		return false;
 	}
 

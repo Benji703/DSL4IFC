@@ -1,5 +1,6 @@
 package lca.epdConnectors;
 
+import lca.Interfaces.EpdOverview;
 import lca.DomainClasses.EnvProductInfo;
 import lca.DomainClasses.Enums.DeclaredUnitEnum;
 import lca.Interfaces.IEPDConnector;
@@ -21,12 +22,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.io.DataOutputStream;
 
 public class EcoPlatformConnector implements IEPDConnector {
 	private Gson gson;
@@ -217,7 +216,6 @@ public class EcoPlatformConnector implements IEPDConnector {
             con.setRequestProperty("Authorization", "Bearer " + bearerToken);
 
             int responseCode = con.getResponseCode();
-            String s = con.getURL().toString();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String sJson = getJsonStringFromStream(con);
 
@@ -256,7 +254,6 @@ public class EcoPlatformConnector implements IEPDConnector {
             con.setRequestProperty("Authorization", "Bearer " + bearerToken);
 
             int responseCode = con.getResponseCode();
-            String s = con.getURL().toString();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String sJson = getJsonStringFromStream(con);
 
@@ -308,6 +305,15 @@ public class EcoPlatformConnector implements IEPDConnector {
         return epdSpecific;
     }
 
+	@Override
+	public List<EpdOverview> GetAllEpdNames() {
+		if (epdMetaDataList.isEmpty()) {
+			epdMetaDataList = getEpdDatabaseObjectList();
+		}
+		
+		return epdMetaDataList.stream().map(data -> new EpdOverview(data.getName(), data.getName(), data.getName())).toList();
+    }
+    
 	private String getJsonStringFromStream(HttpURLConnection connection) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		String inputLine;

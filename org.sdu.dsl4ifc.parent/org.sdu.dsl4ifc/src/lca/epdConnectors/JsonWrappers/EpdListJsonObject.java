@@ -1,7 +1,6 @@
 package lca.epdConnectors.JsonWrappers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class EpdListJsonObject {
 	private int totalCount;

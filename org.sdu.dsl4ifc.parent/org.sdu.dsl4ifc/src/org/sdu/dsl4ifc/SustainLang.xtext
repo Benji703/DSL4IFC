@@ -76,10 +76,17 @@ LcaCalculation returns Calculation:
     '(' summaryReference=LcaSummaryReference '<-' 'SUMMARY' 
     ( ','lcaEntitiesReference=LcaEntitiesReference '<-' 'ELEMENTS' )? ')'
     'FOR' source=[Reference] 
-    '('lcaParams=LcaParams 'MATERIAL' 'MAPPING' '(' matDefs+=MatDef* ')' ')';
+    '('lcaParams=LcaParams 'MATERIAL' 'MAPPING' (materialSource+=MaterialMappingAuto)? (materialSource+=MaterialMappingManual)? ')';
 
+MaterialMappingManual returns MaterialSource:
+	{MaterialMappingManual} '(' materialDefinitions+=MaterialDefinition* ')'
+;
 
-MatDef:
+MaterialMappingAuto returns MaterialSource:
+	{MaterialMappingAuto} 'AUTO'
+;
+
+MaterialDefinition:
 	ifcMat=STRING '->' epdMatId=STRING
 ;
 
