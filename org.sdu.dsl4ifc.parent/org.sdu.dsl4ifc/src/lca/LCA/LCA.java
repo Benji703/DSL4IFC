@@ -6,6 +6,8 @@ import java.util.List;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 
 import lca.epdConnectors.BR18Connector;
+import lca.epdConnectors.EcoPlatformConnector;
+import lca.DomainClasses.Enums.EpdType;
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
 
@@ -14,25 +16,33 @@ public class LCA {
     private IEPDConnector edpConnetcor;
 
 
+    public LCA(EpdType epdType){
+        lcaCalc = new LCACalc();
+        
+        switch (epdType) {
+		case EcoPlatform:
+	        edpConnetcor = new EcoPlatformConnector();
+			break;
+		case BR18:
+	        edpConnetcor = new BR18Connector();
+			break;
+		default:
+			edpConnetcor = new BR18Connector();
+			break;
+		}
+
+    }
+    
     public LCA(){
         lcaCalc = new LCACalc();
         this.edpConnetcor = new BR18Connector();
     }
-
-
-    public double CalculateLCAForWall(double quantity, double aRef) {
-
-        double a = 53.1 * quantity;
-        double c3 = 0.965 * quantity;
-        double c4 = 0.7 * quantity;
-
-        return lcaCalc.CalculateLCABasic(a,c3,c4,aRef);
-    }
-
+  
     public Double CalculateLCAForElement(LCAIFCElement element, Double area) {
-    	if (area == null) {
-			return null;
-		}
+        if (area == null) {
+          return null;
+        }
+
 
         IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getEpdId());
         
@@ -42,25 +52,25 @@ public class LCA {
         
         element.setEpdName(envProductInfo.getName());
 
-        CalculateLcaByQuantity(envProductInfo, element);
-
-        double aRes = TranslateNullToZero(element.getAResult());
-        double c3Res = TranslateNullToZero(element.getC3Result());
-        double c4Res = TranslateNullToZero(element.getC4Result());
-
-        return lcaCalc.CalculateLCABasic(aRes, c3Res, c4Res, area);
-    }
-
-    private double TranslateNullToZero(Double d) {
-        if (d == null) {
-            return 0;
+        if (!CalculateLcaByQuantity(envProductInfo, element)) {
+        	return null;
         }
 
-        return d;
+        Double aRes = element.getAResult();
+        Double c3Res = element.getC3Result();
+        Double c4Res = element.getC4Result();
+
+        return lcaCalc.CalculateLCABasic(aRes, c3Res, c4Res);
     }
     
-    private void CalculateLcaByQuantity(IEnvProductInfo envInfo, LCAIFCElement element) {
-    	double quantity = 0;
+    /**
+     * 
+     * @param envInfo
+     * @param element
+     * @return true if a supported unit is provided, false if an unsupported unit is provided 
+     */
+    private boolean CalculateLcaByQuantity(IEnvProductInfo envInfo, LCAIFCElement element) {
+    	Double quantity = null;
     	
     	switch (envInfo.getDeclaredUnit()) {
 		case M3:
@@ -72,16 +82,17 @@ public class LCA {
 		default:
 			//Skriv warning: SustainLangGenerator.consoleOut
 			SustainLangGenerator.consoleOut.println("Unit: " + envInfo.getDeclaredUnit() + " from material with ID: " + element.getEpdId() + " not supported");
-			break;
+			return false;
 		}
     	
 		element.setAResult(MultiplyWithQuantities(envInfo.getA(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
 		element.setC3Result(MultiplyWithQuantities(envInfo.getC3(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
 		element.setC4Result(MultiplyWithQuantities(envInfo.getC4(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+		return true;
     }
 
     private Double MultiplyWithQuantities(Double envInfo, Double declaredFactor, Double massFactor, Double quant, int lifeTime) {
-        if (envInfo == null) {
+        if (envInfo == null || quant == null) {
             return null;
         }
 
@@ -90,7 +101,7 @@ public class LCA {
             yearFactor = (int) Math.ceil((50.0 / lifeTime));
         }
         
-        return (envInfo/declaredFactor) * massFactor * quant * yearFactor;
+        return (envInfo/declaredFactor) * quant * yearFactor;
     }
     
     public List<LCAIFCElement> calculateLCAByElement(List<LCAIFCElement> ifcElements, Double area) {

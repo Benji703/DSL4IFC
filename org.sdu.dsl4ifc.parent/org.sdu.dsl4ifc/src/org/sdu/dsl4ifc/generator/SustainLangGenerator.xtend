@@ -66,6 +66,10 @@ import org.sdu.dsl4ifc.sustainLang.Value
 import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
+import org.sdu.dsl4ifc.sustainLang.OutputCommand
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
+import lca.DomainClasses.Enums.EpdType
+import org.sdu.dsl4ifc.sustainLang.EPD
 
 class SustainLangGenerator extends AbstractGenerator {
 	

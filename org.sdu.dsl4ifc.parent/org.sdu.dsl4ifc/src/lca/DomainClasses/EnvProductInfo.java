@@ -12,11 +12,13 @@ public class EnvProductInfo implements IEnvProductInfo {
     private Double declaredFactor;
     private Double massFactor;
 
-    public EnvProductInfo(String name, double a, double c3, double c4) {
+    public EnvProductInfo(String name, double a, double c3, double c4, DeclaredUnitEnum declaredUnit, Double declaredFactor) {
         this.name = name;
         this.a = a;
         this.c3 = c3;
         this.c4 = c4;
+        this.declaredUnit = declaredUnit;
+        this.declaredFactor = declaredFactor;
     }
 
 

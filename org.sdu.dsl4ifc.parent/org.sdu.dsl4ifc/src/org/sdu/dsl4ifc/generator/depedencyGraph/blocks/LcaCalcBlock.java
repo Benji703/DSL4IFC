@@ -1,5 +1,8 @@
 package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
+import org.sdu.dsl4ifc.generator.SustainLangGenerator;
+import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
+import org.sdu.dsl4ifc.sustainLang.EPD;
 import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
@@ -27,8 +30,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lca.DomainClasses.Enums.EpdType;
 import java.util.stream.Collectors;
-
 import lca.LCA.*;
 import lca.LCA.materialMapping.WeightedCombinationMapper;
 
@@ -37,13 +40,14 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private AreaSource area;
 	private Double areaValue = null;
 	private String referenceName;
-	private LCA lca = new LCA();
+	private EpdType epdType;
+	private LCA lca;
 	
 	private boolean autoMapMaterials;
 	private Map<String,String> matDefs;
 	private WeightedCombinationMapper materialMapper;
 	
-	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs, boolean autoMapMaterials) {
+	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs, boolean autoMapMaterials, EPD epdType) {
 		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
@@ -55,6 +59,22 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		if (autoMapMaterials) {
 			this.materialMapper = new WeightedCombinationMapper(lca.getEdpConnetcor());
 		}
+
+		this.epdType = translateToJavaEnum(epdType);
+		
+		lca = new LCA(this.epdType);
+		
+	}
+
+	private EpdType translateToJavaEnum(EPD xEpdType) {
+		if (xEpdType == EPD.ECO) {
+			return EpdType.EcoPlatform;
+		} else if (xEpdType == EPD.BR18) {
+			return EpdType.BR18;
+		}
+		
+		SustainLangGenerator.consoleOut.println("Could not recognize EPD type. Using BR18 as default instead.");
+		return EpdType.BR18;
 	}
 
 	@Override
@@ -262,6 +282,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		keyBuilder.append("reference:"+referenceName+",");
 		keyBuilder.append("area:"+getAreaCacheKey()+",");
 		keyBuilder.append("materialMapping:"+materialMappingString()+",");
+		keyBuilder.append("epdType:"+epdType+",");
 		
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");
