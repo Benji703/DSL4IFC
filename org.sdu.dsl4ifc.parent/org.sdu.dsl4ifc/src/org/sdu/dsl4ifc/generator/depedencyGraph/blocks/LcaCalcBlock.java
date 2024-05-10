@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import lca.DomainClasses.Enums.DeclaredUnitEnum;
 import lca.DomainClasses.Enums.EpdType;
 import lca.Interfaces.IIfcQuantityCollector;
 
@@ -91,13 +93,16 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcBuildingElement element : ifcElements) {
-
+	    	
+	    	IIfcQuantityCollector<IfcBuildingElement> quantCol = getQuantityCollector(element);
 	    	
 	    	LcaIfcQuantity quantity = new LcaIfcQuantity();
-	    	
-	    	var invSet = element.getIsDefinedBy_Inverse();
-	    	
-	    	LcaIfcQuantity quantity = getIfcQuantity(invSet);
+	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M3)) {
+		    	quantity.setGrossVolume(quantCol.getQuantity(element, DeclaredUnitEnum.M3));
+	    	}
+	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M2)) {
+		    	quantity.setGrossSideArea(quantCol.getQuantity(element, DeclaredUnitEnum.M2));
+	    	}
 	    	
 	    	SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
 	    	if (associations == null)
