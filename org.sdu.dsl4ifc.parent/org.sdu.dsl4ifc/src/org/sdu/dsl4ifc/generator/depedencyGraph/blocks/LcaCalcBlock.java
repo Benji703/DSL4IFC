@@ -108,7 +108,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    
 	    for (IfcBuildingElement element : ifcElements) {
 	    	
-	    	
 	    	IIfcQuantityCollector<IfcBuildingElement> quantCol = getQuantityCollector(element);
 	    	if (quantCol == null) {
 	    		continue;
