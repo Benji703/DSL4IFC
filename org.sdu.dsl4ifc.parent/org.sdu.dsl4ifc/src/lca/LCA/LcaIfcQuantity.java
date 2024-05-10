@@ -3,14 +3,14 @@ package lca.LCA;
 public class LcaIfcQuantity {
 	
 	private Double grossSideArea;
-	private Double grossVolume;
+	private Double volume;
 	
 	public LcaIfcQuantity() {
 	}
 	
 	public LcaIfcQuantity(Double grossSideArea, Double grossVolume) {
 		this.grossSideArea = grossSideArea;
-		this.grossVolume = grossVolume;
+		this.volume = grossVolume;
 	}
 
 	public Double getGrossSideArea() {
@@ -22,10 +22,10 @@ public class LcaIfcQuantity {
 	}
 
 	public Double getGrossVolume() {
-		return grossVolume;
+		return volume;
 	}
 
 	public void setGrossVolume(Double grossVolume) {
-		this.grossVolume = grossVolume;
+		this.volume = grossVolume;
 	}
 }

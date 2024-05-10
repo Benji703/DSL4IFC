@@ -8,6 +8,7 @@ import org.sdu.dsl4ifc.sustainLang.AreaAuto;
 import org.sdu.dsl4ifc.sustainLang.AreaSource;
 import org.sdu.dsl4ifc.sustainLang.AreaValue;
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
@@ -18,6 +19,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityArea;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
 
@@ -27,9 +29,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import lca.DomainClasses.Enums.DeclaredUnitEnum;
 import lca.DomainClasses.Enums.EpdType;
+import lca.Interfaces.IIfcMaterialCollector;
+import lca.Interfaces.IIfcQuantityCollector;
+
 import java.util.stream.Collectors;
 import lca.LCA.*;
+import lca.ifc.*;
 import lca.LCA.materialMapping.WeightedCombinationMapper;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
@@ -86,7 +94,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	@Override
 	public List<LCAIFCElement> Calculate() {
-		
 		List<VariableReferenceBlock> references = findAllBlocks(VariableReferenceBlock.class);
 		
 		if (references.size() > 1 || references.size() == 0) {
@@ -100,16 +107,24 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcBuildingElement element : ifcElements) {
-	    	var invSet = element.getIsDefinedBy_Inverse();
 	    	
-	    	LcaIfcQuantity quantity = getIfcQuantity(invSet);
 	    	
-	    	SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
-	    	if (associations == null)
+	    	IIfcQuantityCollector<IfcBuildingElement> quantCol = getQuantityCollector(element);
+	    	if (quantCol == null) {
 	    		continue;
+	    	}
 	    	
-			String ifcMatName = getIfcMatName(associations);
-	    	String epdId = getEpdId(ifcMatName);
+	    	LcaIfcQuantity quantity = new LcaIfcQuantity();
+	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M3)) {
+		    	quantity.setGrossVolume(quantCol.getQuantity(element, DeclaredUnitEnum.M3));
+	    	}
+	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M2)) {
+		    	quantity.setGrossSideArea(quantCol.getQuantity(element, DeclaredUnitEnum.M2));
+	    	}
+        
+	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
+	    	String ifcMatName = matCol.getIfcMatName(element);
+	    	String epdId = matDefs.get(ifcMatName);
 	    	
 	    	String elementName = element.getName().getDecodedValue();
 	    	
@@ -140,6 +155,30 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		}
 		
 		return matDefs.get(ifcMatName);
+	}
+	
+	private <T extends IfcBuildingElement> IIfcQuantityCollector<T> getQuantityCollector(IfcBuildingElement element) {
+		
+    	if (element instanceof IfcWall) {
+    		return (IIfcQuantityCollector<T>) new IfcWallQuantityCollector();
+    	}
+    	if (element instanceof IfcBeam) {
+    		return (IIfcQuantityCollector<T>) new IfcBeamQuantityCollector();
+    	}
+    	
+    	return null;
+	}
+	
+	private <T extends IfcBuildingElement> IIfcMaterialCollector<T> getMaterialCollector(IfcBuildingElement element) {
+		
+    	if (element instanceof IfcWall) {
+    		return (IIfcMaterialCollector<T>) new IfcWallMaterialCollector();
+    	}
+    	if (element instanceof IfcBeam) {
+    		return (IIfcMaterialCollector<T>) new IfcBeamMaterialCollector();
+    	}
+    	
+    	return null;
 	}
 	
 	public Double getArea() {
@@ -202,73 +241,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
 		return area == 0 ? null : area;
 	}
-
-	private String getIfcMatName(SET<IfcRelAssociates> matSet) {
-		
-		for (IfcRelAssociates relAss : matSet) {
-			if (!(relAss instanceof IfcRelAssociatesMaterial)) {
-				continue;
-			}
-			
-			var relAssMat = (IfcRelAssociatesMaterial)relAss;
-			
-			if (!(relAssMat.getRelatingMaterial() instanceof IfcMaterialLayerSetUsage)) {
-				continue;
-			}
-			
-			var relMat = ((IfcMaterialLayerSetUsage)relAssMat.getRelatingMaterial()).getForLayerSet();
-			
-			var ifcMatLayer = relMat.getMaterialLayers().get(0);
-	
-			return ifcMatLayer.getMaterial().getName().getValue();
-		}
-		
-		return null;
-	}
-
-	private LcaIfcQuantity getIfcQuantity(SET<IfcRelDefines> invSet) {
-		
-		LcaIfcQuantity quantity = new LcaIfcQuantity();
-		if (invSet == null) {
-			return quantity;
-		}
-		
-		
-		for (IfcRelDefines iRel : invSet) {
-			
-			if (!(iRel instanceof IfcRelDefinesByProperties)) {
-				continue;
-			}
-			
-			var iRelProp = (IfcRelDefinesByProperties)iRel;
-			
-			if (!(iRelProp.getRelatingPropertyDefinition() instanceof IfcElementQuantity)) {
-				continue;
-			}
-			
-			IfcElementQuantity elementQuant = (IfcElementQuantity)iRelProp.getRelatingPropertyDefinition();
-			
-			quantity = GetQuantity(elementQuant);
-		}
-		return quantity;
-	}
-
-	private LcaIfcQuantity GetQuantity(IfcElementQuantity elementQuant) {
-		double grossVolume = 0;
-		double grossSideArea = 0;
-		
-		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
-				grossVolume = ((IfcQuantityVolume)q).getVolumeValue().getValue();
-			}
-			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossSideArea")) {
-				grossSideArea = ((IfcQuantityArea)q).getAreaValue().getValue();
-			}
-		}
-		
-		return new LcaIfcQuantity(grossSideArea, grossVolume);
-	}
-
 
 	@Override
 	public String generateCacheKey() {

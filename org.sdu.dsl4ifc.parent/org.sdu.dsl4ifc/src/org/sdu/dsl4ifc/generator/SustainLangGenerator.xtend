@@ -62,6 +62,11 @@ import org.sdu.dsl4ifc.sustainLang.TableOutput
 import org.sdu.dsl4ifc.sustainLang.TraceOutput
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.OutputCommand
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
+import lca.DomainClasses.Enums.EpdType
+import org.sdu.dsl4ifc.sustainLang.EPD
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam
 import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
@@ -490,6 +495,9 @@ class SustainLangGenerator extends AbstractGenerator {
 		switch (type) {
 			case IFC_WALL: {
 				return IfcWall
+			}
+			case IFC_BEAM: {
+				return IfcBeam
 			}
 			case IFC_DOOR: {
 				return IfcDoor

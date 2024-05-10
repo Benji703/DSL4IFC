@@ -46,6 +46,7 @@ enum AggregateFunction:
     
 enum IfcType:
 	ifcWall='IfcWall' 						| 
+	ifcBeam='IfcBeam' 						|
 	ifcDoor='IfcDoor' 						| 
 	ifcRoot='IfcRoot' 						| 
 	ifcMaterial='IfcMaterial' 				| 
