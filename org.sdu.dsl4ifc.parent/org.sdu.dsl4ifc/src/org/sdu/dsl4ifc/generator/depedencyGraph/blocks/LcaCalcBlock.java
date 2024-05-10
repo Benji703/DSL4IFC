@@ -33,11 +33,13 @@ import java.util.Map;
 
 import lca.DomainClasses.Enums.DeclaredUnitEnum;
 import lca.DomainClasses.Enums.EpdType;
+import lca.Interfaces.IIfcMaterialCollector;
 import lca.Interfaces.IIfcQuantityCollector;
 
 import java.util.stream.Collectors;
 import lca.LCA.*;
 import lca.ifc.IfcWallQuantityCollector;
+import lca.ifc.IfcWallMaterialCollector;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
@@ -104,11 +106,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		    	quantity.setGrossSideArea(quantCol.getQuantity(element, DeclaredUnitEnum.M2));
 	    	}
 	    	
-	    	SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
-	    	if (associations == null)
-	    		continue;
-	    	
-			String ifcMatName = getIfcMatName(associations);
+	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
+	    	String ifcMatName = matCol.getIfcMatName(element);
 	    	String epdId = matDefs.get(ifcMatName);
 	    	
 	    	String elementName = element.getName().getDecodedValue();
@@ -126,6 +125,15 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
     	if (element instanceof IfcWall) {
     		return (IIfcQuantityCollector<T>) new IfcWallQuantityCollector();
+    	}
+    	
+    	return null;
+	}
+	
+	private <T extends IfcBuildingElement> IIfcMaterialCollector<T> getMaterialCollector(IfcBuildingElement element) {
+		
+    	if (element instanceof IfcWall) {
+    		return (IIfcMaterialCollector<T>) new IfcWallMaterialCollector();
     	}
     	
     	return null;
