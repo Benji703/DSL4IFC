@@ -42,7 +42,6 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.GroupByBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
@@ -55,7 +54,6 @@ import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.Function
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
-import org.sdu.dsl4ifc.sustainLang.MatDef
 import org.sdu.dsl4ifc.sustainLang.OutputArgument
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
@@ -69,6 +67,10 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import lca.DomainClasses.Enums.EpdType
 import org.sdu.dsl4ifc.sustainLang.EPD
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam
+import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -79,6 +81,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val myConsole = findConsole("SusLang");
 		consoleOut = myConsole.newMessageStream();
+		consoleOut.getConsole().setHandleControlCharacters(true);
+		consoleOut.getConsole().setCarriageReturnAsControlCharacter(true);
 		consoleOut.println("SusLang Console");
 		
 		val statements = resource.allContents.filter(Statement);
@@ -297,18 +301,32 @@ class SustainLangGenerator extends AbstractGenerator {
 	
 	def Block<?> createLcaCalculationBlock(LcaCalculation cal, Statement statement, Resource resource) {
 		
+		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
+		
 		val lcaPar = cal.lcaParams;
-		val matDefs = cal.matDefs
+		val manualMaterialMappings = cal.materialSource.filter(MaterialMappingManual);
+		val automaticMaterialMappings = cal.materialSource.filter(MaterialMappingAuto);
 		
-	 	var matDefMap = new HashMap<String,String>
-		
-		for (MatDef matDef : matDefs) {
-			matDefMap.put(matDef.ifcMat,matDef.epdMatId);
+		if (manualMaterialMappings.isEmpty && automaticMaterialMappings.isEmpty) {
+			throw new Exception("You must either specify the material mapping yourself set it to auto in the LCA calculation!");
 		}
 		
-		val referenceName = cal.lcaEntitiesReference === null ? "lcacalcblockentities" : cal.lcaEntitiesReference.name
-
-		val lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap, lcaPar.epd);
+		val automapMaterials = !automaticMaterialMappings.isEmpty;
+		
+		var LcaCalcBlock lcaCalcBlock;
+		
+		if (!manualMaterialMappings.isEmpty) {
+			var matDefMap = new HashMap<String,String>
+		
+			for (MaterialDefinition matDef : manualMaterialMappings.head.materialDefinitions) {
+				matDefMap.put(matDef.ifcMat, matDef.epdMatId);
+			}
+			
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap, automapMaterials, lcaPar.epd);
+		}
+		else if (automapMaterials) {
+			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, new HashMap, true, lcaPar.epd);
+		}
 		
 		// Create necesarry inputs
 		// Can be types or filters

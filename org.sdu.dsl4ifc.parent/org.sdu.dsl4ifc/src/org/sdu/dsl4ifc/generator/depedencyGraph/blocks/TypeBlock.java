@@ -25,6 +25,12 @@ public class TypeBlock<T extends InternalAccessClass> extends VariableReferenceB
 
 	@Override
 	public boolean IsOutOfDate() {
+		boolean inputsAreNewer = Inputs.stream().anyMatch(input -> input.GetTimeOfCalculation() > GetTimeOfCalculation());
+		
+		if (inputsAreNewer) {
+			return true;
+		}
+		
 		return false;
 	}
 

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.dhatim.fastexcel.Worksheet;
 import org.sdu.dsl4ifc.generator.IExtractor;
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Cell;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.ColumnHeader;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Row;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;

@@ -4,8 +4,6 @@ import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.sustainLang.EPD;
 import org.dhatim.fastexcel.Worksheet;
-import org.sdu.dsl4ifc.generator.SustainLangGenerator;
-import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.sustainLang.AreaAuto;
 import org.sdu.dsl4ifc.sustainLang.AreaSource;
 import org.sdu.dsl4ifc.sustainLang.AreaValue;
@@ -40,25 +38,36 @@ import lca.Interfaces.IIfcQuantityCollector;
 import java.util.stream.Collectors;
 import lca.LCA.*;
 import lca.ifc.*;
+import lca.LCA.materialMapping.WeightedCombinationMapper;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
 	private AreaSource area;
 	private Double areaValue = null;
-	private Map<String,String> matDefs;
 	private String referenceName;
 	private EpdType epdType;
 	private LCA lca;
 	
-	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs, EPD epdType) {
+	private boolean autoMapMaterials;
+	private Map<String,String> matDefs;
+	private WeightedCombinationMapper materialMapper;
+	
+	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs, boolean autoMapMaterials, EPD epdType) {
 		super("LCA Calculation (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.area = area;
-		this.matDefs = matDefs;
-		this.epdType = translateToJavaEnum(epdType);
 		
+		this.matDefs = matDefs;
+		this.autoMapMaterials = autoMapMaterials;
+		
+		this.epdType = translateToJavaEnum(epdType);
 		lca = new LCA(this.epdType);
+		
+		if (autoMapMaterials) {
+			this.materialMapper = new WeightedCombinationMapper(lca.getEdpConnetcor());
+		}
+
 	}
 
 	private EpdType translateToJavaEnum(EPD xEpdType) {
@@ -74,14 +83,17 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 
 	@Override
 	public boolean IsOutOfDate() {
-		return false;
+		boolean inputsAreNewer = Inputs.stream().anyMatch(input -> input.GetTimeOfCalculation() > GetTimeOfCalculation());
 		
+		if (inputsAreNewer) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
 	public List<LCAIFCElement> Calculate() {
-		IIfcQuantityCollector<IfcWall> wallQuantCollector;
-		
 		List<VariableReferenceBlock> references = findAllBlocks(VariableReferenceBlock.class);
 		
 		if (references.size() > 1 || references.size() == 0) {
@@ -109,7 +121,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M2)) {
 		    	quantity.setGrossSideArea(quantCol.getQuantity(element, DeclaredUnitEnum.M2));
 	    	}
-	    	
+        
 	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
 	    	String ifcMatName = matCol.getIfcMatName(element);
 	    	String epdId = matDefs.get(ifcMatName);
@@ -123,6 +135,26 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
         List<LCAIFCElement> lcaElements = lca.calculateLCAByElement(elements, area);
 		
 		return lcaElements;
+	}
+
+	private String getEpdId(String ifcMatName) {
+		
+		if (ifcMatName == null) {
+			return null;
+		}
+		
+		if (autoMapMaterials) {
+			
+			if (matDefs.containsKey(ifcMatName)) {
+				return matDefs.get(ifcMatName);
+			}
+			
+			var epdId = materialMapper.getMostSimilarEpd(ifcMatName).getEpdId();
+			matDefs.put(ifcMatName, epdId);
+			return epdId;
+		}
+		
+		return matDefs.get(ifcMatName);
 	}
 	
 	private <T extends IfcBuildingElement> IIfcQuantityCollector<T> getQuantityCollector(IfcBuildingElement element) {
@@ -217,7 +249,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		keyBuilder.append("source:"+sourceVarName+",");
 		keyBuilder.append("reference:"+referenceName+",");
 		keyBuilder.append("area:"+getAreaCacheKey()+",");
-		keyBuilder.append("matdefs:"+matDefsToString()+",");
+		keyBuilder.append("materialMapping:"+materialMappingString()+",");
 		keyBuilder.append("epdType:"+epdType+",");
 		
         for (Block<?> block : Inputs) {
@@ -241,8 +273,13 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		return referenceName;
 	}
 	
-	private String matDefsToString() {
+	private String materialMappingString() {
+		
 		var builder = new StringBuilder();
+		
+		if (autoMapMaterials) {
+			builder.append("auto,");
+		}
 		
 		for (var entry : matDefs.entrySet()) {
 			builder.append(entry.getKey()+ " -> " + entry.getValue()+ ",");
