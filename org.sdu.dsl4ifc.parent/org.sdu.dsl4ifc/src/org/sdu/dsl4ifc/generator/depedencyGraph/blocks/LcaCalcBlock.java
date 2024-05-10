@@ -10,6 +10,7 @@ import org.sdu.dsl4ifc.sustainLang.AreaAuto;
 import org.sdu.dsl4ifc.sustainLang.AreaSource;
 import org.sdu.dsl4ifc.sustainLang.AreaValue;
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
@@ -38,8 +39,7 @@ import lca.Interfaces.IIfcQuantityCollector;
 
 import java.util.stream.Collectors;
 import lca.LCA.*;
-import lca.ifc.IfcWallQuantityCollector;
-import lca.ifc.IfcWallMaterialCollector;
+import lca.ifc.*;
 
 public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private String sourceVarName;
@@ -96,7 +96,11 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    
 	    for (IfcBuildingElement element : ifcElements) {
 	    	
+	    	/*
 	    	IIfcQuantityCollector<IfcBuildingElement> quantCol = getQuantityCollector(element);
+	    	if (quantCol == null) {
+	    		continue;
+	    	}
 	    	
 	    	LcaIfcQuantity quantity = new LcaIfcQuantity();
 	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M3)) {
@@ -104,7 +108,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	}
 	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M2)) {
 		    	quantity.setGrossSideArea(quantCol.getQuantity(element, DeclaredUnitEnum.M2));
-	    	}
+	    	}*/
+	    	LcaIfcQuantity quantity = new LcaIfcQuantity(2.0,2.0);
 	    	
 	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
 	    	String ifcMatName = matCol.getIfcMatName(element);
@@ -134,6 +139,9 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
     	if (element instanceof IfcWall) {
     		return (IIfcMaterialCollector<T>) new IfcWallMaterialCollector();
+    	}
+    	if (element instanceof IfcBeam) {
+    		return (IIfcMaterialCollector<T>) new IfcBeamMaterialCollector();
     	}
     	
     	return null;
@@ -199,75 +207,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
 		return area == 0 ? null : area;
 	}
-
-	private String getIfcMatName(SET<IfcRelAssociates> matSet) {
-		
-		for (IfcRelAssociates relAss : matSet) {
-			if (!(relAss instanceof IfcRelAssociatesMaterial)) {
-				continue;
-			}
-			
-			var relAssMat = (IfcRelAssociatesMaterial)relAss;
-			
-			if (!(relAssMat.getRelatingMaterial() instanceof IfcMaterialLayerSetUsage)) {
-				continue;
-			}
-			
-			var relMat = ((IfcMaterialLayerSetUsage)relAssMat.getRelatingMaterial()).getForLayerSet();
-			
-			var ifcMatLayer = relMat.getMaterialLayers().get(0);
-	
-			return ifcMatLayer.getMaterial().getName().getValue();
-		}
-		
-		return null;
-	}
-
-	/*
-	private LcaIfcQuantity getIfcQuantity(SET<IfcRelDefines> invSet) {
-		
-		LcaIfcQuantity quantity = new LcaIfcQuantity();
-		if (invSet == null) {
-			return quantity;
-		}
-		
-		
-		for (IfcRelDefines iRel : invSet) {
-			
-			if (!(iRel instanceof IfcRelDefinesByProperties)) {
-				continue;
-			}
-			
-			var iRelProp = (IfcRelDefinesByProperties)iRel;
-			
-			if (!(iRelProp.getRelatingPropertyDefinition() instanceof IfcElementQuantity)) {
-				continue;
-			}
-			
-			IfcElementQuantity elementQuant = (IfcElementQuantity)iRelProp.getRelatingPropertyDefinition();
-			
-			quantity = GetQuantity(elementQuant);
-		}
-		return quantity;
-	}*/
-
-	/*
-	private LcaIfcQuantity GetQuantity(IfcElementQuantity elementQuant) {
-		double grossVolume = 0;
-		double grossSideArea = 0;
-		
-		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
-				grossVolume = ((IfcQuantityVolume)q).getVolumeValue().getValue();
-			}
-			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossSideArea")) {
-				grossSideArea = ((IfcQuantityArea)q).getAreaValue().getValue();
-			}
-		}
-		
-		return new LcaIfcQuantity(grossSideArea, grossVolume);
-	}*/
-
 
 	@Override
 	public String generateCacheKey() {

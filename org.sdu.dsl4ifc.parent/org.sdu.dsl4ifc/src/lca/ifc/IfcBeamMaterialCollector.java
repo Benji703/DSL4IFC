@@ -1,17 +1,18 @@
 package lca.ifc;
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.step.core.SET;
 
 import lca.Interfaces.IIfcMaterialCollector;
 
-public class IfcWallMaterialCollector implements IIfcMaterialCollector<IfcWall> {
+public class IfcBeamMaterialCollector implements IIfcMaterialCollector<IfcBeam> {
 
 	@Override
-	public String getIfcMatName(IfcWall element) {
+	public String getIfcMatName(IfcBeam element) {
 		
 		SET<IfcRelAssociates> associations = element.getHasAssociations_Inverse();
     	if (associations == null)
@@ -29,18 +30,17 @@ public class IfcWallMaterialCollector implements IIfcMaterialCollector<IfcWall> 
 			
 			var relAssMat = (IfcRelAssociatesMaterial)relAss;
 			
-			if (!(relAssMat.getRelatingMaterial() instanceof IfcMaterialLayerSetUsage)) {
+			if (!(relAssMat.getRelatingMaterial() instanceof IfcMaterial)) {
 				continue;
 			}
 			
-			var relMat = ((IfcMaterialLayerSetUsage)relAssMat.getRelatingMaterial()).getForLayerSet();
+			String matName = ((IfcMaterial)relAssMat.getRelatingMaterial()).getName().getDecodedValue();
 			
-			var ifcMatLayer = relMat.getMaterialLayers().get(0);
 	
-			return ifcMatLayer.getMaterial().getName().getValue();
+			return matName;
 		}
 		
 		return null;
 	}
-
+	
 }

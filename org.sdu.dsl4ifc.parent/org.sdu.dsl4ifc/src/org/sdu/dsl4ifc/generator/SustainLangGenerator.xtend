@@ -68,6 +68,7 @@ import org.sdu.dsl4ifc.sustainLang.OutputCommand
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import lca.DomainClasses.Enums.EpdType
 import org.sdu.dsl4ifc.sustainLang.EPD
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -476,6 +477,9 @@ class SustainLangGenerator extends AbstractGenerator {
 		switch (type) {
 			case IFC_WALL: {
 				return IfcWall
+			}
+			case IFC_BEAM: {
+				return IfcBeam
 			}
 			case IFC_DOOR: {
 				return IfcDoor
