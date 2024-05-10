@@ -96,7 +96,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    
 	    for (IfcBuildingElement element : ifcElements) {
 	    	
-	    	/*
+	    	
 	    	IIfcQuantityCollector<IfcBuildingElement> quantCol = getQuantityCollector(element);
 	    	if (quantCol == null) {
 	    		continue;
@@ -108,8 +108,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	}
 	    	if (quantCol.isUnitSupported(DeclaredUnitEnum.M2)) {
 		    	quantity.setGrossSideArea(quantCol.getQuantity(element, DeclaredUnitEnum.M2));
-	    	}*/
-	    	LcaIfcQuantity quantity = new LcaIfcQuantity(2.0,2.0);
+	    	}
 	    	
 	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
 	    	String ifcMatName = matCol.getIfcMatName(element);
@@ -130,6 +129,9 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
     	if (element instanceof IfcWall) {
     		return (IIfcQuantityCollector<T>) new IfcWallQuantityCollector();
+    	}
+    	if (element instanceof IfcBeam) {
+    		return (IIfcQuantityCollector<T>) new IfcBeamQuantityCollector();
     	}
     	
     	return null;
