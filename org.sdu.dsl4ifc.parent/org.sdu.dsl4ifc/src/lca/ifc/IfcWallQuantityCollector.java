@@ -88,7 +88,7 @@ public class IfcWallQuantityCollector implements IIfcQuantityCollector<IfcWall> 
 		double grossArea = 0;
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossArea")) {
+			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossSideArea")) {
 				grossArea = ((IfcQuantityArea)q).getAreaValue().getValue();
 			}
 		}

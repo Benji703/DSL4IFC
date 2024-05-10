@@ -215,6 +215,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		return null;
 	}
 
+	/*
 	private LcaIfcQuantity getIfcQuantity(SET<IfcRelDefines> invSet) {
 		
 		LcaIfcQuantity quantity = new LcaIfcQuantity();
@@ -240,8 +241,9 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			quantity = GetQuantity(elementQuant);
 		}
 		return quantity;
-	}
+	}*/
 
+	/*
 	private LcaIfcQuantity GetQuantity(IfcElementQuantity elementQuant) {
 		double grossVolume = 0;
 		double grossSideArea = 0;
@@ -256,7 +258,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		}
 		
 		return new LcaIfcQuantity(grossSideArea, grossVolume);
-	}
+	}*/
 
 
 	@Override
