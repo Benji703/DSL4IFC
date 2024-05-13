@@ -135,11 +135,9 @@ public class LCA {
 		return result;
 	}
 	
-    public LcaDResult CalculateLcaForDModule(List<LCAIFCElement> ifcElements, Double areaHeated, double dOp, Double area) {
+    public Double CalculateLcaForDModule(List<LCAIFCElement> ifcElements, Double areaHeated, double dOp, Double area) {
 
-        Double result = getDResult(ifcElements, areaHeated, dOp, area);
-
-        return new LcaDResult(result,dOp,ifcElements, area, areaHeated);
+        return getDResult(ifcElements, areaHeated, dOp, area);
     }
     
 	private Double getDResult(List<LCAIFCElement> ifcElements, Double areaHeated, double dOp, Double area) {

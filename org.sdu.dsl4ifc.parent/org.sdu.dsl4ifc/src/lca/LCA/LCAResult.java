@@ -7,6 +7,8 @@ public class LCAResult {
 	private Double area;
 	private Double heatedArea;
     private Double lcaResult;
+    private Double dResult;
+    private Double dSubtracted;
     private List<LCAIFCElement> elements;
 
     public LCAResult(double lcaResult, Double area, Double heatedArea) {
@@ -54,6 +56,22 @@ public class LCAResult {
 
 	public void setHeatedArea(Double heatedArea) {
 		this.heatedArea = heatedArea;
+	}
+
+	public Double getdResult() {
+		return dResult;
+	}
+
+	public void setdResult(Double dResult) {
+		this.dResult = dResult;
+	}
+
+	public Double getdSubtracted() {
+		return dSubtracted;
+	}
+
+	public void setdSubtracted(Double dSubtracted) {
+		this.dSubtracted = dSubtracted;
 	}
     
     

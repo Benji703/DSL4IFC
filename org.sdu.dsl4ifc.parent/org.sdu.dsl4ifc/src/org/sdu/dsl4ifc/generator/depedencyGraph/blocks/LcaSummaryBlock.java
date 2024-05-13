@@ -50,6 +50,11 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 		Double area = lcaCalcBlock.getArea();
 
         LCAResult lcaResult = lca.CalculateLCAWhole(lcaElements, heatedArea, b6, area);
+        if (dOp != null) {
+        	lcaResult.setdResult(lca.CalculateLcaForDModule(lcaElements, heatedArea, dOp, area));
+        	lcaResult.setdSubtracted(lcaResult.getLcaResult()+lcaResult.getdResult());
+        }
+        
 		
 		return List.of(lcaResult);
 	}
