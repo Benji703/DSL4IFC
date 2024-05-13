@@ -242,8 +242,9 @@ public class EcoPlatformConnector implements IEPDConnector {
         parameters.put("distributed", "true");
         parameters.put("virtual", "true");
         parameters.put("metaDataOnly", "false");
-        parameters.put("compliance", "b00f9ec0-7874-11e3-981f-0800200c9a66");
-        parameters.put("pageSize", "15000");
+        parameters.put("pageSize", "14000");
+        parameters.put("validUntil", "2024");
+
         //parameters.put("lang", "en");
 		
 		try {
