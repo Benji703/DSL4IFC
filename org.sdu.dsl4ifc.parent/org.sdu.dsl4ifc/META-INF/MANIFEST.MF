@@ -13,7 +13,11 @@ Bundle-ClassPath: .,
  bin/commons-compress-1.26.1.jar,
  bin/commons-io-2.16.0.jar,
  bin/aalto-xml-1.3.2.jar,
- bin/stax2-api-4.2.2.jar
+ bin/stax2-api-4.2.2.jar,
+ bin/gson-2.10.1.jarbin/fastexcel-0.18.0.jar,
+ bin/opczip-1.2.0.jar,
+ bin/fastexcel-0.18.0.jar,
+ bin/gson-2.10.1.jar
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
  org.eclipse.equinox.common;bundle-version="3.16.0",
@@ -41,6 +45,7 @@ Export-Package: org.sdu.dsl4ifc,
  org.sdu.dsl4ifc.sustainLang,
  org.sdu.dsl4ifc.sustainLang.impl,
  org.sdu.dsl4ifc.sustainLang.util,
- org.sdu.dsl4ifc.validation
+ org.sdu.dsl4ifc.validation,
+ org.sdu.dsl4ifc.parser.antlr.lexer
 Import-Package: org.apache.log4j,
  org.osgi.framework;version="1.10.0"

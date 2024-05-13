@@ -1,11 +1,8 @@
 package lca.epdConnectors;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +17,7 @@ import org.osgi.framework.FrameworkUtil;
 
 import lca.DomainClasses.BR18ProductDeclaration;
 import lca.DomainClasses.Enums.DeclaredUnitEnum;
+import lca.Interfaces.EpdOverview;
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
 
@@ -34,7 +32,18 @@ public class BR18Connector implements IEPDConnector {
             return getProdDecById(id);
         }
 
-        Map<String, List<String>> epdData = new HashMap<String, List<String>>();
+        loadProductListIfNotInitialized();
+
+        return getProdDecById(id);
+    }
+
+	private void loadProductListIfNotInitialized() {
+		
+		if (productList != null) {
+			return;
+		}
+		
+		Map<String, List<String>> epdData = new HashMap<String, List<String>>();
 
         try {
         	Bundle bundle = FrameworkUtil.getBundle(BR18Connector.class);
@@ -154,8 +163,19 @@ public class BR18Connector implements IEPDConnector {
                 }
             }
         }
+        
         return data;
     }
+    
+
+	@Override
+	public List<EpdOverview> GetAllEpdNames() {
+		loadProductListIfNotInitialized();
+		
+		return productList.stream()
+				.map(product -> new EpdOverview(product.getName(), product.getSortID(), product.getDkName()))
+				.toList();
+	}
 
 
 }

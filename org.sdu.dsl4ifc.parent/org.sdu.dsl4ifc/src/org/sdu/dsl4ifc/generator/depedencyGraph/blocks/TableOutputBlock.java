@@ -3,18 +3,28 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
 
+import org.dhatim.fastexcel.Worksheet;
+import org.sdu.dsl4ifc.generator.IExtractor;
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.ColumnHeader;
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Row;
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.table.Table;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
+import org.sdu.dsl4ifc.sustainLang.Reference;
 
-public class SelectBlock extends Block<Table> {
+public class TableOutputBlock extends Block<Table> {
 
-	private List<AttributeReference<Object, String>> attributeReferences;
+	private List<AttributeReference<?>> attributeReferences;
+	private Reference reference;
 
-	public SelectBlock(String name, List<AttributeReference<Object,String>> attributeReferences) {
-		super(name);
+	public TableOutputBlock(List<AttributeReference<?>> attributeReferences, Reference reference) {
+		super("Output Table (" + getColumnNamesAsString(attributeReferences) + ")");
 		this.attributeReferences = attributeReferences;
+		this.reference = reference;
+	}
+
+	private static String getColumnNamesAsString(List<AttributeReference<?>> attributeReferences) {
+		return String.join(", ", attributeReferences.stream().map(ref -> ref.getDisplayName()).toList());
 	}
 
 	@Override
@@ -44,15 +54,15 @@ public class SelectBlock extends Block<Table> {
 		}
 		
 		
-		var table = new Table();
+		var table = new Table(reference.getName());
 		this.attributeReferences.forEach(reference -> 
-				table.addColumn(reference.getReferenceName() + "." + reference.getAttributeName(), reference)
+				table.addColumn(reference.getDisplayName(), reference)
 			);
 
 		// Get correct inputs
 		// Compute variables
 		var outputMap = new HashMap<String, List<?>>();
-		for (AttributeReference<?, String> attributeReference : attributeReferences) {
+		for (AttributeReference<?> attributeReference : attributeReferences) {
 			var referenceName = attributeReference.getReferenceName();
 			
 			var block = referenceNameToInputBlock.get(referenceName);
@@ -75,7 +85,7 @@ public class SelectBlock extends Block<Table> {
 						continue;
 					}
 					
-					var extractor = columnSource.getExtractor();
+					IExtractor<Object, String> extractor = (IExtractor<Object, String>) columnSource.getExtractor();
 					String parameterValue = extractor.getParameterValue(entity);
 					values.add(parameterValue == null ? "null" : parameterValue);
 				}
@@ -91,13 +101,40 @@ public class SelectBlock extends Block<Table> {
 	@Override
 	public String generateCacheKey() {
 		StringBuilder keyBuilder = new StringBuilder(Name);
-		for (AttributeReference<?,?> ref : attributeReferences) {
-            keyBuilder.append(ref.getReferenceName()+"."+ref.getAttributeName()+",");
+		for (AttributeReference<?> ref : attributeReferences) {
+            keyBuilder.append(ref.toString()+",");
         }
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");
         }
         return keyBuilder.toString();
+	}
+
+	@Override
+	public void fillTraceInWorksheet(Worksheet worksheet, int startingRow) {
+		var table = getOutput();
+		
+		int currentRow = startingRow;
+		
+		var headers = table.getHeaders();
+		for (int columnIndex = 0; columnIndex < headers.size(); columnIndex++) {
+			ColumnHeader header = headers.get(columnIndex);
+			
+			worksheet.value(currentRow, columnIndex, header.headerText);
+			worksheet.style(currentRow, columnIndex).bold().set();
+		}
+		
+		var rows = table.getRows();
+		for (Row row : rows) {
+			currentRow++;
+			
+			var cells = row.cells;
+			for (int columnIndex = 0; columnIndex < cells.size(); columnIndex++) {
+				var cell = cells.get(columnIndex);
+				
+				worksheet.value(currentRow, columnIndex, cell.value);
+			}
+		}
 	}
 
 }

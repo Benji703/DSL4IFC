@@ -7,30 +7,62 @@ Model:
     statements+=Statement*;
 
 Statement:
-    {Statement} source=SourceCommand select=SelectCommand from=FromCommand? filters+=FilterCommand* do=DoCommand? transforms=TranformationCommand? ';'?;
+    {Statement} source=SourceCommand filters+=FilterCommand* do=DoCommand? (transforms+=TransformationCommand)* outputs+=OutputCommand+ ';'?;
 
 SourceCommand:
-    'SOURCE' 'MODEL' path=STRING;
+    'SOURCE' path=STRING;
 
-SelectCommand:
-	{SelectCommand} 'SELECT' selects+=Attribute? (',' selects+=Attribute)*
+OutputCommand:
+	'OUTPUT' (TableOutput | TraceOutput)
 ;
 
-FromCommand:
-    'FROM' types+=IfcTypeRef (',' types+=IfcTypeRef)*;
+TableOutput returns OutputCommand:
+	{TableOutput} 'TABLE' reference=[Reference] 'COLUMNS' '[' columns+=OutputArgument? (',' columns+=OutputArgument)* ']'
+;
+
+TraceOutput returns OutputCommand:
+	{TraceOutput} 'TRACE' 'REPORT' outputPath=STRING
+;
+
+OutputArgument:
+	Field | Function
+;
+
+Function:
+	functionType=AggregateFunction'(' field=Field ')'
+;
+
+Field:
+	fieldName=ID
+;
+
+enum AggregateFunction:
+	sum='SUM'  |
+	average='AVG' |
+	minimum='MIN' |
+	maximum='MAX' |
+	count='COUNT'
+;
     
 enum IfcType:
-	ifcWall='IfcWall' | ifcDoor='IfcDoor' | ifcRoot='IfcRoot' | ifcMaterial='IfcMaterial' | ifcBuildingElement='IfcBuildingElement' | ifcSlab='IfcSlab'
+	ifcWall='IfcWall' 						| 
+	ifcBeam='IfcBeam' 						|
+	ifcDoor='IfcDoor' 						| 
+	ifcRoot='IfcRoot' 						| 
+	ifcMaterial='IfcMaterial' 				| 
+	ifcBuildingElement='IfcBuildingElement' | 
+	ifcSlab='IfcSlab'						|
+	ifcBuilding='IfcBuilding'
 ;
 
 FilterCommand:
-    'FILTER' reference=[Reference] 'WHERE' condition=BooleanExpression;
+    'GET' type=IfcTypeRef ('WHERE' condition=BooleanExpression)?;
 
 DoCommand:
-    {DoCommand} 'DO' calculation+=Calculation*;
+    {DoCommand} 'CALCULATE' calculation+=Calculation*;
 
-TranformationCommand:
-    'GROUP' 'BY' attribute=Attribute;	// Add more
+TransformationCommand:
+    'GROUP' reference=[Reference] 'BY' attributes+=Field (',' attributes+=Field)*;
 
 IfcTypeRef returns Reference:
 	ifcType=IfcType name=ID?
@@ -39,21 +71,40 @@ IfcTypeRef returns Reference:
 Calculation returns Calculation:
 	LcaCalculation
 ;
-/* 
-LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '(' (options+=ID (',' options+=ID)*)? ')' reference=CalcReference;
-*/
-LcaCalculation returns Calculation:
-    {LcaCalculation} 'LCA' '('lcaParams=LcaParams 'MATDEF' '(' matDefs+=MatDef* ')' ')' summaryReference=LcaSummaryReference (',' lcaEntitiesReference=LcaEntitiesReference)?;
 
-//sourceVar=[Reference]',' quantPath=ID
+LcaCalculation returns Calculation:
+    {LcaCalculation} 'LCA' 
+    '(' summaryReference=LcaSummaryReference '<-' 'SUMMARY' 
+    ( ','lcaEntitiesReference=LcaEntitiesReference '<-' 'ELEMENTS' )? ')'
+    'FOR' source=[Reference] 
+    '('lcaParams=LcaParams 'MATERIAL' 'MAPPING' (materialSource+=MaterialMappingAuto)? (materialSource+=MaterialMappingManual)? ')';
 
-MatDef:
+MaterialMappingManual returns MaterialSource:
+	{MaterialMappingManual} '(' materialDefinitions+=MaterialDefinition* ')'
+;
+
+MaterialMappingAuto returns MaterialSource:
+	{MaterialMappingAuto} 'AUTO'
+;
+
+MaterialDefinition:
 	ifcMat=STRING '->' epdMatId=STRING
 ;
 
 LcaParams:
-	'SOURCE' sourceVar=[Reference] & 'AREA' area=Double & 'AREAHEAT' areaHeat=Double & 'B6' b6=Double
+	'AREA' area=AreaSource & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double & 'EPD' epd=EPD & ('D' dopObject=DOperational)?
+;
+
+DOperational:
+	dop=Double
+;
+
+enum EPD:
+	br18='BR18' | eco='EcoPlatform'
+;
+
+AreaSource returns AreaSource:
+	{AreaValue} area=Double | {AreaAuto} 'AUTO'
 ;
 
 Double returns ecore::EDouble:
@@ -66,7 +117,7 @@ LcaEntitiesReference returns Reference:
     {LcaEntitiesReference} name=ID;
 
 Attribute:
-    reference=[Reference]'.'attribute=ID
+    reference=[Reference]'.'field=Field
 ;
 
 enum BooleanOperator:

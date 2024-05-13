@@ -75,4 +75,8 @@ class MockExpression<T> extends Expression<T> {
   override Evaluate(T item, VariableStore variables)  {
     return value
   }
+		
+  override getFilledExpression(T item) {
+    return this.value.toString;
+  }
 }

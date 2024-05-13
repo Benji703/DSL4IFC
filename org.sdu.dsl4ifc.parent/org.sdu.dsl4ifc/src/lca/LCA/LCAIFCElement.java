@@ -7,19 +7,21 @@ public class LCAIFCElement {
 	private String ifcName;
 	private String epdName;
     private String epdId;
-    private Double quantity;
+    private LcaIfcQuantity quantity;
     private int lifeTime;
     private Double aResult;
     private Double c3Result;
     private Double c4Result;
     private Double dResult;
     private Double lcaVal;
+    private int ifcStepNumber;
 
 
-    public LCAIFCElement(String epdId, String ifcName, double quantity) {
+    public LCAIFCElement(String epdId, String ifcName, int ifcStepNumber, LcaIfcQuantity quantity) {
         this.epdId = epdId;
         this.ifcName = ifcName;
         this.quantity = quantity;
+        this.ifcStepNumber = ifcStepNumber;
     }
 
     public Double getAResult() {
@@ -58,7 +60,7 @@ public class LCAIFCElement {
         return epdId;
     }
 
-    public Double getQuantity() {
+    public LcaIfcQuantity getQuantity() {
         return quantity;
     }
 
@@ -92,11 +94,11 @@ public class LCAIFCElement {
                 '}';
     }
 
-    public Double getdResult() {
+    public Double getDResult() {
         return dResult;
     }
 
-    public void setdResult(Double dResult) {
+    public void setDResult(Double dResult) {
         this.dResult = dResult;
     }
 
@@ -115,4 +117,13 @@ public class LCAIFCElement {
 	public void setEpdName(String epdName) {
 		this.epdName = epdName;
 	}
+
+	public int getIfcStepNumber() {
+		return ifcStepNumber;
+	}
+
+	public void setIfcStepNumber(int ifcStepNumber) {
+		this.ifcStepNumber = ifcStepNumber;
+	}
+	
 }

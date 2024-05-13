@@ -32,6 +32,11 @@ public class CompareValueToValueOperation<T, U> extends ComparisonOperation<U, T
     
     @Override
     public String toString() {
-    	return left + " " + this.comparison +" " + right;
+    	return left + " " + this.comparison + " " + right;
     }
+
+	@Override
+	public String getFilledExpression(U item) {
+		return "\""+left+"\"" + " " + this.comparison + " " + "\""+right+"\"";
+	}
 }
