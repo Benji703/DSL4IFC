@@ -313,7 +313,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			worksheet.value(currentRow, 2, element.getAResult());
 			worksheet.value(currentRow, 3, element.getC3Result());
 			worksheet.value(currentRow, 4, element.getC4Result());
-			worksheet.value(currentRow, 5, element.getdResult());
+			worksheet.value(currentRow, 5, element.getDResult());
 			worksheet.value(currentRow, 6, element.getQuantity().getGrossSideArea());	// TODO: Choose the quantity that is used in the calculation
 			worksheet.value(currentRow, 7, element.getEpdId());
 			worksheet.value(currentRow, 8, element.getEpdName());

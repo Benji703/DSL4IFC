@@ -87,6 +87,7 @@ public class EcoPlatformConnector implements IEPDConnector {
 		double a = 0.0;
 		double c3 = 0.0;
 		double c4 = 0.0;
+		double d = 0.0;
 		DeclaredUnitEnum decUnit = ParseToEnum(flowProp.getReferenceUnit());
 		
 		for (AniesJsonObject anie : aniesList) {
@@ -109,13 +110,16 @@ public class EcoPlatformConnector implements IEPDConnector {
 			case "C4":
 				c4 = ParseStringToDouble(anie.getValue());
 				break;
+			case "D":
+				d = ParseStringToDouble(anie.getValue());
+				break;
 
 			default:
 				break;
 			}
 		}
 		
-		EnvProductInfo envProductInfo = new EnvProductInfo(name, a, c3, c4, decUnit, flowProp.getMeanValue());
+		EnvProductInfo envProductInfo = new EnvProductInfo(name, a, c3, c4, d, decUnit, flowProp.getMeanValue());
 		
 		envProdMap.put(name, envProductInfo);
 		
