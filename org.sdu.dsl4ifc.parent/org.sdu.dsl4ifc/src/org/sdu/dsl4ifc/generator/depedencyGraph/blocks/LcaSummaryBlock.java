@@ -16,14 +16,16 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	private AreaSource area;
 	private double b6;
 	private String referenceName;
+	private Double dOp;
 	
-	public LcaSummaryBlock(String sourceVarName, String referenceName, double heatedArea, double b6, AreaSource area) {
+	public LcaSummaryBlock(String sourceVarName, String referenceName, double heatedArea, double b6, AreaSource area, Double dOp) {
 		super("LCA Summary (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
 		this.heatedArea = heatedArea;
 		this.b6 = b6;
 		this.area = area;
+		this.dOp = dOp;
 	}
 
 	@Override

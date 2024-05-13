@@ -92,7 +92,11 @@ MaterialDefinition:
 ;
 
 LcaParams:
-	'AREA' area=AreaSource & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double & 'EPD' epd=EPD & ('D' dOp=Double)?
+	'AREA' area=AreaSource & 'HEATEDAREA' areaHeat=Double & 'B6' b6=Double & 'EPD' epd=EPD & ('D' dopObject=DOperational)?
+;
+
+DOperational:
+	dop=Double
 ;
 
 enum EPD:

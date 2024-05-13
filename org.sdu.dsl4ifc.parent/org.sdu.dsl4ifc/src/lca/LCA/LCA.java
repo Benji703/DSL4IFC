@@ -123,7 +123,6 @@ public class LCA {
         return new LCAResult(result,ifcElements, area, areaHeated);
     }
 
-
 	private Double getResult(List<LCAIFCElement> ifcElements, Double areaHeated, double b6, Double area) {
 		if (area == null) {
 			return null;
@@ -134,6 +133,25 @@ public class LCA {
         double opResult = lcaCalc.CalculateLCAOperational(b6, areaHeated);
         double result = baseWithArea + opResult;
 		return result;
+	}
+	
+    public LcaDResult CalculateLcaForDModule(List<LCAIFCElement> ifcElements, Double areaHeated, double dOp, Double area) {
+
+        Double result = getDResult(ifcElements, areaHeated, dOp, area);
+
+        return new LcaDResult(result,dOp,ifcElements, area, areaHeated);
+    }
+    
+	private Double getDResult(List<LCAIFCElement> ifcElements, Double areaHeated, double dOp, Double area) {
+		if (area == null) {
+			return null;
+		}
+		
+		double baseDResult = ifcElements.stream().filter(t -> t.getLcaVal() != null).mapToDouble(LCAIFCElement::getDResult).sum();
+        double baseDWithArea = lcaCalc.CalculateLCAModuleDBasic(baseDResult, area);
+        double opDResult = lcaCalc.CalculateLCAModuleDOperational(dOp, areaHeated);
+        double dResult = baseDWithArea + opDResult;
+		return dResult;
 	}
 
 

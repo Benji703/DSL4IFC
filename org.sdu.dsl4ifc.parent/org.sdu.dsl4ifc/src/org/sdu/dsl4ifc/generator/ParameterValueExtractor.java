@@ -95,7 +95,7 @@ public class ParameterValueExtractor<T, U> implements IExtractor<T, U> {
 			case "c4":
 				return (U) (asLcaElement.getC4Result() + " kg. CO₂ ævk.");
 			case "d":
-				return (U) (asLcaElement.getdResult() + " kg. CO₂ ævk.");
+				return (U) (asLcaElement.getDResult() + " kg. CO₂ ævk.");
 			case "result":
 				return (U) (asLcaElement.getLcaVal() + " kg. CO₂ ævk.");
 			case "quantity":

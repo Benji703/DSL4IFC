@@ -94,11 +94,11 @@ public class LCAIFCElement {
                 '}';
     }
 
-    public Double getdResult() {
+    public Double getDResult() {
         return dResult;
     }
 
-    public void setdResult(Double dResult) {
+    public void setDResult(Double dResult) {
         this.dResult = dResult;
     }
 
