@@ -3,26 +3,27 @@
  */
 package org.sdu.dsl4ifc.generator
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcApplication
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterial
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcProperty
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelationship
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRoot
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcSlab
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall
 import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass
+import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel
+import java.io.File
 import java.io.FileOutputStream
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashMap
 import java.util.HashSet
-import java.util.LinkedHashMap
 import java.util.List
-import java.util.Map
-import java.util.function.Function
 import java.util.Set
-import lca.DomainClasses.Enums.EpdType
 import org.dhatim.fastexcel.Workbook
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
@@ -48,13 +49,11 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
-import org.sdu.dsl4ifc.sustainLang.EPD
 import org.sdu.dsl4ifc.sustainLang.Field
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.Function
@@ -64,7 +63,6 @@ import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
 import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
 import org.sdu.dsl4ifc.sustainLang.OutputArgument
-import org.sdu.dsl4ifc.sustainLang.OutputCommand
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
@@ -72,12 +70,6 @@ import org.sdu.dsl4ifc.sustainLang.TableOutput
 import org.sdu.dsl4ifc.sustainLang.TraceOutput
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
-import org.eclipse.jface.resource.ImageDescriptor
-import com.apstex.ifc2x3toolbox.ifcmodel.IfcModel
-import java.io.File
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcApplication
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcProperty
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelationship
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -166,7 +158,7 @@ class SustainLangGenerator extends AbstractGenerator {
         block.fillTraceInWorksheet(ws, 5)
 	}
 	
-	private def Block<?> constructGraph(Statement statement, Resource resource) {
+	private def List<Block<?>> constructGraph(Statement statement, Resource resource) {
 		
 		val outputs = statement.outputs.filter[output | !(output instanceof TraceOutput)].toList
 		
@@ -255,7 +247,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		}
 	}
 	
-	def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
+	private def dispatch Block<?> createBlock(FilterCommand filter, Statement statement, Resource resource) {
 		val filterBlock = new FilterBlock(filter.type.name, filter.toExpression)
 		
 		// Create necesarry inputs
@@ -282,7 +274,7 @@ class SustainLangGenerator extends AbstractGenerator {
 		return transformBlock;
 	}
 	
-	def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
+	private def dispatch Block<?> createBlock(Reference reference, Statement statement, Resource resource) {
 		val typeBlock = new TypeBlock(reference.name, reference.ifcType.toIfcType)
 		
 		// Create necesarry inputs
@@ -441,7 +433,7 @@ class SustainLangGenerator extends AbstractGenerator {
 	}
 	
 	// Could be an "exists" as well
-	private val defaultValue = new TrueValue<InternalAccessClass>()
+	val defaultValue = new TrueValue<InternalAccessClass>()
 	
 	private def dispatch Expression<InternalAccessClass> toBlockExpression(ComparisonExpression expression, Reference variableReference) {
 		var left = expression.left
@@ -551,15 +543,6 @@ class SustainLangGenerator extends AbstractGenerator {
 	    return myConsole;
 	}
 	
-
-	private def static <T, K> List<T> distinctBy(List<T> list, java.util.function.Function<T, K> keyExtractor) {
-        val Map<K, T> map = new LinkedHashMap();
-        for (T element : list) {
-            map.putIfAbsent(keyExtractor.apply(element), element);
-        }
-        return new ArrayList(map.values());
-    }
-	
 	def runTest(Resource resource) {
 		
 		consoleOut = new TestConsole()
@@ -575,15 +558,14 @@ class SustainLangGenerator extends AbstractGenerator {
 		statements.forEach[statement | {
 			try {
 				val timeStart = System.currentTimeMillis()
-				val graph = constructGraph(statement, resource)
-				val output = graph.output
+				val graphs = constructGraph(statement, resource)
+				graphs.forEach[graph | graph.output]
 				val timeMsg = '''Done [«System.currentTimeMillis-timeStart» ms]'''
+				consoleOut.println(timeMsg)
 			} catch (Exception e) {
 				throw e;
 			}
 		}];
-		
-		
 			
 	}
 	
@@ -607,6 +589,10 @@ interface ConsoleProxy {
 	def void println(String message)
 	
 	def void println()
+	
+	def void print(String message)
+	
+	def void flush()
 }
 
 class EclipseConsole implements ConsoleProxy {
@@ -627,6 +613,14 @@ class EclipseConsole implements ConsoleProxy {
 		stream.println
 	}
 	
+	override print(String message) {
+		stream.print(message)
+	}
+	
+	override flush() {
+		stream.flush
+	}
+	
 }
 
 class TestConsole implements ConsoleProxy {
@@ -638,6 +632,16 @@ class TestConsole implements ConsoleProxy {
 	override println() {
 		//System.out.println
 	}
+	
+	override print(String message) {
+		// No Op
+	}
+	
+	override flush() {
+		// No Op
+	}
+	
+	
 	
 }
 
