@@ -216,3 +216,4 @@ xtend-gen/
 *.xml_gen
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,java,intellij+all,xtext
+org.sdu.dsl4ifc.parent/org.sdu.dsl4ifc.tests/ifc-files-data.csv

@@ -12,6 +12,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcElementQuantity;
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcLabel;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityVolume;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociates;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelAssociatesMaterial;
@@ -19,6 +20,7 @@ import com.apstex.ifc2x3toolbox.ifc2x3.IfcPhysicalQuantity;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcQuantityArea;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefines;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcRelDefinesByProperties;
+import com.apstex.ifc2x3toolbox.ifc2x3.InternalAccessClass;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcWall;
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcMaterialLayerSetUsage;
 import com.apstex.step.core.SET;
@@ -103,7 +105,13 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
 	    var sourceVar = (VariableReferenceBlock<?>)references.get(0);
 	    
-	    List<IfcBuildingElement> ifcElements = (List<IfcBuildingElement>) sourceVar.getOutput();
+	    List<InternalAccessClass> ifcEntities = (List<InternalAccessClass>) sourceVar.getOutput();
+	    
+	    List<IfcBuildingElement> ifcElements = ifcEntities.stream()
+	    		.filter(sc -> sc instanceof IfcBuildingElement)
+	    		.map(sc -> (IfcBuildingElement) sc)
+	    		.toList();
+	    
 	    ArrayList<LCAIFCElement> elements = new ArrayList<>();
 	    
 	    for (IfcBuildingElement element : ifcElements) {
@@ -125,7 +133,8 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	String ifcMatName = matCol.getIfcMatName(element);
 	    	String epdId = matDefs.get(ifcMatName);
 	    	
-	    	String elementName = element.getName().getDecodedValue();
+	    	IfcLabel nameElement = element.getName();
+			String elementName = nameElement != null ? nameElement.getDecodedValue() : "null";
 	    	
 			elements.add(new LCAIFCElement(epdId, elementName, element.getStepLineNumber(), quantity));
 	    }
@@ -155,6 +164,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		
 		return matDefs.get(ifcMatName);
 	}
+
 	
 	private <T extends IfcBuildingElement> IIfcQuantityCollector<T> getQuantityCollector(IfcBuildingElement element) {
 		
