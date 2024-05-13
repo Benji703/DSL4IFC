@@ -38,29 +38,26 @@ public class LCA {
         this.edpConnetcor = new BR18Connector();
     }
   
-    public Double CalculateLCAForElement(LCAIFCElement element, Double area) {
+    public void CalculateLCAForElement(LCAIFCElement element, Double area) {
         if (area == null) {
-          return null;
+          return;
         }
 
 
         IEnvProductInfo envProductInfo = edpConnetcor.GetEPDDataByType(element.getEpdId());
         
         if (envProductInfo == null) {
-        	return null;
+        	return;
         }
         
         element.setEpdName(envProductInfo.getName());
 
         if (!CalculateLcaByQuantity(envProductInfo, element)) {
-        	return null;
+        	return;
         }
 
-        Double aRes = element.getAResult();
-        Double c3Res = element.getC3Result();
-        Double c4Res = element.getC4Result();
-
-        return lcaCalc.CalculateLCABasic(aRes, c3Res, c4Res);
+        Double result = lcaCalc.CalculateLCABasic(element.getAResult(), element.getC3Result(), element.getC4Result());
+        element.setLcaVal(result);
     }
     
     /**
@@ -88,6 +85,8 @@ public class LCA {
 		element.setAResult(MultiplyWithQuantities(envInfo.getA(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
 		element.setC3Result(MultiplyWithQuantities(envInfo.getC3(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
 		element.setC4Result(MultiplyWithQuantities(envInfo.getC4(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,element.getLifeTime()));
+		//Lifetime set to 0, to not count environmental benefits multiple times
+		element.setDResult(MultiplyWithQuantities(envInfo.getD(),envInfo.getDeclaredFactor(),envInfo.getMassFactor(),quantity,0));
 		return true;
     }
 
@@ -108,8 +107,7 @@ public class LCA {
     	ArrayList<LCAIFCElement> ifcElementResults = new ArrayList<LCAIFCElement>(); 
     	
         for (LCAIFCElement element : ifcElements) {
-            Double lcaValue = CalculateLCAForElement(element, area);
-			element.setLcaVal(lcaValue);
+            CalculateLCAForElement(element, area);
             ifcElementResults.add(element);
         }
         
@@ -145,8 +143,8 @@ public class LCA {
 			return null;
 		}
 		
-		double baseDResult = ifcElements.stream().filter(t -> t.getLcaVal() != null).mapToDouble(LCAIFCElement::getDResult).sum();
-        double baseDWithArea = lcaCalc.CalculateLCAModuleDBasic(baseDResult, area);
+		double baseDResult = ifcElements.stream().filter(t -> t.getDResult() != null).mapToDouble(LCAIFCElement::getDResult).sum();
+        double baseDWithArea = lcaCalc.CalculateLCAModuleDBuilding(baseDResult, area);
         double opDResult = lcaCalc.CalculateLCAModuleDOperational(dOp, areaHeated);
         double dResult = baseDWithArea + opDResult;
 		return dResult;

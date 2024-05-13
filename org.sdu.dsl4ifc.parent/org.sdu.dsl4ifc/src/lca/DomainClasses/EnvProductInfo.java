@@ -8,15 +8,17 @@ public class EnvProductInfo implements IEnvProductInfo {
     private double a;
     private double c3;
     private double c4;
+    private double d;
     private DeclaredUnitEnum declaredUnit;
     private Double declaredFactor;
     private Double massFactor;
 
-    public EnvProductInfo(String name, double a, double c3, double c4, DeclaredUnitEnum declaredUnit, Double declaredFactor) {
+    public EnvProductInfo(String name, double a, double c3, double c4, double d, DeclaredUnitEnum declaredUnit, Double declaredFactor) {
         this.name = name;
         this.a = a;
         this.c3 = c3;
         this.c4 = c4;
+        this.d = d;
         this.declaredUnit = declaredUnit;
         this.declaredFactor = declaredFactor;
     }
@@ -54,5 +56,11 @@ public class EnvProductInfo implements IEnvProductInfo {
 	@Override
 	public Double getMassFactor() {
 		return massFactor;
+	}
+
+
+	@Override
+	public Double getD() {
+		return d;
 	}
 }

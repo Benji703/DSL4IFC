@@ -69,6 +69,7 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 		keyBuilder.append("area:"+getAreaCacheKey()+",");
 		keyBuilder.append("heatedArea:"+heatedArea+",");
 		keyBuilder.append("b6:"+b6+",");
+		keyBuilder.append("dop:"+dOp+",");
 		
         for (Block<?> block : Inputs) {
             keyBuilder.append(block.generateCacheKey()+";");

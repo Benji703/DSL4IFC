@@ -74,6 +74,10 @@ public class ParameterValueExtractor<T, U> implements IExtractor<T, U> {
 			switch (parameterName) {
 			case "result":
 				return (U) (asLcaResult.getLcaResult()+" kg. CO₂ ævk. / m² / år");
+			case "resultd":
+				return (U) (asLcaResult.getdResult()+" kg. CO₂ ævk. / m² / år");
+			case "resultdsubtracted":
+				return (U) (asLcaResult.getdSubtracted()+" kg. CO₂ ævk. / m² / år");
 
 			default:
 				break;
@@ -102,6 +106,7 @@ public class ParameterValueExtractor<T, U> implements IExtractor<T, U> {
 				return (U) (asLcaElement.getQuantity() + " m³");
 			case "lifetime":
 				return (U) (asLcaElement.getLifeTime() + " year(s)");
+			
 
 			default:
 				break;

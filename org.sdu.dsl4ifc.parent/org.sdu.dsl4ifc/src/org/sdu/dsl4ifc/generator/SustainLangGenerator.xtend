@@ -3,6 +3,7 @@
  */
 package org.sdu.dsl4ifc.generator
 
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuildingElement
 import com.apstex.ifc2x3toolbox.ifc2x3.IfcDoor
@@ -20,6 +21,7 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
+import lca.DomainClasses.Enums.EpdType
 import org.dhatim.fastexcel.Workbook
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
@@ -42,19 +44,26 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.AttributeReference
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.GroupByBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
+import org.sdu.dsl4ifc.sustainLang.EPD
 import org.sdu.dsl4ifc.sustainLang.Field
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
 import org.sdu.dsl4ifc.sustainLang.Function
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
+import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
 import org.sdu.dsl4ifc.sustainLang.OutputArgument
+import org.sdu.dsl4ifc.sustainLang.OutputCommand
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
@@ -62,15 +71,6 @@ import org.sdu.dsl4ifc.sustainLang.TableOutput
 import org.sdu.dsl4ifc.sustainLang.TraceOutput
 import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
-import org.sdu.dsl4ifc.sustainLang.OutputCommand
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
-import lca.DomainClasses.Enums.EpdType
-import org.sdu.dsl4ifc.sustainLang.EPD
-import com.apstex.ifc2x3toolbox.ifc2x3.IfcBeam
-import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
-import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
-import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
 
 class SustainLangGenerator extends AbstractGenerator {
 	
@@ -288,7 +288,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val lcaPar = cal.lcaParams;
 		
-		val lcaSummaryBlock = new LcaSummaryBlock(cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6, lcaPar.area, lcaPar.dopObject.dop);
+		val dop = lcaPar.dopObject === null ? null : lcaPar.dopObject.dop
+		val lcaSummaryBlock = new LcaSummaryBlock(cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6, lcaPar.area, dop);
 
 		
 		
