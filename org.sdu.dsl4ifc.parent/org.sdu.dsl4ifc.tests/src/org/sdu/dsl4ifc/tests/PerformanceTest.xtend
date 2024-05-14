@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 import org.sdu.dsl4ifc.generator.IfcFileInformation
 import org.sdu.dsl4ifc.generator.SustainLangGenerator
+import lca.epdConnectors.EcoPlatformConnector
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -33,14 +34,24 @@ class PerformanceTest {
 	
 	Map<String, IfcFileInformation> fileInformation = new HashMap
 	
-	final int reps = 10;
+	var int fileCount = 0; var int fileTotal = 0;
+	var int repCount = 0;  final int repTotal = 1;
+	var int testCount = 0; val int testTotal = 16;
+	var int typeCount = 0; val int typeTotal = 3;
+
 	
 	@Test
 	def void test() {
 		
-		var ifcFolderPath = "/Users/andreasedalpedersen/Downloads/mappe uden navn";
+		var ifcFolderPath = "/Users/andreasedalpedersen/SDU-local/Speciale/Evaluation/IFC-files-second-iteration";
         var folderFile = new File(ifcFolderPath);
         var ifcFiles = folderFile.listFiles().filter[file | file.name.endsWith(".ifc")];
+        
+        println("Warming up EcoPlatform...")
+        warmUpEcoPlatform();
+        println("Done!")
+        
+        fileTotal = ifcFiles.length;
 		
 		log = new PrintStream(new FileOutputStream(csvPath));
 		try {
@@ -48,13 +59,19 @@ class PerformanceTest {
 	        log.println("File Name, File Size [byte], File Entities Count, File Relations Count, File Properties Count, IFC Source Program, Cold Response Time [ms], Warm Response Time [ms], Cold Query ID, Warm Query ID, Test Name, IfcType (Data Volume), Warm vs. Cold Response Time Diff. [ms]");
 			
 			for (file : ifcFiles) {
+				
+				fileCount++;
+				repCount = 0;
+				
 				val path = file.absolutePath
 				println(path)
 				
 				val info = generator.getIfcFileInformation(path)
 				fileInformation.put(path, info)
 				
-				for (var i = 0; i < reps; i++) {
+				for (var i = 0; i < repTotal; i++) {
+					repCount++;
+					testCount = 0;
 					runTests(path)
 				}
 			}
@@ -65,15 +82,47 @@ class PerformanceTest {
 		
 	}
 	
+	protected def void warmUpEcoPlatform() {
+		val ifcPath = "/Users/andreasedalpedersen/SDU-local/Speciale/Evaluation/warm-up.ifc"
+        val resourceSet = new XtextResourceSet();
+        val resource = createResource(ifcPath, QueryEnum.LcaUsingEcoPlatform, resourceSet, "IfcWall");
+		generator.runTest(resource)
+	}
+	
 	protected def void runTests(String path) {
+		testCount++;
 		runTest(path, TestEnum.IdentifierNameChanged)
+		testCount++;
 		runTest(path, TestEnum.AddedToSelect)
+		testCount++;
 		runTest(path, TestEnum.FilterExpressionChanged)
+		testCount++;
 		runTest(path, TestEnum.LcaChanged)
+		testCount++;
 		runTest(path, TestEnum.FilterAdded)
+		testCount++;
 		runTest(path, TestEnum.FilterRemoved)
+		testCount++;
 		runTest(path, TestEnum.LcaAdded)
+		testCount++;
 		runTest(path, TestEnum.LcaRemoved)
+		
+		testCount++;
+		runTest(path, TestEnum.AutomaticAreaAdded)
+		testCount++;
+		runTest(path, TestEnum.AutomaticAreaRemoved)
+		testCount++;
+		runTest(path, TestEnum.AutomaticMaterialMappingAdded)
+		testCount++;
+		runTest(path, TestEnum.AutomaticMaterialMappingRemoved)
+		testCount++;
+		runTest(path, TestEnum.EpdSourceToEcoPlatform)
+		testCount++;
+		runTest(path, TestEnum.EpdSourceToBR18)
+		testCount++;
+		runTest(path, TestEnum.GroupByAdded)
+		testCount++;
+		runTest(path, TestEnum.GroupByRemoved)
 	}
 	
 	def runTest(String ifcPath, TestEnum test) {
@@ -151,9 +200,13 @@ class PerformanceTest {
 	];
 	
 	def runAllVolumeQueries(String ifcPath, QueryEnum coldQuery, QueryEnum warmQuery, String testName) {
+		typeCount = 0;
 		
 		for (ifcType : ifcTypes) {
+			typeCount++;
+			
 			generator.clearCache
+			EcoPlatformConnector.envProdMap.clear
 			runWarmAndColdQuery(ifcPath, coldQuery, warmQuery, testName, ifcType)
 		}
 	}
@@ -238,8 +291,10 @@ class PerformanceTest {
         // 12: warm vs. cold response time diff. [ms]
         cells.add(warmResponseTime - coldResponseTime + "");
         
-        val row = String.join(", ", cells);
+        val row = String.join(",", cells);
         log.println(row)
+        
+        println('''File[«fileCount»/«fileTotal»], Rep[«repCount»/«repTotal»], Test[«testCount»/«testTotal»], Type[«typeCount»/«typeTotal»]''');
 	}
 	
 	def Resource createResource(String ifcPath, QueryEnum queryEnum, XtextResourceSet resourceSet, String ifcType) {
@@ -247,7 +302,7 @@ class PerformanceTest {
 		
 		// Add content to the resource
 		val query = getQuery(ifcPath, queryEnum, ifcType);
-		println('''Got query: '«query»''')
+		//println('''Got query: '«query»''')
 				
 		resource.load(new StringInputStream(query), null);
 		

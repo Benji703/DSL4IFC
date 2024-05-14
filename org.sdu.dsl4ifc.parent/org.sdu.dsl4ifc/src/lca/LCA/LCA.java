@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 
-import lca.epdConnectors.BR18Connector;
-import lca.epdConnectors.EcoPlatformConnector;
 import lca.DomainClasses.Enums.EpdType;
 import lca.Interfaces.IEPDConnector;
 import lca.Interfaces.IEnvProductInfo;
+import lca.epdConnectors.BR18Connector;
+import lca.epdConnectors.EcoPlatformConnector;
 
 public class LCA {
     private LCACalc lcaCalc;

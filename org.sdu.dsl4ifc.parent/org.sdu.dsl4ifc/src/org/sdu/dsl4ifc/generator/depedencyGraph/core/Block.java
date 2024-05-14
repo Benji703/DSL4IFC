@@ -27,7 +27,7 @@ public abstract class Block<T> implements IOutOfDate, ICalculation<T>, ICacheKey
     }
 
     public void Invoke() {
-        System.out.println("Invoking " + Name);
+        //System.out.println("Invoking " + Name);
         for (var input : Inputs) {
             input.Invoke();
         }

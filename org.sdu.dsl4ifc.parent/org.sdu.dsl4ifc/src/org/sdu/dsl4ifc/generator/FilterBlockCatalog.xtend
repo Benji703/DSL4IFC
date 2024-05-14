@@ -37,7 +37,7 @@ class FilterBlockCatalog {
 	def Block<?> ensureExistingIsUsed(Block<?> block) {
 		val key = block.generateCacheKey
 		if (currentBlocks.containsKey(key)) {
-			System.out.println('''Reusing block "«key»"''')
+			//System.out.println('''Reusing block "«key»"''')
 			return currentBlocks.get(key)
 		}
 		
