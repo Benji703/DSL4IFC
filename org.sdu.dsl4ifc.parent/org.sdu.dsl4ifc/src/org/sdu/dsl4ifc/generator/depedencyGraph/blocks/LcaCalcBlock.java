@@ -53,6 +53,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	private boolean autoMapMaterials;
 	private Map<String,String> matDefs;
 	private WeightedCombinationMapper materialMapper;
+	private boolean isTest;
 	
 	public LcaCalcBlock(String sourceVarName, String referenceName, AreaSource area, Map<String,String> matDefs, boolean autoMapMaterials, EPD epdType) {
 		super("LCA Calculation (source " + sourceVarName + ")");
@@ -131,7 +132,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
         
 	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
 	    	String ifcMatName = matCol.getIfcMatName(element);
-	    	String epdId = matDefs.get(ifcMatName);
+	    	String epdId = getEpdId(ifcMatName);
 	    	
 	    	IfcLabel nameElement = element.getName();
 			String elementName = nameElement != null ? nameElement.getDecodedValue() : "null";
@@ -151,18 +152,23 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			return null;
 		}
 		
+		String epdId = matDefs.get(ifcMatName);
 		if (autoMapMaterials) {
 			
-			if (matDefs.containsKey(ifcMatName)) {
-				return matDefs.get(ifcMatName);
+			if (epdId == null) {
+				return epdId;
 			}
 			
-			var epdId = materialMapper.getMostSimilarEpd(ifcMatName).getEpdId();
+			epdId = materialMapper.getMostSimilarEpd(ifcMatName).getEpdId();
 			matDefs.put(ifcMatName, epdId);
 			return epdId;
 		}
 		
-		return matDefs.get(ifcMatName);
+		if (epdId == null && isTest) {
+			return this.epdType == EpdType.BR18 ? "#B1318" : "ANLÆGSBETON (C35/45 Lava Concrete in Aggressive Environmental Exposure Class)";
+		}
+		
+		return epdId;
 	}
 
 	
@@ -332,5 +338,11 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		}
 		
 	}
+
+	public void setIsTest(boolean isTest) {
+		this.isTest = isTest;
+	}
+	
+	
 	
 }

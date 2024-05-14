@@ -338,6 +338,8 @@ class SustainLangGenerator extends AbstractGenerator {
 		val parserBlock = statement.source.createBlock(statement, resource)
 		lcaCalcBlock.AddInput(parserBlock)
 		
+		lcaCalcBlock.isTest = isTest;
+		
 		return catalog.ensureExistingIsUsed(lcaCalcBlock)
 	}
 	
@@ -543,7 +545,11 @@ class SustainLangGenerator extends AbstractGenerator {
 	    return myConsole;
 	}
 	
+	var isTest = false;
+	
 	def runTest(Resource resource) {
+		
+		isTest = true;
 		
 		consoleOut = new TestConsole()
 		
