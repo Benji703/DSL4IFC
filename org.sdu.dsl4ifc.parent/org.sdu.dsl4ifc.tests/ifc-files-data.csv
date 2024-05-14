@@ -1,217 +1,241 @@
 File Name, File Size [byte], File Entities Count, File Relations Count, File Properties Count, IFC Source Program, Cold Response Time [ms], Warm Response Time [ms], Cold Query ID, Warm Query ID, Test Name, IfcType (Data Volume), Warm vs. Cold Response Time Diff. [ms]
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2901, 34, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2867
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2711, 18, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2693
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2699, 6, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2693
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2889, 58, LCA1, LCA2, LCA Changed, IfcRoot, -2831
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2708, 28, NoFilter, Filter1, Filter Added, IfcRoot, -2680
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2633, 18, Filter1, NoFilter, Filter Removed, IfcRoot, -2615
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2518, 133, NoLCA, LCA1, LCA Added, IfcRoot, -2385
-Molio_with_URIs.ifc, 73945142, 969835, 23574, 334375, ARCHICAD, 2584, 10, LCA1, NoLCA, LCA Removed, IfcRoot, -2574
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 315, 15, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -300
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 245, 11, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -234
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 237, 3, Filter1, Filter2, Filter Expression Changed, IfcRoot, -234
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 240, 11, LCA1, LCA2, LCA Changed, IfcRoot, -229
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 241, 11, NoFilter, Filter1, Filter Added, IfcRoot, -230
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 249, 9, Filter1, NoFilter, Filter Removed, IfcRoot, -240
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 236, 10, NoLCA, LCA1, LCA Added, IfcRoot, -226
-wall-with-materials.ifc, 5980888, 81524, 11628, 13163, Autodesk Revit 2023 (ENU), 239, 6, LCA1, NoLCA, LCA Removed, IfcRoot, -233
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2317, 4, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2313
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2321, 4, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2317
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2283, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2282
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2417, 1, LCA1, LCA2, LCA Changed, IfcRoot, -2416
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2289, 4, NoFilter, Filter1, Filter Added, IfcRoot, -2285
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2335, 3, Filter1, NoFilter, Filter Removed, IfcRoot, -2332
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2354, 2, NoLCA, LCA1, LCA Added, IfcRoot, -2352
-IFC Schependomlaan incl planningsdata.ifc, 65078748, 843172, 3473, 276491, Synchro, 2345, 3, LCA1, NoLCA, LCA Removed, IfcRoot, -2342
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 328, 3, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -325
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 302, 2, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -300
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 395, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -394
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 321, 1, LCA1, LCA2, LCA Changed, IfcRoot, -320
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 318, 2, NoFilter, Filter1, Filter Added, IfcRoot, -316
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 322, 3, Filter1, NoFilter, Filter Removed, IfcRoot, -319
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 351, 1, NoLCA, LCA1, LCA Added, IfcRoot, -350
-Duplex_M_20111024_ROOMS_AND_SPACES.ifc, 8781887, 155212, 3547, 14677, Autodesk Revit MEP 2011, 323, 2, LCA1, NoLCA, LCA Removed, IfcRoot, -321
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 6108, 14, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -6094
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 5905, 12, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -5893
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 5811, 4, Filter1, Filter2, Filter Expression Changed, IfcRoot, -5807
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 5763, 14, LCA1, LCA2, LCA Changed, IfcRoot, -5749
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 5974, 18, NoFilter, Filter1, Filter Added, IfcRoot, -5956
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 5816, 12, Filter1, NoFilter, Filter Removed, IfcRoot, -5804
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 5939, 17, NoLCA, LCA1, LCA Added, IfcRoot, -5922
-DACH_sample_project.ifc, 159522787, 2818060, 16191, 9753, Autodesk Revit 2023 (ENU), 6069, 8, LCA1, NoLCA, LCA Removed, IfcRoot, -6061
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2629, 4, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2625
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2450, 4, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2446
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2429, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2428
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2428, 2, LCA1, LCA2, LCA Changed, IfcRoot, -2426
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2465, 3, NoFilter, Filter1, Filter Added, IfcRoot, -2462
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2407, 3, Filter1, NoFilter, Filter Removed, IfcRoot, -2404
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2410, 1, NoLCA, LCA1, LCA Added, IfcRoot, -2409
-Week 37 11 sept IFC Schependomlaan incl planningsdata.ifc, 65064843, 842852, 3473, 276491, Synchro, 2429, 2, LCA1, NoLCA, LCA Removed, IfcRoot, -2427
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 592, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -591
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 553, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -552
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 550, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -549
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 552, 0, LCA1, LCA2, LCA Changed, IfcRoot, -552
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 547, 1, NoFilter, Filter1, Filter Added, IfcRoot, -546
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 542, 1, Filter1, NoFilter, Filter Removed, IfcRoot, -541
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 544, 1, NoLCA, LCA1, LCA Added, IfcRoot, -543
-Week 26 26 june IFC Schependomlaan incl planningsdata.ifc, 14843114, 157200, 1075, 83217, Synchro, 550, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -550
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2450, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2449
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2487, 2, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2485
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2451, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2451
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2461, 7, LCA1, LCA2, LCA Changed, IfcRoot, -2454
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2486, 2, NoFilter, Filter1, Filter Added, IfcRoot, -2484
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2525, 2, Filter1, NoFilter, Filter Removed, IfcRoot, -2523
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2528, 7, NoLCA, LCA1, LCA Added, IfcRoot, -2521
-racbasicsampleproject.ifc, 27308205, 536967, 1898, 1589, Autodesk Revit 2023 (ENU), 2441, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -2440
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 601, 12, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -589
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 504, 10, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -494
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 508, 5, Filter1, Filter2, Filter Expression Changed, IfcRoot, -503
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 533, 12, LCA1, LCA2, LCA Changed, IfcRoot, -521
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 540, 15, NoFilter, Filter1, Filter Added, IfcRoot, -525
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 536, 13, Filter1, NoFilter, Filter Removed, IfcRoot, -523
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 516, 12, NoLCA, LCA1, LCA Added, IfcRoot, -504
-Clinic_Architectural.ifc, 13003205, 209259, 22567, 6629, Autodesk Revit Architecture 2011, 524, 9, LCA1, NoLCA, LCA Removed, IfcRoot, -515
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 792, 7, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -785
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 781, 6, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -775
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 756, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -755
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 731, 7, LCA1, LCA2, LCA Changed, IfcRoot, -724
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 675, 9, NoFilter, Filter1, Filter Added, IfcRoot, -666
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 751, 5, Filter1, NoFilter, Filter Removed, IfcRoot, -746
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 738, 7, NoLCA, LCA1, LCA Added, IfcRoot, -731
-Clinic_Structural.ifc, 19058175, 317671, 9714, 1416, Autodesk Revit Architecture 2011, 729, 5, LCA1, NoLCA, LCA Removed, IfcRoot, -724
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 92, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -91
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 92, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -91
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 92, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -91
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 114, 5, LCA1, LCA2, LCA Changed, IfcRoot, -109
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 94, 1, NoFilter, Filter1, Filter Added, IfcRoot, -93
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 94, 1, Filter1, NoFilter, Filter Removed, IfcRoot, -93
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 92, 7, NoLCA, LCA1, LCA Added, IfcRoot, -85
-Duplex_A_20110907.ifc, 2380763, 38898, 2068, 5213, Autodesk Revit Architecture 2011, 95, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -94
-Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2
-Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2
-Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 26, 3, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -23
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 2, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 16, 2, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -14
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 7, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 6, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 6, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 6, 1, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 10, 1, Filter1, Filter2, Filter Expression Changed, IfcWall, -9
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 50, 1, LCA1, LCA2, LCA Changed, IfcMaterial, -49
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 86, 17, LCA1, LCA2, LCA Changed, IfcWall, -69
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 22, 17, LCA1, LCA2, LCA Changed, IfcRoot, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 6, 0, NoFilter, Filter1, Filter Added, IfcMaterial, -6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, NoFilter, Filter1, Filter Added, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 1, NoFilter, Filter1, Filter Added, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, Filter1, NoFilter, Filter Removed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, NoLCA, LCA1, LCA Added, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 13, NoLCA, LCA1, LCA Added, IfcWall, 9
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 14, NoLCA, LCA1, LCA Added, IfcRoot, 10
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, LCA1, NoLCA, LCA Removed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 15, 0, LCA1, NoLCA, LCA Removed, IfcWall, -15
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 15, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -14
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 6, 0, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Filter1, Filter2, Filter Expression Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, LCA1, LCA2, LCA Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 16, 12, LCA1, LCA2, LCA Changed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 17, 10, LCA1, LCA2, LCA Changed, IfcRoot, -7
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, NoFilter, Filter1, Filter Added, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, NoFilter, Filter1, Filter Added, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, NoFilter, Filter1, Filter Added, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, NoFilter, Filter Removed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Filter1, NoFilter, Filter Removed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoLCA, LCA1, LCA Added, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 7, 12, NoLCA, LCA1, LCA Added, IfcWall, 5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 11, NoLCA, LCA1, LCA Added, IfcRoot, 7
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, LCA1, NoLCA, LCA Removed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 12, 1, LCA1, NoLCA, LCA Removed, IfcWall, -11
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 13, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -13
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, Filter2, Filter Expression Changed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, LCA1, LCA2, LCA Changed, IfcMaterial, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 13, 10, LCA1, LCA2, LCA Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 14, 10, LCA1, LCA2, LCA Changed, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, NoFilter, Filter1, Filter Added, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcMaterial, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoLCA, LCA1, LCA Added, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 9, NoLCA, LCA1, LCA Added, IfcWall, 6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 9, NoLCA, LCA1, LCA Added, IfcRoot, 6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, LCA1, NoLCA, LCA Removed, IfcMaterial, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 12, 0, LCA1, NoLCA, LCA Removed, IfcWall, -12
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 12, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -12
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, Filter2, Filter Expression Changed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, LCA1, LCA2, LCA Changed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 11, 7, LCA1, LCA2, LCA Changed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 10, 8, LCA1, LCA2, LCA Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, NoFilter, Filter1, Filter Added, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, NoFilter, Filter Removed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, NoFilter, Filter Removed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, NoLCA, LCA1, LCA Added, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 8, NoLCA, LCA1, LCA Added, IfcWall, 5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 8, NoLCA, LCA1, LCA Added, IfcRoot, 5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, LCA1, NoLCA, LCA Removed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 10, 1, LCA1, NoLCA, LCA Removed, IfcWall, -9
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 10, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -10
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, Filter2, Filter Expression Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, LCA1, LCA2, LCA Changed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 9, 6, LCA1, LCA2, LCA Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 10, 7, LCA1, LCA2, LCA Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoFilter, Filter1, Filter Added, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, NoFilter, Filter1, Filter Added, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoFilter, Filter1, Filter Added, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, NoFilter, Filter Removed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, NoLCA, LCA1, LCA Added, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 6, NoLCA, LCA1, LCA Added, IfcWall, 3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 6, NoLCA, LCA1, LCA Added, IfcRoot, 4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, LCA1, NoLCA, LCA Removed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 9, 0, LCA1, NoLCA, LCA Removed, IfcWall, -9
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 10, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -10
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, Filter2, Filter Expression Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, LCA1, LCA2, LCA Changed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 5, LCA1, LCA2, LCA Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 9, 5, LCA1, LCA2, LCA Changed, IfcRoot, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoFilter, Filter1, Filter Added, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, NoFilter, Filter Removed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 3, Filter1, NoFilter, Filter Removed, IfcRoot, 0
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, NoLCA, LCA1, LCA Added, IfcMaterial, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 6, NoLCA, LCA1, LCA Added, IfcWall, 4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 5, NoLCA, LCA1, LCA Added, IfcRoot, 2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, LCA1, NoLCA, LCA Removed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 1, LCA1, NoLCA, LCA Removed, IfcWall, -7
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -7
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, Filter2, Filter Expression Changed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, LCA1, LCA2, LCA Changed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 9, 5, LCA1, LCA2, LCA Changed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 6, LCA1, LCA2, LCA Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, NoFilter, Filter1, Filter Added, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, NoFilter, Filter1, Filter Added, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoFilter, Filter1, Filter Added, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, NoFilter, Filter Removed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, NoFilter, Filter Removed, IfcRoot, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoLCA, LCA1, LCA Added, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 7, NoLCA, LCA1, LCA Added, IfcWall, 5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 5, NoLCA, LCA1, LCA Added, IfcRoot, 2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, LCA1, NoLCA, LCA Removed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 0, LCA1, NoLCA, LCA Removed, IfcWall, -8
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -8
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, Filter2, Filter Expression Changed, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, LCA1, LCA2, LCA Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 8, LCA1, LCA2, LCA Changed, IfcWall, 0
 Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 7, 6, LCA1, LCA2, LCA Changed, IfcRoot, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, NoFilter, Filter1, Filter Added, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, NoFilter, Filter1, Filter Added, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, NoFilter, Filter1, Filter Added, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcWall, -4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Filter1, NoFilter, Filter Removed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, NoLCA, LCA1, LCA Added, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 6, NoLCA, LCA1, LCA Added, IfcWall, 3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 6, NoLCA, LCA1, LCA Added, IfcRoot, 4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, LCA1, NoLCA, LCA Removed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 0, LCA1, NoLCA, LCA Removed, IfcWall, -8
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -7
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 5, 0, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -5
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, Filter2, Filter Expression Changed, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, LCA1, LCA2, LCA Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 6, LCA1, LCA2, LCA Changed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 6, LCA1, LCA2, LCA Changed, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoFilter, Filter1, Filter Added, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoFilter, Filter1, Filter Added, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcRoot, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, Filter1, NoFilter, Filter Removed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoLCA, LCA1, LCA Added, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 6, NoLCA, LCA1, LCA Added, IfcWall, 4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 6, NoLCA, LCA1, LCA Added, IfcRoot, 3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, LCA1, NoLCA, LCA Removed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 7, 1, LCA1, NoLCA, LCA Removed, IfcWall, -6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 9, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -9
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 4, 1, Identifier1, Identifier2, Identifier Name Changed, IfcMaterial, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcWall, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, Filter2, Filter Expression Changed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, Filter1, Filter2, Filter Expression Changed, IfcWall, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, LCA1, LCA2, LCA Changed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 7, 6, LCA1, LCA2, LCA Changed, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 8, 5, LCA1, LCA2, LCA Changed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, NoFilter, Filter1, Filter Added, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, NoFilter, Filter1, Filter Added, IfcWall, -3
 Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, NoFilter, Filter1, Filter Added, IfcRoot, -2
-Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -2
-Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 5, NoLCA, LCA1, LCA Added, IfcRoot, 3
-Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 7, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -7
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1166, 2, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -1164
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1205, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -1204
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1124, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1123
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1128, 1, LCA1, LCA2, LCA Changed, IfcRoot, -1127
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1163, 2, NoFilter, Filter1, Filter Added, IfcRoot, -1161
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1149, 2, Filter1, NoFilter, Filter Removed, IfcRoot, -1147
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1219, 1, NoLCA, LCA1, LCA Added, IfcRoot, -1218
-Week 30 24 july IFC Schependomlaan incl planningsdata.ifc, 30292565, 323348, 1926, 170489, Synchro, 1127, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -1126
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1979, 19, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -1960
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1887, 17, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -1870
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1941, 4, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1937
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1980, 99, LCA1, LCA2, LCA Changed, IfcRoot, -1881
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1819, 20, NoFilter, Filter1, Filter Added, IfcRoot, -1799
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1952, 15, Filter1, NoFilter, Filter Removed, IfcRoot, -1937
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1928, 34, NoLCA, LCA1, LCA Added, IfcRoot, -1894
-IFC_Schependomlaan_geo.ifc, 49287362, 714490, 24118, 164901, ArchiCAD-64, 1929, 12, LCA1, NoLCA, LCA Removed, IfcRoot, -1917
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 722, 2, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -720
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 788, 2, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -786
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 735, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -735
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 704, 1, LCA1, LCA2, LCA Changed, IfcRoot, -703
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 713, 1, NoFilter, Filter1, Filter Added, IfcRoot, -712
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 702, 1, Filter1, NoFilter, Filter Removed, IfcRoot, -701
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 735, 0, NoLCA, LCA1, LCA Added, IfcRoot, -735
-Week 27 3 july IFC Schependomlaan incl planningsdata.ifc, 19547479, 207886, 1248, 112529, Synchro, 730, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -729
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2275, 67, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2208
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2160, 46, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2114
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2372, 13, Filter1, Filter2, Filter Expression Changed, IfcRoot, -2359
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2082, 3, LCA1, LCA2, LCA Changed, IfcRoot, -2079
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2214, 68, NoFilter, Filter1, Filter Added, IfcRoot, -2146
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2208, 46, Filter1, NoFilter, Filter Removed, IfcRoot, -2162
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2194, 4, NoLCA, LCA1, LCA Added, IfcRoot, -2190
-Clinic_Plumbing.ifc, 55834520, 1027694, 78888, 18619, Autodesk Revit 2013, 2173, 33, LCA1, NoLCA, LCA Removed, IfcRoot, -2140
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 1072, 31, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -1041
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 1036, 23, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -1013
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 1160, 8, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1152
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 994, 1, LCA1, LCA2, LCA Changed, IfcRoot, -993
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 1037, 35, NoFilter, Filter1, Filter Added, IfcRoot, -1002
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 1093, 24, Filter1, NoFilter, Filter Removed, IfcRoot, -1069
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 1072, 2, NoLCA, LCA1, LCA Added, IfcRoot, -1070
-Clinic_HVAC.ifc, 26914597, 455957, 43706, 17649, Autodesk Revit MEP 2013, 1046, 16, LCA1, NoLCA, LCA Removed, IfcRoot, -1030
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1094, 3, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -1091
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1094, 50, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -1044
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1064, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1063
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1154, 0, LCA1, LCA2, LCA Changed, IfcRoot, -1154
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1119, 3, NoFilter, Filter1, Filter Added, IfcRoot, -1116
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1111, 2, Filter1, NoFilter, Filter Removed, IfcRoot, -1109
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1105, 0, NoLCA, LCA1, LCA Added, IfcRoot, -1105
-Duplex_Plumbing_20121113.ifc, 31556138, 566909, 6118, 16049, Autodesk Revit 2013, 1110, 2, LCA1, NoLCA, LCA Removed, IfcRoot, -1108
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 17837, 119, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -17718
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 16512, 134, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -16378
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 15671, 33, Filter1, Filter2, Filter Expression Changed, IfcRoot, -15638
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 15873, 65, LCA1, LCA2, LCA Changed, IfcRoot, -15808
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 15754, 118, NoFilter, Filter1, Filter Added, IfcRoot, -15636
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 15285, 160, Filter1, NoFilter, Filter Removed, IfcRoot, -15125
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 15432, 66, NoLCA, LCA1, LCA Added, IfcRoot, -15366
-O-S1-BWK-BIM architectural - BIM bouwkundig.ifc, 394697402, 5190732, 95911, 2155952, IFC manager for sketchup, 15900, 135, LCA1, NoLCA, LCA Removed, IfcRoot, -15765
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 567, 9, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -558
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 496, 7, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -489
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 515, 2, Filter1, Filter2, Filter Expression Changed, IfcRoot, -513
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 529, 37, LCA1, LCA2, LCA Changed, IfcRoot, -492
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 524, 12, NoFilter, Filter1, Filter Added, IfcRoot, -512
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 515, 7, Filter1, NoFilter, Filter Removed, IfcRoot, -508
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 489, 9, NoLCA, LCA1, LCA Added, IfcRoot, -480
-1807_EP_AR_v18.ifc, 12109172, 189422, 14581, 34178, ARCHICAD-64, 538, 5, LCA1, NoLCA, LCA Removed, IfcRoot, -533
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 688, 4, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -684
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 730, 6, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -724
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 728, 1, Filter1, Filter2, Filter Expression Changed, IfcRoot, -727
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 701, 0, LCA1, LCA2, LCA Changed, IfcRoot, -701
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 637, 5, NoFilter, Filter1, Filter Added, IfcRoot, -632
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 742, 4, Filter1, NoFilter, Filter Removed, IfcRoot, -738
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 712, 0, NoLCA, LCA1, LCA Added, IfcRoot, -712
-Duplex_MEP_20110907.ifc, 17871432, 311480, 7031, 28129, Autodesk Revit MEP 2011, 722, 2, LCA1, NoLCA, LCA Removed, IfcRoot, -720
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1095, 2, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -1093
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1054, 2, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -1052
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1170, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1170
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1021, 1, LCA1, LCA2, LCA Changed, IfcRoot, -1020
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1073, 1, NoFilter, Filter1, Filter Added, IfcRoot, -1072
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1107, 2, Filter1, NoFilter, Filter Removed, IfcRoot, -1105
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1044, 1, NoLCA, LCA1, LCA Added, IfcRoot, -1043
-Week 29 17 july IFC Schependomlaan incl planningsdata.ifc, 28765558, 308244, 1893, 160897, Synchro, 1057, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -1056
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 3, 1, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 3, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -2
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 4, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -4
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 8, 5, LCA1, LCA2, LCA Changed, IfcRoot, -3
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 3, 1, NoFilter, Filter1, Filter Added, IfcRoot, -2
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 4, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -4
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 3, 5, NoLCA, LCA1, LCA Added, IfcRoot, 2
-wall-with-single-layer.ifc, 57641, 795, 111, 275, Autodesk Revit 2023 (ENU), 8, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -7
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 324, 13, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -311
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 306, 11, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -295
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 285, 2, Filter1, Filter2, Filter Expression Changed, IfcRoot, -283
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 314, 5, LCA1, LCA2, LCA Changed, IfcRoot, -309
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 277, 15, NoFilter, Filter1, Filter Added, IfcRoot, -262
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 280, 10, Filter1, NoFilter, Filter Removed, IfcRoot, -270
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 296, 5, NoLCA, LCA1, LCA Added, IfcRoot, -291
-Clinic_Electrical.ifc, 6800204, 103577, 17066, 3706, Autodesk Revit 2013, 272, 7, LCA1, NoLCA, LCA Removed, IfcRoot, -265
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 2033, 18, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -2015
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 1939, 15, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -1924
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 1927, 5, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1922
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 1941, 30, LCA1, LCA2, LCA Changed, IfcRoot, -1911
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 1804, 19, NoFilter, Filter1, Filter Added, IfcRoot, -1785
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 1885, 16, Filter1, NoFilter, Filter Removed, IfcRoot, -1869
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 2039, 36, NoLCA, LCA1, LCA Added, IfcRoot, -2003
-IFC Schependomlaan.ifc, 49286967, 714485, 24118, 164901, ArchiCAD-64, 1948, 10, LCA1, NoLCA, LCA Removed, IfcRoot, -1938
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 989, 2, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -987
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 986, 2, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -984
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 1003, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -1003
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 1035, 1, LCA1, LCA2, LCA Changed, IfcRoot, -1034
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 969, 1, NoFilter, Filter1, Filter Added, IfcRoot, -968
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 979, 1, Filter1, NoFilter, Filter Removed, IfcRoot, -978
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 972, 0, NoLCA, LCA1, LCA Added, IfcRoot, -972
-Week 28 10 july IFC Schependomlaan incl planningsdata.ifc, 26715414, 281131, 1765, 152171, Synchro, 960, 1, LCA1, NoLCA, LCA Removed, IfcRoot, -959
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 57, 0, Identifier1, Identifier2, Identifier Name Changed, IfcRoot, -57
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 59, 1, SelectOneProperty, SelectTwoProperties, Property Added to Select, IfcRoot, -58
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 58, 0, Filter1, Filter2, Filter Expression Changed, IfcRoot, -58
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 59, 0, LCA1, LCA2, LCA Changed, IfcRoot, -59
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 58, 0, NoFilter, Filter1, Filter Added, IfcRoot, -58
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 57, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -57
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 57, 1, NoLCA, LCA1, LCA Added, IfcRoot, -56
-Duplex_Electrical_20121207.ifc, 1602758, 30554, 842, 2366, Autodesk Revit 2013, 57, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -57
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, Filter1, NoFilter, Filter Removed, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, Filter1, NoFilter, Filter Removed, IfcWall, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 3, 0, Filter1, NoFilter, Filter Removed, IfcRoot, -3
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 0, NoLCA, LCA1, LCA Added, IfcMaterial, -2
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 6, NoLCA, LCA1, LCA Added, IfcWall, 4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 6, NoLCA, LCA1, LCA Added, IfcRoot, 4
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 2, 1, LCA1, NoLCA, LCA Removed, IfcMaterial, -1
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 7, 1, LCA1, NoLCA, LCA Removed, IfcWall, -6
+Projekt4vægge.ifc, 22605, 330, 44, 56, Autodesk Revit 2025 (ENU), 9, 0, LCA1, NoLCA, LCA Removed, IfcRoot, -9

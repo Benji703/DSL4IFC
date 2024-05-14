@@ -59,8 +59,6 @@ public class BR18Connector implements IEPDConnector {
         }
 
         productList = ConvertToBR18ObjectList(epdData);
-
-        return getProdDecById(id);
     }
 
 	private String getFilePath(Bundle bundle) throws IOException {

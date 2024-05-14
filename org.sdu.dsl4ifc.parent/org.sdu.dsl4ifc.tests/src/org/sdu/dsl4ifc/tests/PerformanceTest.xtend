@@ -25,12 +25,6 @@ import org.sdu.dsl4ifc.generator.SustainLangGenerator
 @InjectWith(SustainLangInjectorProvider)
 class PerformanceTest {
 	
-	@Test
-	def void fileExists() {
-		//assertTrue("File does not exist", file.exists)
-		//assertTrue("File is an actual file", file.isFile)
-	}
-	
 	@Inject
 	SustainLangGenerator generator
 	
@@ -44,7 +38,7 @@ class PerformanceTest {
 	@Test
 	def void test() {
 		
-		var ifcFolderPath = "/Users/andreasedalpedersen/SDU-local/Speciale/Evaluation/IFC-files";
+		var ifcFolderPath = "/Users/andreasedalpedersen/Downloads/mappe uden navn";
         var folderFile = new File(ifcFolderPath);
         var ifcFiles = folderFile.listFiles().filter[file | file.name.endsWith(".ifc")];
 		
@@ -110,6 +104,38 @@ class PerformanceTest {
 			}
 			case LcaRemoved: {
 				runAllVolumeQueries(ifcPath, QueryEnum.LCA1, QueryEnum.NoLCA, "LCA Removed")
+			}
+			
+			case AutomaticAreaAdded: {
+				runAllVolumeQueries(ifcPath, QueryEnum.LCA1, QueryEnum.LcaWithAutomaticArea, "Automatic Area Added")
+			}
+	
+			case AutomaticAreaRemoved: {
+				runAllVolumeQueries(ifcPath, QueryEnum.LcaWithAutomaticArea, QueryEnum.LCA1, "Automatic Area Removed")
+			}
+			
+			case AutomaticMaterialMappingAdded: {
+				runAllVolumeQueries(ifcPath, QueryEnum.LCA1, QueryEnum.LcaWithAutomaticMaterialMapping, "Automatic Material Mapping Added")
+			}
+	
+			case AutomaticMaterialMappingRemoved: {
+				runAllVolumeQueries(ifcPath, QueryEnum.LcaWithAutomaticMaterialMapping, QueryEnum.LCA1, "Automatic Material Mapping Removed")
+			}
+	
+			case EpdSourceToEcoPlatform: {
+				runAllVolumeQueries(ifcPath, QueryEnum.LCA1, QueryEnum.LcaUsingEcoPlatform, "EPD Source to EcoPlatform")
+			}
+	
+			case EpdSourceToBR18: {
+				runAllVolumeQueries(ifcPath, QueryEnum.LcaUsingEcoPlatform, QueryEnum.LCA1, "EPD Source to BR18")
+			}
+	
+			case GroupByAdded: {
+				runAllVolumeQueries(ifcPath, QueryEnum.NoFilter, QueryEnum.GroupBy, "Group By Added")
+			}
+	
+			case GroupByRemoved: {
+				runAllVolumeQueries(ifcPath, QueryEnum.GroupBy, QueryEnum.NoFilter, "Group By Removed")
 			}
 		
 			default: {
@@ -233,98 +259,152 @@ class PerformanceTest {
 		switch (queryEnum) {
 			case Identifier1: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT x.stepnumber, x.name
-				FROM «ifcType» x
-				FILTER x WHERE x.name <> ""
+				SOURCE "«ifcPath»"
+				GET «ifcType» x WHERE x.name <> ""
+				OUTPUT TABLE x COLUMNS[stepnumber, name]
 				'''
 			}
 			case Identifier2: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT y.stepnumber, y.name
-				FROM «ifcType» y
-				FILTER y WHERE x.name <> ""
+				SOURCE "«ifcPath»"
+				GET «ifcType» y WHERE x.name <> ""
+				OUTPUT TABLE y COLUMNS[stepnumber, name]
 				'''
 			}
 			case SelectOneProperty: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT x.stepnumber
-				FROM «ifcType» x
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				OUTPUT TABLE x COLUMNS[stepnumber]
 				'''
 			}
 			case SelectTwoProperties: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT x.stepnumber, x.name
-				FROM «ifcType» x
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				OUTPUT TABLE x COLUMNS[stepnumber, name]
 				'''
 			}
 			case Filter1: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT x.stepnumber, x.name
-				FROM «ifcType» x
-				FILTER x WHERE x.name <> ""
+				SOURCE "«ifcPath»"
+				GET «ifcType» x WHERE x.name <> ""
+				OUTPUT TABLE x COLUMNS[stepnumber, name]
 				'''
 			}
 			case Filter2: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT x.stepnumber, x.name
-				FROM «ifcType» x
-				FILTER x WHERE x.name = "ifc-name"
+				SOURCE "«ifcPath»"
+				GET «ifcType» x WHERE x.name = "ifc-name"
+				OUTPUT TABLE x COLUMNS[stepnumber, name]
 				'''
 			}
 			case LCA1: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT elements.result
-				FROM «ifcType» x
-				DO LCA(
-					AREA 5
-					AREAHEAT 5
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				CALCULATE LCA (lcaResult <- SUMMARY, elms <- ELEMENTS) FOR x (
+					AREA 50
+					HEATEDAREA 5
 					B6 10
-					SOURCE x
-					MATDEF (
+					EPD BR18
+					MATERIAL MAPPING (
 						"Letklinkerblok, Massiv" -> "​​#B1339"
-					) 
-				) sum, elements
+					)
+				)
+				OUTPUT TABLE elms COLUMNS[result];
 				'''
 			}
 			case LCA2: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT elements.result
-				FROM «ifcType» x
-				DO LCA(
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				CALCULATE LCA (lcaResult <- SUMMARY, elms <- ELEMENTS) FOR x (
 					AREA 500
-					AREAHEAT 500
+					HEATEDAREA 50
 					B6 100
-					SOURCE x
-					MATDEF (
+					EPD BR18
+					MATERIAL MAPPING (
 						"Concrete, Cast In Situ" -> "#G0242"
-					) 
-				) sum, elements
+					)
+				)
+				OUTPUT TABLE elms COLUMNS[result];
 				'''
 			}
 			case NoFilter: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT x.stepnumber, x.name
-				FROM «ifcType» x
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				OUTPUT TABLE x COLUMNS[stepnumber, name]
 				'''
 			}
 			case NoLCA: {
 				return '''
-				SOURCE MODEL "«ifcPath»"
-				SELECT x.stepnumber
-				FROM «ifcType» x
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				OUTPUT TABLE x COLUMNS[stepnumber]
 				'''
 			}
 			
-			default: throw new Exception("Query not found")
+			case LcaWithAutomaticArea: {
+				return '''
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				CALCULATE LCA (lcaResult <- SUMMARY, elms <- ELEMENTS) FOR x (
+					AREA AUTO
+					HEATEDAREA 5
+					B6 10
+					EPD BR18
+					MATERIAL MAPPING (
+						"Letklinkerblok, Massiv" -> "​​#B1339"
+					)
+				)
+				OUTPUT TABLE elms COLUMNS[result];
+				'''
+			}
+			
+			case LcaWithAutomaticMaterialMapping: {
+				return '''
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				CALCULATE LCA (lcaResult <- SUMMARY, elms <- ELEMENTS) FOR x (
+					AREA 50
+					HEATEDAREA 5
+					B6 10
+					EPD BR18
+					MATERIAL MAPPING AUTO
+				)
+				OUTPUT TABLE elms COLUMNS[result];
+				'''
+			}
+			
+			case LcaUsingEcoPlatform: {
+				return '''
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				CALCULATE LCA (lcaResult <- SUMMARY, elms <- ELEMENTS) FOR x (
+					AREA 50
+					HEATEDAREA 5
+					B6 10
+					EPD EcoPlatform
+					MATERIAL MAPPING (
+						"Letklinkerblok, Massiv" -> "​​#B1339"
+					)
+				)
+				OUTPUT TABLE elms COLUMNS[result];
+				'''
+			}
+			
+			case GroupBy: {
+				return '''
+				SOURCE "«ifcPath»"
+				GET «ifcType» x
+				GROUP x BY ifctype
+				OUTPUT TABLE x COLUMNS[SUM(stepnumber), ifctype]
+				'''
+			}
+			
+			default: throw new Exception("Query not found: " + queryEnum)
 		}
 	}
 }
@@ -339,7 +419,11 @@ enum QueryEnum {
 	LCA1,
 	LCA2,
 	NoFilter,
-	NoLCA
+	NoLCA,
+	LcaWithAutomaticArea,
+	LcaWithAutomaticMaterialMapping,
+	LcaUsingEcoPlatform,
+	GroupBy
 }
 
 enum TestEnum {
@@ -350,5 +434,13 @@ enum TestEnum {
 	FilterAdded,
 	FilterRemoved,
 	LcaAdded,
-	LcaRemoved
+	LcaRemoved,
+	AutomaticAreaAdded,
+	AutomaticAreaRemoved,
+	AutomaticMaterialMappingAdded,
+	AutomaticMaterialMappingRemoved,
+	EpdSourceToEcoPlatform,
+	EpdSourceToBR18,
+	GroupByAdded,
+	GroupByRemoved
 }

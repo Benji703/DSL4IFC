@@ -641,8 +641,6 @@ class TestConsole implements ConsoleProxy {
 		// No Op
 	}
 	
-	
-	
 }
 
 class IfcFileInformation {
