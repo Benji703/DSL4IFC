@@ -15,13 +15,15 @@ public class LCAIFCElement {
     private Double dResult;
     private Double lcaVal;
     private int ifcStepNumber;
+	private String ifcMaterialName;
 
 
-    public LCAIFCElement(String epdId, String ifcName, int ifcStepNumber, LcaIfcQuantity quantity) {
+    public LCAIFCElement(String epdId, String ifcName, int ifcStepNumber, LcaIfcQuantity quantity, String ifcMaterialName) {
         this.epdId = epdId;
         this.ifcName = ifcName;
         this.quantity = quantity;
         this.ifcStepNumber = ifcStepNumber;
+		this.ifcMaterialName = ifcMaterialName;
     }
 
     public Double getAResult() {
@@ -124,6 +126,14 @@ public class LCAIFCElement {
 
 	public void setIfcStepNumber(int ifcStepNumber) {
 		this.ifcStepNumber = ifcStepNumber;
+	}
+
+	public String getIfcMaterialName() {
+		return ifcMaterialName;
+	}
+
+	public void setIfcMaterialName(String ifcMaterialName) {
+		this.ifcMaterialName = ifcMaterialName;
 	}
 	
 }

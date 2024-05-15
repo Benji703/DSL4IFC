@@ -131,12 +131,12 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
         
 	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
 	    	String ifcMatName = matCol.getIfcMatName(element);
-	    	String epdId = matDefs.get(ifcMatName);
+	    	String epdId = getEpdId(ifcMatName);
 	    	
 	    	IfcLabel nameElement = element.getName();
 			String elementName = nameElement != null ? nameElement.getDecodedValue() : "null";
 	    	
-			elements.add(new LCAIFCElement(epdId, elementName, element.getStepLineNumber(), quantity));
+			elements.add(new LCAIFCElement(epdId, elementName, element.getStepLineNumber(), quantity, ifcMatName));
 	    }
 
 	    Double area = getArea();
@@ -205,7 +205,7 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			
 			var ifcBuldings = ifcModel.getCollection(IfcBuilding.class);
 			
-			areaValue = getSomeFloorAreaSum(ifcBuldings);
+			areaValue = AreaExtractor.getSomeFloorAreaSum(ifcBuldings);
 			
 			if (areaValue == null) {
 				SustainLangGenerator.consoleOut.println("WARNING: Could not find an area value. The LCA results using the area will be null.");
@@ -213,42 +213,6 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 		}
 		
 		return areaValue;
-	}
-
-	private Double getSomeFloorAreaSum(Collection<IfcBuilding> ifcBuldings) {
-		Double area = ifcBuldings.stream().collect(Collectors.summingDouble(building -> {
-				SET<IfcRelDefines> isDefinedBy = building.getIsDefinedBy_Inverse();
-				
-				for (IfcRelDefines iRel : isDefinedBy) {
-					
-					if (!(iRel instanceof IfcRelDefinesByProperties)) {
-						continue;
-					}
-					
-					var iRelProp = (IfcRelDefinesByProperties) iRel;
-					
-					if (!(iRelProp.getRelatingPropertyDefinition() instanceof IfcElementQuantity)) {
-						continue;
-					}
-					
-					IfcElementQuantity elementQuant = (IfcElementQuantity) iRelProp.getRelatingPropertyDefinition();
-					
-					for (IfcPhysicalQuantity quantity : elementQuant.getQuantities()) {
-						if (quantity instanceof IfcQuantityArea && quantity.getName().getDecodedValue().equals("NetFloorArea")) {
-							return ((IfcQuantityArea) quantity).getAreaValue().getValue();
-						}
-						if (quantity instanceof IfcQuantityArea && quantity.getName().getDecodedValue().equals("GrossFloorArea")) {
-							SustainLangGenerator.consoleOut.println("WARNING: Using gross area as area value in LCA calculation!");
-							return ((IfcQuantityArea) quantity).getAreaValue().getValue();
-						}
-						
-					}
-				}
-				
-				return 0;
-			}));
-		
-		return area == 0 ? null : area;
 	}
 
 	@Override
