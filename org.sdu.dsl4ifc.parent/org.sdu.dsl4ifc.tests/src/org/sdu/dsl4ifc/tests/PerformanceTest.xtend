@@ -20,31 +20,30 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 import org.sdu.dsl4ifc.generator.IfcFileInformation
 import org.sdu.dsl4ifc.generator.SustainLangGenerator
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
 class PerformanceTest {
 	
-	@Test
-	def void fileExists() {
-		//assertTrue("File does not exist", file.exists)
-		//assertTrue("File is an actual file", file.isFile)
-	}
 	
 	@Inject
 	SustainLangGenerator generator
 	
 	PrintStream log
-	String csvPath = "./ifc-files-data.csv";
+	String csvPath = "./performance-test_" + System.currentTimeMillis + ".csv";
 	
 	Map<String, IfcFileInformation> fileInformation = new HashMap
 	
 	final int reps = 10;
 	
 	@Test
-	def void test() {
+	def void performanceTest() {
 		
-		var ifcFolderPath = "/Users/andreasedalpedersen/SDU-local/Speciale/Evaluation/IFC-files";
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+		
+		var ifcFolderPath = "C:\\Users\\Andreas\\Downloads\\ifc";
         var folderFile = new File(ifcFolderPath);
         var ifcFiles = folderFile.listFiles().filter[file | file.name.endsWith(".ifc")];
 		
@@ -61,7 +60,7 @@ class PerformanceTest {
 				fileInformation.put(path, info)
 				
 				for (var i = 0; i < reps; i++) {
-					runTests(path)
+					runTests(file)
 				}
 			}
 		
@@ -71,45 +70,45 @@ class PerformanceTest {
 		
 	}
 	
-	protected def void runTests(String path) {
-		runTest(path, TestEnum.IdentifierNameChanged)
-		runTest(path, TestEnum.AddedToSelect)
-		runTest(path, TestEnum.FilterExpressionChanged)
-		runTest(path, TestEnum.LcaChanged)
-		runTest(path, TestEnum.FilterAdded)
-		runTest(path, TestEnum.FilterRemoved)
-		runTest(path, TestEnum.LcaAdded)
-		runTest(path, TestEnum.LcaRemoved)
+	protected def void runTests(File ifcFile) {
+		runTest(ifcFile, TestEnum.IdentifierNameChanged)
+		runTest(ifcFile, TestEnum.AddedToSelect)
+		runTest(ifcFile, TestEnum.FilterExpressionChanged)
+		runTest(ifcFile, TestEnum.LcaChanged)
+		runTest(ifcFile, TestEnum.FilterAdded)
+		runTest(ifcFile, TestEnum.FilterRemoved)
+		runTest(ifcFile, TestEnum.LcaAdded)
+		runTest(ifcFile, TestEnum.LcaRemoved)
 	}
 	
-	def runTest(String ifcPath, TestEnum test) {
+	def runTest(File ifcFile, TestEnum test) {
 		
 		println('''Running Test [«test»]''')
 		
 		switch (test) {
 			case IdentifierNameChanged: {
-				runAllVolumeQueries(ifcPath, QueryEnum.Identifier1, QueryEnum.Identifier2, "Identifier Name Changed")
+				runAllVolumeQueries(ifcFile, QueryEnum.Identifier1, QueryEnum.Identifier2, "Identifier Name Changed")
 			}
 			case AddedToSelect: {
-				runAllVolumeQueries(ifcPath, QueryEnum.SelectOneProperty, QueryEnum.SelectTwoProperties, "Property Added to Select")
+				runAllVolumeQueries(ifcFile, QueryEnum.SelectOneProperty, QueryEnum.SelectTwoProperties, "Property Added to Select")
 			}
 			case FilterExpressionChanged: {
-				runAllVolumeQueries(ifcPath, QueryEnum.Filter1, QueryEnum.Filter2, "Filter Expression Changed")
+				runAllVolumeQueries(ifcFile, QueryEnum.Filter1, QueryEnum.Filter2, "Filter Expression Changed")
 			}
 			case LcaChanged: {
-				runAllVolumeQueries(ifcPath, QueryEnum.LCA1, QueryEnum.LCA2, "LCA Changed")
+				runAllVolumeQueries(ifcFile, QueryEnum.LCA1, QueryEnum.LCA2, "LCA Changed")
 			}
 			case FilterAdded: {
-				runAllVolumeQueries(ifcPath, QueryEnum.NoFilter, QueryEnum.Filter1, "Filter Added")
+				runAllVolumeQueries(ifcFile, QueryEnum.NoFilter, QueryEnum.Filter1, "Filter Added")
 			}
 			case FilterRemoved: {
-				runAllVolumeQueries(ifcPath, QueryEnum.Filter1, QueryEnum.NoFilter, "Filter Removed")
+				runAllVolumeQueries(ifcFile, QueryEnum.Filter1, QueryEnum.NoFilter, "Filter Removed")
 			}
 			case LcaAdded: {
-				runAllVolumeQueries(ifcPath, QueryEnum.NoLCA, QueryEnum.LCA1, "LCA Added")
+				runAllVolumeQueries(ifcFile, QueryEnum.NoLCA, QueryEnum.LCA1, "LCA Added")
 			}
 			case LcaRemoved: {
-				runAllVolumeQueries(ifcPath, QueryEnum.LCA1, QueryEnum.NoLCA, "LCA Removed")
+				runAllVolumeQueries(ifcFile, QueryEnum.LCA1, QueryEnum.NoLCA, "LCA Removed")
 			}
 		
 			default: {
@@ -124,20 +123,21 @@ class PerformanceTest {
 		"IfcRoot"
 	];
 	
-	def runAllVolumeQueries(String ifcPath, QueryEnum coldQuery, QueryEnum warmQuery, String testName) {
+	def runAllVolumeQueries(File ifcFile, QueryEnum coldQuery, QueryEnum warmQuery, String testName) {
 		
 		for (ifcType : ifcTypes) {
 			generator.clearCache
-			runWarmAndColdQuery(ifcPath, coldQuery, warmQuery, testName, ifcType)
+			runWarmAndColdQuery(ifcFile, coldQuery, warmQuery, testName, ifcType)
 		}
 	}
 	
-	def runWarmAndColdQuery(String ifcPath, QueryEnum coldQuery, QueryEnum warmQuery, String testName, String ifcType) {
+	def runWarmAndColdQuery(File ifcFile, QueryEnum coldQuery, QueryEnum warmQuery, String testName, String ifcType) {
 		// Set up a resource set
 		val resourceSet = new XtextResourceSet();
 		
-		val coldResource = createResource(ifcPath, coldQuery, resourceSet, ifcType);
-		val warmResource = createResource(ifcPath, warmQuery, resourceSet, ifcType);
+		
+		val coldResource = createResource(ifcFile, coldQuery, resourceSet, ifcType);
+		val warmResource = createResource(ifcFile, warmQuery, resourceSet, ifcType);
 		
 		// Cold
 		var time = System.currentTimeMillis
@@ -151,7 +151,7 @@ class PerformanceTest {
 		val warmResponseTime = System.currentTimeMillis - time
 		println('''Warm response time: «warmResponseTime» ms.''')
 		
-		appendResult(coldResponseTime, warmResponseTime, ifcPath, coldQuery, warmQuery, testName, ifcType)
+		appendResult(coldResponseTime, warmResponseTime, ifcFile.absolutePath, coldQuery, warmQuery, testName, ifcType)
 	}
 	
 	def appendResult(long coldResponseTime, long warmResponseTime, String ifcPath, QueryEnum coldQuery, QueryEnum warmQuery, String testName, String ifcType) {
@@ -216,11 +216,11 @@ class PerformanceTest {
         log.println(row)
 	}
 	
-	def Resource createResource(String ifcPath, QueryEnum queryEnum, XtextResourceSet resourceSet, String ifcType) {
-		val resource = resourceSet.createResource(URI.createURI('''«queryEnum»_«ifcPath».slang'''));
+	def Resource createResource(File ifcFile, QueryEnum queryEnum, ResourceSetImpl resourceSet, String ifcType) {		
+		val resource = resourceSet.createResource(URI.createURI('''«queryEnum»_«ifcFile.name».slang'''));
 		
 		// Add content to the resource
-		val query = getQuery(ifcPath, queryEnum, ifcType);
+		val query = getQuery(ifcFile, queryEnum, ifcType);
 		println('''Got query: '«query»''')
 				
 		resource.load(new StringInputStream(query), null);
@@ -228,7 +228,8 @@ class PerformanceTest {
 		return resource
 	}
 	
-	def String getQuery(String ifcPath, QueryEnum queryEnum, String ifcType) {
+	def String getQuery(File ifcFile, QueryEnum queryEnum, String ifcType) {
+		val ifcPath = ifcFile.absolutePath.replace("\\", "\\\\")
 		
 		switch (queryEnum) {
 			case Identifier1: {

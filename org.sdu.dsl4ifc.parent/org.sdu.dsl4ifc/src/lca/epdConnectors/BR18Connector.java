@@ -57,7 +57,7 @@ public class BR18Connector implements IEPDConnector {
 	private String getFilePath(Bundle bundle) throws IOException {
 		
 		if (bundle == null) {
-			return "/Users/andreasedalpedersen/SDU-local/Speciale/dsl4ifc/DSL4IFC/org.sdu.dsl4ifc.parent/org.sdu.dsl4ifc/src/lca/ExcelData/BR18v2_201222_clean.xlsx";
+			return "C:\\Users\\Andreas\\Documents\\Projects\\DSL4IFC\\org.sdu.dsl4ifc.parent\\org.sdu.dsl4ifc.tests\\src\\lca\\ExcelData\\BR18v2_201222_clean.xlsx";
 		}
 		
 		URL fileURL = bundle.getEntry("/src/lca/ExcelData/BR18v2_201222_clean.xlsx"); // Replace "/path/to/your/file.xlsx" with the path to your file within the plugin
