@@ -78,9 +78,7 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 			var parserBlock = findFirstBlock(Ifc2x3ParserBlock.class);
 			var ifcModel = parserBlock.getOutput();
 			
-			var ifcBuldings = ifcModel.getCollection(IfcBuilding.class);
-			
-			heatedAreaValue = AreaExtractor.getSomeFloorAreaSum(ifcBuldings);
+			heatedAreaValue = AreaExtractor.getSomeFloorAreaSum(ifcModel);
 			
 			if (heatedAreaValue == null) {
 				SustainLangGenerator.consoleOut.println("WARNING: Could not find an area value. The LCA results using the area will be null.");
