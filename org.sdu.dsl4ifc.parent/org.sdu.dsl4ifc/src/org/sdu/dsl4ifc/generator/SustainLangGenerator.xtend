@@ -290,8 +290,6 @@ class SustainLangGenerator extends AbstractGenerator {
 		
 		val dop = lcaPar.dopObject === null ? null : lcaPar.dopObject.dop
 		val lcaSummaryBlock = new LcaSummaryBlock(cal.source.name, cal.summaryReference.name, lcaPar.areaHeat, lcaPar.b6, lcaPar.area, dop);
-
-		
 		
 		// Create necesarry inputs
 		val lcaCalcBlock = cal.createLcaCalculationBlock(statement, resource)

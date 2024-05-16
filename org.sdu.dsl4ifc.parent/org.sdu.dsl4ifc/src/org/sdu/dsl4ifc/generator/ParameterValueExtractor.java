@@ -102,10 +102,14 @@ public class ParameterValueExtractor<T, U> implements IExtractor<T, U> {
 				return (U) (asLcaElement.getDResult() + " kg. CO₂ ævk.");
 			case "result":
 				return (U) (asLcaElement.getLcaVal() + " kg. CO₂ ævk.");
-			case "quantity":
-				return (U) (asLcaElement.getQuantity() + " m³");
+			case "volume":
+				return (U) (asLcaElement.getQuantity().getGrossVolume() + " m³");
+			case "sidearea":
+				return (U) (asLcaElement.getQuantity().getGrossSideArea() + " m²");
 			case "lifetime":
 				return (U) (asLcaElement.getLifeTime() + " year(s)");
+			case "ifcmaterialname":
+				return (U) (asLcaElement.getIfcMaterialName() + "");
 			
 
 			default:

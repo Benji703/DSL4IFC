@@ -2,23 +2,27 @@ package org.sdu.dsl4ifc.generator.depedencyGraph.blocks;
 
 import java.util.List;
 import org.dhatim.fastexcel.Worksheet;
+import org.sdu.dsl4ifc.generator.SustainLangGenerator;
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block;
 import org.sdu.dsl4ifc.sustainLang.AreaAuto;
 import org.sdu.dsl4ifc.sustainLang.AreaSource;
 import org.sdu.dsl4ifc.sustainLang.AreaValue;
+
+import com.apstex.ifc2x3toolbox.ifc2x3.IfcBuilding;
 
 import lca.LCA.LCA;
 import lca.LCA.LCAResult;
 
 public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 	private String sourceVarName;
-	private double heatedArea;
+	private AreaSource heatedArea;
 	private AreaSource area;
 	private double b6;
 	private String referenceName;
 	private Double dOp;
+	private Double heatedAreaValue;
 	
-	public LcaSummaryBlock(String sourceVarName, String referenceName, double heatedArea, double b6, AreaSource area, Double dOp) {
+	public LcaSummaryBlock(String sourceVarName, String referenceName, AreaSource heatedArea, double b6, AreaSource area, Double dOp) {
 		super("LCA Summary (source " + sourceVarName + ")");
 		this.sourceVarName = sourceVarName;
 		this.referenceName = referenceName;
@@ -48,6 +52,7 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 		LCA lca = new LCA();
 
 		Double area = lcaCalcBlock.getArea();
+		Double heatedArea = getHeatedArea();
 
         LCAResult lcaResult = lca.CalculateLCAWhole(lcaElements, heatedArea, b6, area);
         if (dOp != null) {
@@ -59,6 +64,32 @@ public class LcaSummaryBlock extends VariableReferenceBlock<LCAResult> {
 		return List.of(lcaResult);
 	}
 
+
+	private Double getHeatedArea() {
+		
+		if (heatedAreaValue != null) {
+			return heatedAreaValue;
+		}
+		
+		if (area instanceof AreaValue) {
+			heatedAreaValue = ((AreaValue) area).getArea();
+		}
+		if (area instanceof AreaAuto) {
+			var parserBlock = findFirstBlock(Ifc2x3ParserBlock.class);
+			var ifcModel = parserBlock.getOutput();
+			
+			var ifcBuldings = ifcModel.getCollection(IfcBuilding.class);
+			
+			heatedAreaValue = AreaExtractor.getSomeFloorAreaSum(ifcBuldings);
+			
+			if (heatedAreaValue == null) {
+				SustainLangGenerator.consoleOut.println("WARNING: Could not find an area value. The LCA results using the area will be null.");
+			}
+		}
+		
+		return heatedAreaValue;
+		
+	}
 
 	@Override
 	public String generateCacheKey() {
