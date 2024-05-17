@@ -10,6 +10,7 @@ import java.io.PrintStream
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Map
+import lca.epdConnectors.EcoPlatformConnector
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.resource.XtextResourceSet
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 import org.sdu.dsl4ifc.generator.IfcFileInformation
 import org.sdu.dsl4ifc.generator.SustainLangGenerator
-import lca.epdConnectors.EcoPlatformConnector
 
 @ExtendWith(InjectionExtension)
 @InjectWith(SustainLangInjectorProvider)
@@ -43,7 +43,7 @@ class PerformanceTest {
 	@Test
 	def void test() {
 		
-		var ifcFolderPath = "/Users/andreasedalpedersen/SDU-local/Speciale/Evaluation/IFC-files-second-iteration";
+		var ifcFolderPath = "C:\\Users\\Andreas\\Downloads\\ifc\\Sorted";
         var folderFile = new File(ifcFolderPath);
         var ifcFiles = folderFile.listFiles().filter[file | file.name.endsWith(".ifc")];
         
@@ -83,7 +83,7 @@ class PerformanceTest {
 	}
 	
 	protected def void warmUpEcoPlatform() {
-		val ifcPath = "/Users/andreasedalpedersen/SDU-local/Speciale/Evaluation/warm-up.ifc"
+		val ifcPath = "C:/Users/Andreas/Downloads/ifc/warm-up/warm-up.ifc"
         val resourceSet = new XtextResourceSet();
         val resource = createResource(ifcPath, QueryEnum.LcaUsingEcoPlatform, resourceSet, "IfcWall");
 		generator.runTest(resource)
@@ -298,10 +298,11 @@ class PerformanceTest {
 	}
 	
 	def Resource createResource(String ifcPath, QueryEnum queryEnum, XtextResourceSet resourceSet, String ifcType) {
-		val resource = resourceSet.createResource(URI.createURI('''«queryEnum»_«ifcPath».slang'''));
+		val uriString = '''«queryEnum»_«ifcPath.substring(2)».slang'''
+		val resource = resourceSet.createResource(URI.createURI(uriString));
 		
 		// Add content to the resource
-		val query = getQuery(ifcPath, queryEnum, ifcType);
+		val query = getQuery(ifcPath.replace("\\", "\\\\"), queryEnum, ifcType);
 		//println('''Got query: '«query»''')
 				
 		resource.load(new StringInputStream(query), null);
