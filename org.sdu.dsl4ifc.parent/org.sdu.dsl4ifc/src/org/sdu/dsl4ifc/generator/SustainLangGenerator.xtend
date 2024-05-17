@@ -320,7 +320,7 @@ class SustainLangGenerator extends AbstractGenerator {
 			var matDefMap = new HashMap<String,String>
 		
 			for (MaterialDefinition matDef : manualMaterialMappings.head.materialDefinitions) {
-				matDefMap.put(matDef.ifcMat, matDef.epdMatId);
+				matDefMap.put(removeCarriageReturnAndNewline(matDef.ifcMat), removeCarriageReturnAndNewline(matDef.epdMatId));
 			}
 			
 			lcaCalcBlock = new LcaCalcBlock(cal.source.name, referenceName, lcaPar.area, matDefMap, automapMaterials, lcaPar.epd);
@@ -337,6 +337,10 @@ class SustainLangGenerator extends AbstractGenerator {
 		lcaCalcBlock.AddInput(parserBlock)
 		
 		return catalog.ensureExistingIsUsed(lcaCalcBlock)
+	}
+	
+	private def String removeCarriageReturnAndNewline(String s) {
+		return s.replaceAll("\r","").replaceAll("\n","");
 	}
 	
 	private def Block<?> createInputFromReference(Statement statement, Resource resource, Reference reference) {
