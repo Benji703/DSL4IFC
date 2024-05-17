@@ -24,7 +24,6 @@ import java.util.HashMap
 import java.util.HashSet
 import java.util.List
 import java.util.Set
-import org.dhatim.fastexcel.Workbook
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.resource.Resource
@@ -47,29 +46,30 @@ import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.FilterBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.GroupByBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.Ifc2x3ParserBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaCalcBlock
-import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TableOutputBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.TypeBlock
 import org.sdu.dsl4ifc.generator.depedencyGraph.core.Block
 import org.sdu.dsl4ifc.sustainLang.Attribute
 import org.sdu.dsl4ifc.sustainLang.BooleanExpression
 import org.sdu.dsl4ifc.sustainLang.ComparisonExpression
-import org.sdu.dsl4ifc.sustainLang.Field
 import org.sdu.dsl4ifc.sustainLang.FilterCommand
-import org.sdu.dsl4ifc.sustainLang.Function
 import org.sdu.dsl4ifc.sustainLang.IfcType
 import org.sdu.dsl4ifc.sustainLang.LcaCalculation
-import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
-import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
-import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
-import org.sdu.dsl4ifc.sustainLang.OutputArgument
 import org.sdu.dsl4ifc.sustainLang.Reference
 import org.sdu.dsl4ifc.sustainLang.SourceCommand
 import org.sdu.dsl4ifc.sustainLang.Statement
-import org.sdu.dsl4ifc.sustainLang.TableOutput
-import org.sdu.dsl4ifc.sustainLang.TraceOutput
-import org.sdu.dsl4ifc.sustainLang.TransformationCommand
 import org.sdu.dsl4ifc.sustainLang.Value
+import org.sdu.dsl4ifc.sustainLang.Field
+import org.sdu.dsl4ifc.sustainLang.Function
+import org.sdu.dsl4ifc.sustainLang.TraceOutput
+import org.sdu.dsl4ifc.generator.depedencyGraph.blocks.LcaSummaryBlock
+import org.dhatim.fastexcel.Workbook
+import org.sdu.dsl4ifc.sustainLang.TableOutput
+import org.sdu.dsl4ifc.sustainLang.TransformationCommand
+import org.sdu.dsl4ifc.sustainLang.MaterialDefinition
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingManual
+import org.sdu.dsl4ifc.sustainLang.MaterialMappingAuto
+import org.sdu.dsl4ifc.sustainLang.OutputArgument
 
 class SustainLangGenerator extends AbstractGenerator {
 	
