@@ -209,9 +209,9 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 			var parserBlock = findFirstBlock(Ifc2x3ParserBlock.class);
 			var ifcModel = parserBlock.getOutput();
 			
-			var ifcBuldings = ifcModel.getCollection(IfcBuilding.class);
 			
-			areaValue = AreaExtractor.getSomeFloorAreaSum(ifcBuldings);
+			
+			areaValue = AreaExtractor.getSomeFloorAreaSum(ifcModel);
 			
 			if (areaValue == null) {
 				SustainLangGenerator.consoleOut.println("WARNING: Could not find an area value. The LCA results using the area will be null.");
