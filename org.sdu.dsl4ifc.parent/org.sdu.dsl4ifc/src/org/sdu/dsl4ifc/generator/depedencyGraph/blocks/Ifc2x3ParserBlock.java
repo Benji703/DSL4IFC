@@ -54,14 +54,15 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 			}
 		});
 		
-        try {
-        	SustainLangGenerator.consoleOut.println("Parsing file: " + file.getAbsolutePath() + "...");
+ 
+    	SustainLangGenerator.consoleOut.println("Parsing file: " + file.getAbsolutePath() + "...");
+		try {
 			ifcModel.readStepFile(file);
-			SustainLangGenerator.consoleOut.println("Parsing done!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+		SustainLangGenerator.consoleOut.println("Parsing done!");
 		
         ifcModel.setTypeCacheEnabled(true);
         
@@ -69,7 +70,11 @@ public class Ifc2x3ParserBlock extends Block<IfcModel> {
 	}
 	
 	private boolean isRelativePath() {
-		return !path.startsWith("/");
+		if (path == null) {
+			return false;
+		}
+		
+		return !(path.startsWith("/") || path.startsWith("\\") || (path.length() >= 3 && path.charAt(1) == ':' && (path.charAt(2) == '/' || path.charAt(2) == '\\')));
 	}
 
 	private String getAbsolutePathFromRelativePath(String relativePath) {
