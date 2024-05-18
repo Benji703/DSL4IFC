@@ -23,6 +23,8 @@ public class AreaExtractor {
 		Double area = ifcBuldings.stream().collect(Collectors.summingDouble(building -> {
 				SET<IfcRelDefines> isDefinedBy = building.getIsDefinedBy_Inverse();
 				
+				if (isDefinedBy == null) return 0;
+				
 				for (IfcRelDefines iRel : isDefinedBy) {
 					
 					if (!(iRel instanceof IfcRelDefinesByProperties)) {
@@ -66,6 +68,8 @@ public class AreaExtractor {
 		
 		Double area = ifcSpaces.stream().collect(Collectors.summingDouble(building -> {
 			SET<IfcRelDefines> isDefinedBy = building.getIsDefinedBy_Inverse();
+			
+			if (isDefinedBy == null) return 0;
 			
 			for (IfcRelDefines iRel : isDefinedBy) {
 				

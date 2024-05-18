@@ -35,7 +35,7 @@ class PerformanceTest {
 	Map<String, IfcFileInformation> fileInformation = new HashMap
 	
 	var int fileCount = 0; var int fileTotal = 0;
-	var int repCount = 0;  final int repTotal = 1;
+	var int repCount = 0;  final int repTotal = 10;
 	var int testCount = 0; val int testTotal = 16;
 	var int typeCount = 0; val int typeTotal = 3;
 
@@ -43,7 +43,7 @@ class PerformanceTest {
 	@Test
 	def void test() {
 		
-		var ifcFolderPath = "C:\\Users\\Andreas\\Downloads\\ifc\\Sorted";
+		var ifcFolderPath = "C:\\Users\\Andreas\\Downloads\\ifc";
         var folderFile = new File(ifcFolderPath);
         var ifcFiles = folderFile.listFiles().filter[file | file.name.endsWith(".ifc")];
         
