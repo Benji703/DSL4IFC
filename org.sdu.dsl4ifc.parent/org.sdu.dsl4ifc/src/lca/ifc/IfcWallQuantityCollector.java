@@ -76,7 +76,7 @@ public class IfcWallQuantityCollector implements IIfcQuantityCollector<IfcWall> 
 		double grossVolume = 0;
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
+			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("NetVolume")) {
 				grossVolume = ((IfcQuantityVolume)q).getVolumeValue().getValue();
 			}
 		}
@@ -88,7 +88,7 @@ public class IfcWallQuantityCollector implements IIfcQuantityCollector<IfcWall> 
 		double grossArea = 0;
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("GrossSideArea")) {
+			if (q instanceof IfcQuantityArea && q.getName().getDecodedValue().equals("NetSideArea")) {
 				grossArea = ((IfcQuantityArea)q).getAreaValue().getValue();
 			}
 		}
