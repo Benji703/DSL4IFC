@@ -72,13 +72,14 @@ public class IfcBeamQuantityCollector implements IIfcQuantityCollector<IfcBeam> 
 		double volume = 0;
 		
 		for (IfcPhysicalQuantity q : elementQuant.getQuantities()) {
-			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
+			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("NetVolume")) {
 				volume = ((IfcQuantityVolume)q).getVolumeValue().getValue();
 				break;
 			}
-			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("NetVolume")) {
+			if (q instanceof IfcQuantityVolume && q.getName().getDecodedValue().equals("GrossVolume")) {
 				volume = ((IfcQuantityVolume)q).getVolumeValue().getValue();
 			}
+
 		}
 		
 		return volume;

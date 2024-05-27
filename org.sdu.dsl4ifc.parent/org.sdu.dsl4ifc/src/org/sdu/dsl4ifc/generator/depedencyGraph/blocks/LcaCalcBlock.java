@@ -130,6 +130,10 @@ public class LcaCalcBlock extends VariableReferenceBlock<LCAIFCElement> {
 	    	}
         
 	    	IIfcMaterialCollector<IfcBuildingElement> matCol = getMaterialCollector(element);
+	    	if (matCol == null) {
+	    		continue;
+	    	}
+	    	
 	    	String ifcMatName = matCol.getIfcMatName(element);
 	    	String epdId = getEpdId(ifcMatName);
 	    	
